@@ -1,28 +1,84 @@
-<!--pages/My/My.wxml-->
-<view class="page">
-    <image src="{{src}}" mode="widthFix" style="width: 100%;"></image>
-    <view class="userInfoContainer">
-        <view class="userInfo" wx:if="{{nickName}}" animation="{{animationData}}" style="opacity: 0;">
-            <image src="{{avatarUrl}}" style="width: 100rpx; height: 100rpx; margin: 16rpx; border-radius: 20rpx;"></image>
-            <view>{{nickName}}</view>
-        </view>
-    </view>
-
-    <view class="background" wx:if="{{nickName}}" animation="{{animationData}}" style="opacity: 0;">
-        <view hover-class="hoverClass" class="box" style="border-top: 1rpx solid transparent;border-bottom-left-radius: 0; border-bottom-right-radius: 0;" bindtap="myAsk">我的提问</view>
-        <view hover-class="hoverClass" class="box" style="border-radius: 0;" bindtap="myCollect">我的关注</view>
-        <view hover-class="hoverClass" class="box" style="border-top-left-radius: 0; border-top-right-radius: 0;" bindtap="myMessage">我的消息
-            <text class="red-point" wx:if="{{messageNum}}">{{messageNum}}</text>
-        </view>
-    </view>
-    
-    <!-- <button style="margin-top: 128rpx; opacity: 0;" wx:if="{{!nickName}}" type="primary" open-type="getUserInfo" bindtap="getUserInfo" animation="{{animationData}}">登录</button> -->
-
-    <view class="background" wx:if="{{nickName}}" animation="{{animationData}}" style="opacity: 0;">
-        <view class="buttonBox">
-            <button style="width: 100%; border-radius: 20rpx; font-size: 34rpx; font-weight: normal; justify-content: flex-start; border: 1rpx solid transparent; background-color: white;" open-type="feedback">意见反馈</button>
-        </view>
-        <view hover-class="hoverClass" class="box" style="border-radius: 0;" bindtap="help">使用帮助</view>
-    </view>
+<wxs src="../../filter.wxs" module="filter" />
+<view class="topBlock" style="height: {{top+32+32}}px; width: 100%; position: fixed;z-index: 1;"></view>
+<view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2;">
+  消息
 </view>
-<!-- <button bindtap="update">更新</button> -->
+<tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+  <view slot="tab-content-0">
+    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+    <block wx:if="{{tabs[0].questionList.length == 0}}">
+      <view class="bottom" style="margin-top: 40%;">你还没有收到回应哦~</view>
+    </block>
+    <block wx:for="{{tabs[0].questionList}}" wx:key="id">
+      <view class="messageBackground" bindtap="gotoDetail" id="{{item._id}}">
+        <view class="showTime">
+          <showTime year="{{year}}" dbyear="{{item.Ayear}}" month="{{month}}" dbmonth="{{item.Amonth}}" day="{{day}}" dbday="{{item.Aday}}" h="{{h}}" dbh="{{item.Ah}}" m="{{m}}" dbm="{{item.Am}}" s="{{s}}" dbs="{{item.As}}"></showTime>
+          <text class="red-point" wx:if="{{item.message}}">{{item.message}}</text>
+        </view>
+        <view class="top">
+          <block wx:if="{{item.commenter[2]}}">
+            <text class="nickName">@{{item.commenter[0].nickName}} @{{item.commenter[1].nickName}}</text>等回应了你发布的帖子
+          </block>
+          <block wx:elif="{{item.commenter[1]}}">
+            <text class="nickName">@{{item.commenter[0].nickName}} @{{item.commenter[1].nickName}}</text>回应了你发布的帖子
+          </block>
+          <block wx:else>
+            <text class="nickName">@{{item.commenter[0].nickName}}</text>回应了你发布的帖子
+          </block>
+        </view>
+
+        <view class="background">
+          <view class="title" style="margin: 0; margin-bottom: 32rpx; font-weight: 500;">{{item.title}}</view>
+          <view class="last" style="margin: 0;">
+            <text class="watched">{{item.commentNum}} 回应</text> ·
+            <text class="watched">{{item.watched}} 浏览</text> ·
+            <text class="watched">{{item.collectNum}} 关注</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view class="bottom" wx:if="{{ activeTab===0 && !isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{ activeTab===0 && isBottom}}">已经触底了~</view>
+  </view>
+  <view slot="tab-content-1">
+    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+    <block wx:if="{{tabs[1].questionList.length == 0}}">
+      <view class="bottom" style="margin-top: 40%;">你还没有收到回应哦~</view>
+    </block>
+    <block wx:for="{{tabs[1].questionList}}" wx:key="id">
+      <view class="messageBackground" bindtap="gotoDetail2" id="{{item.questionId}}" data-commentId="{{item._id}}">
+        <view class="showTime">
+          <showTime year="{{year}}" dbyear="{{item.Ayear}}" month="{{month}}" dbmonth="{{item.Amonth}}" day="{{day}}" dbday="{{item.Aday}}" h="{{h}}" dbh="{{item.Ah}}" m="{{m}}" dbm="{{item.Am}}" s="{{s}}" dbs="{{item.As}}"></showTime>
+          <text class="red-point" wx:if="{{!item.isWatched}}">1</text>
+        </view>
+        <view class="top">
+          <text class="nickName">@{{item.newNickName}}</text>
+          <text>回应了你的评论：</text>
+        </view>
+        <view class="title" style="font-weight: 500;">{{item.commentAgainBody}} <text wx:if="{{item.image_upload.length>0}}">[图片评论]</text></view>
+      </view>
+    </block>
+    <view class="bottom" wx:if="{{ activeTab===1 && !isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{ activeTab===1 && isBottom}}">已经触底了~</view>
+  </view>
+  <view slot="tab-content-2">
+    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+    <block wx:if="{{tabs[2].questionList.length == 0}}">
+      <view class="bottom" style="margin-top: 40%;">你还没有收到点赞哦~</view>
+    </block>
+    <block wx:for="{{tabs[2].questionList}}" wx:key="id">
+      <view class="messageBackground" bindtap="gotoDetail3" id="{{item.questionId}}">
+        <view class="showTime">
+          <showTime year="{{year}}" dbyear="{{item.Lyear}}" month="{{month}}" dbmonth="{{item.Lmonth}}" day="{{day}}" dbday="{{item.Lday}}" h="{{h}}" dbh="{{item.Lh}}" m="{{m}}" dbm="{{item.Lm}}" s="{{s}}" dbs="{{item.Ls}}"></showTime>
+        </view>
+        <view class="top">{{item.liker.length}} 个人赞了你的评论：</view>
+        <view class="background" style="font-size: 30rpx;">
+          {{filter.abbreviation(item.body)}}
+          <text wx:if="{{item.image_upload.length!=0}}">[图片评论]</text>
+        </view>
+      </view>
+    </block>
+    <view class="bottom" wx:if="{{ activeTab===2 && !isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{ activeTab===2 && isBottom}}">已经触底了~</view>
+  </view>
+</tabs>

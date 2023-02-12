@@ -1,11 +1,93 @@
 // pages/0-1 TopPost/TopPost.js
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
-    src:'cloud://cloud1-7gklx79xcb32af55.636c-cloud1-7gklx79xcb32af55-1310015840/oUXgD49xZ2UmMCD3B3GLS3h0rx1w/stable/tip01.jpg'
+    src: '',
+
+    top: 48,
+    left: 281,
+    right: 367,
+    bottom: 80,
+
+    currentId: 0,
+  },
+  help: function (e) {
+    const { id } = e.currentTarget.dataset
+    const { currentId } = this.data
+    if (id === '新版') {
+      if (currentId === 0) {
+        this.setData({
+          currentId: -1
+        })
+      }
+      else{
+        this.setData({
+          currentId: 0
+        })
+      }
+    }
+    else if (id === '菜单') {
+      if (currentId === 1) {
+        this.setData({
+          currentId: -1
+        })
+      }
+      else{
+        this.setData({
+          currentId: 1
+        })
+      }
+    }
+    else if (id === '搜索') { 
+      if (currentId === 2) {
+        this.setData({
+          currentId: -1
+        })
+      }
+      else{
+        this.setData({
+          currentId: 2
+        })
+      }
+    }
+    else if (id === '发帖') { 
+      if (currentId === 3) {
+        this.setData({
+          currentId: -1
+        })
+      }
+      else{
+        this.setData({
+          currentId: 3
+        })
+      }
+    }
+    else if (id === '消息') {
+      if (currentId === 4) {
+        this.setData({
+          currentId: -1
+        })
+      }
+      else{
+        this.setData({
+          currentId: 4
+        })
+      }
+     }
+     else if (id === '左上角圆点') {
+      if (currentId === 5) {
+        this.setData({
+          currentId: -1
+        })
+      }
+      else{
+        this.setData({
+          currentId: 5
+        })
+      }
+     }
   },
   return: function (e) {
     wx.navigateBack()
@@ -19,9 +101,10 @@ Page({
       bottom: res.bottom
     })
   },
-  getData:function(){
+  getData: function () {
     this.getRightTop()
   },
+
 
   /**
    * 生命周期函数--监听页面加载
@@ -72,12 +155,5 @@ Page({
 
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    return {
-      title: '使用帮助',
-    }
-  }
+  
 })

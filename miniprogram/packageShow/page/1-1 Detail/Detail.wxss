@@ -1,128 +1,124 @@
-.loading{
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: white;
-  z-index: 1;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #ACACAC;
-}
 /* 1 问题 */
-.word{
+.word {
   width: 100%;
-  height:fit-content;   
-
+  height: fit-content;
   /* border: 1rpx solid black; */
 }
-.top{
+
+.top {
   width: 100%;
   /* border: 1rpx solid black; */
   margin-top: 32rpx;
   display: flex;
   justify-content: space-between;
 }
-.tag{
+
+.tag {
   margin-bottom: 0;
   margin-top: 0;
 
   font-size: 30rpx;
   font-weight: 500;
 }
-.threePoint{
-  /* border: 1rpx solid black; */
-  margin-right: 32rpx;
 
-  border-radius: 15rpx;
-
-  padding-left: 8rpx; padding-right: 8rpx;
-
-  font-weight: 600;
-  color: #ACACAC;
+.title {
+  font-size: 38rpx;
+  font-weight: bold;
+  margin: 32rpx;
 }
-.title{
-  font-size: 44rpx;
-  font-weight:bold
-}
-.body{
-  font-size: 34rpx;
+
+.body {
+
+  display: flex;
+  align-items: center;
+  font-size: 30rpx;
   color: #3d3d3d;
 }
-.middle{
+
+.middle {
   /* border: 1rpx solid black; */
   display: flex;
 
   align-items: center;
   margin: 32rpx;
 }
-.last{
+
+.last {
   /* border: 1rpx solid black; */
   align-items: center;
 }
+
 /* 2 关注/回应按钮 */
-.FollowReplybutton-area{
+.FollowReplybutton-area {
   display: flex;
   align-items: center;
   justify-content: center;
 
   font-weight: 100;
 }
-.FollowReplybutton{
+
+.FollowReplybutton {
   margin: 32rpx;
 }
-/* 3 评论 */
-.commentBackground{
-  height: fit-content;
-  
-  margin: 16rpx;
-  margin-left: 32rpx;  margin-right: 32rpx;
 
+/* 3 评论 */
+.commentBackground {
+  height: fit-content;
+
+  margin: 16rpx;
   border: 1rpx solid #F3F3F3;
-  border-radius: 10rpx;
+  border-radius: 25rpx;
   background-color: #F3F3F3;
 }
-.userInfo{
+
+.userInfo {
   margin: 16rpx;
   display: flex;
 }
 
-.nickName{
+.nickName {
   margin: 8rpx;
 
   font-size: 28rpx;
   color: #7B7B7B;
 }
 
-.commentBody{
-  padding: 32rpx;
+.commentBodyContainer {
+  padding: 16rpx;
+  padding-top: 8rpx;
   padding-left: 84rpx;
-  padding-top: 16rpx;  padding-bottom: 16rpx;
-
-  display: flex;
-  font-size: 34rpx;
-  color: black;
-  /* word-break: break-all; */
 }
-.first{
+
+.commentBody {
+  /* border: 1rpx solid black; */
+  display: flex;
+  font-size: 30rpx;
+  color: black;
+  word-break: break-all;
+  padding-right: 16rpx;
+}
+
+.first {
   display: flex;
   align-items: center;
   font-size: 28rpx;
 }
-.second{
+
+.second {
   font-size: 28rpx;
   margin-left: 63rpx;
+  word-break: break-all;
+  /* border: 1rpx solid black; */
 }
 
-.commentLast{
+.commentLast {
   /* border: 1rpx solid black; */
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.commentTime{
+
+.commentTime {
   /* border: 1rpx solid black; */
   margin-left: 84rpx;
 
@@ -131,7 +127,7 @@
 }
 
 /* 4 点赞/评论按钮 */
-.LikeCommentbutton-area{
+.LikeCommentbutton-area {
   height: 46rpx;
 
   margin: 16rpx;
@@ -143,13 +139,14 @@
   justify-content: flex-end;
 }
 
-.LikeCommentImage{
+.LikeCommentImage {
   height: 37rpx;
   width: 37rpx;
 
   margin: 8rpx;
 }
-.buttonLike{
+
+.buttonLike {
   margin-right: 24rpx;
 
   display: flex;
@@ -159,7 +156,8 @@
   font-size: 24rpx;
   color: #D8D8D8;
 }
-.buttonComment{
+
+.buttonComment {
   margin-right: 16rpx;
 
   display: flex;
@@ -169,8 +167,9 @@
   font-size: 24rpx;
   color: #D8D8D8;
 }
+
 /* 4-2 评论的评论 */
-.commentAgainBackground{
+.commentAgainBackground {
   margin: 16rpx;
   border-left: 8rpx solid #ACACAC;
   border-top-right-radius: 10rpx;
@@ -178,52 +177,155 @@
   background-color: #F3F3F3;
   padding: 16rpx;
 }
-.commentAgainnickName{
+
+.commentAgainnickName {
   align-items: center;
   justify-content: center;
   color: #0C88B5;
 }
-.commentAgainBody{
+
+.commentAgainBody {
   /* word-break: break-all; */
   display: flex;
 }
+
 /* 5 底部评论输入 */
-.bottomInput-Container{
+.imageShow {
+  /* width: fit-content;
+  height: fit-content; */
+
+  /* border: 1rpx solid black; */
+  border-radius: 10rpx;
+  background-color: white;
+  position: fixed;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin:0 auto;
+  
+  padding: 16rpx;
+
+  z-index: 2;
+}
+
+.imageArea {
+  /* border: 1rpx solid black; */
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16rpx;
+  margin-right: 0;
+
+}
+
+.bottomInput-Container {
   width: 100%;
   height: fit-content;
 
   position: fixed;
 
-  border: 1rpx solid #ECECEC;
+  border-top: 1rpx solid #ECECEC;
   background-color: white;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.bottomInput{
+
+.bottomInput {
   height: 100%;
   width: 100%;
-
   margin: 16rpx;
-  margin-right: 8rpx;
 
   border-radius: 30rpx;
   background-color: #F3F3F3;
 
   padding: 16rpx;
 }
-.sendButton{
-  width: 140rpx;
+button{
+  border:none;
+}
+button::after {
+  border:none;
+}
+button {
+  border-radius: 25rpx; 
+  padding: 16rpx; 
+  margin: 0; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: max-content; 
+  font-size: 14px;
+}
 
+.sendButton {
+  /* border: 1rpx solid black; */
   margin: 16rpx;
-  margin-left: 8rpx;
-
+  margin-left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.hoverClass{
+.sort{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16rpx;
+
+  color:#0C88B5;
+  font-size: 26rpx;
+}
+.hoverClass {
   background-color: #DDDDDD;
 }
 
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark) {
+  .body {
+    color: #dddddd;
+  }
+  /* 3 评论 */
+  .commentBackground {
+    border: 1rpx solid #3d3d3d;
+    background-color: #3d3d3d;
+  }
+  .nickName {
+    color: #7B7B7B;
+  }
+
+  .commentBody {
+    color: #DDDDDD;
+  }
+  .commentTime {
+    color: #ACACAC;
+  }
+
+  /* 4-2 评论的评论 */
+  .commentAgainBackground {
+    background-color: #3d3d3d;
+  }
+
+  /* 5 底部评论输入 */
+  .imageShow {
+    background-color: black;
+  }
+
+  .bottomInput-Container {
+    border-top: 1rpx solid #3d3d3d;
+    background-color: black;
+  }
+
+  .bottomInput {
+    background-color: #3d3d3d;
+  }
+
+  .hoverClass{
+    background-color: #7b7b7b;
+    box-shadow:0 0 0rpx black;
+  }
+}

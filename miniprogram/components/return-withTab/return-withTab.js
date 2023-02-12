@@ -8,10 +8,10 @@ Component({
       type:Number,
       value:0
     },
-    color:{
+    topWord:{
       type:String,
       value:''
-    }
+    },
   },
 
   /**

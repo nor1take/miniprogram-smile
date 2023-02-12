@@ -1,43 +1,45 @@
 {
   "entryPagePath":"packageLogin/pages/0-0 Login/Login",
   "pages": [
-    "pages/1-0 Show/Show",
+    "pages/0-0 Show/Show",
     "pages/2-0 Classify/Classify",
     "pages/3-0 My/My"
   ],
   "window": {
-    "backgroundColor": "#FFFFFF",
+    "backgroundColor": "@backgroundColor",
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#FFFFFF",
-    "navigationStyle":"custom",
-    
+    "navigationBarBackgroundColor": "@navigationBarBackgroundColor",
+    "navigationStyle": "custom",
+    "navigationBarTextStyle":"@navigationBarTextStyle",
     "initialRenderingCache": "static"
   },
   "tabBar": {
-    "borderStyle": "white",
-    "selectedColor": "#3d3d3d",
+    "color": "@tabFontColor",
+    "selectedColor": "@tabSelectedColor",
+    "backgroundColor": "@tabBgColor",
+    "borderStyle": "@tabBorderStyle",
     "list": [
       {
-        "pagePath": "pages/1-0 Show/Show",
-        "text": "问题",
+        "pagePath": "pages/0-0 Show/Show",
+        "text": "实时",
         "iconPath": "icon/_question.png",
-        "selectedIconPath": "icon/question.png"
+        "selectedIconPath": "@selectedQuestionIconPath"
       },
       {
         "pagePath": "pages/2-0 Classify/Classify",
         "text": "分类",
         "iconPath": "icon/_class.png",
-        "selectedIconPath": "icon/class.png"
+        "selectedIconPath": "@selectedClassIconPath"
       },
       {
         "pagePath": "pages/3-0 My/My",
-        "text": "我的",
-        "iconPath": "icon/_my.png",
-        "selectedIconPath": "icon/my.png"
+        "text": "消息",
+        "iconPath": "icon/_message.png",
+        "selectedIconPath": "@selectedMessageIconPath"
       }
     ]
   },
-  "subPackages":[
+  "subPackages": [
     {
       "root": "packageShow",
       "pages": [
@@ -49,27 +51,29 @@
     {
       "root": "packageMy",
       "pages": [
+        "pages/0-1 TopPost/TopPost",
         "pages/3-1 MyAsk/MyAsk",
-        "pages/3-3 MyMessage/MyMessage",
         "pages/3-2 MyCollect/MyCollect",
-        "pages/0-1 TopPost/TopPost"
+        "pages/3-3 MyComment/MyComment"
       ]
     },
     {
-      "root":"packageLogin",
+      "root": "packageLogin",
       "pages": [
-         "pages/0-0 Login/Login"
-      ],
-      "independent":true
+        "pages/0-0 Login/Login"
+      ]
     }
   ],
-  "preloadRule":{
-    "packageLogin/pages/0-0 Login/Login" :{
-      "packages": ["__APP__"],
+  "preloadRule": {
+    "packageLogin/pages/0-0 Login/Login": {
+      "packages": [
+        "__APP__"
+      ],
       "network": "all"
     }
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "darkmode": true,
+  "themeLocation": "theme.json"
 }

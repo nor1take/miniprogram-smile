@@ -1,10 +1,14 @@
-<view style="position: fixed; top: {{top}}px; left: 16px; z-index: 1; font-size: 24px;color:#3d3d3d;" bindtap="return">←</view>
+<wxs src="../../../filter.wxs" module="filter" />
 
-<view class="searchContainer">
-  <input class="searchInput" confirm-type="search" focus style="margin-top: {{top}}px; margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input" />
+<return top="{{top}}" bottom="{{bottom}}" color="#F3F3F3"></return>
+
+<view class="searchContainer" style="width: 100%; position: fixed; top:{{top}}px;  z-index: 1;">
+  <input class="searchInput" confirm-type="search" focus style="margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input"placeholder="搜索标签/标题/正文"/>
 </view>
-
-<view class="background" hover-class="hoverClass" wx:for="{{searchList}}" wx:key="_id" id="{{item._id}}" bindtap="beWatched">
+<block wx:if="{{searchList.length == 0 && isDone}}">
+  <view class="bottom" style="margin-top: 40%;">（搜索结果为空）</view>
+</block>
+<view class="background" hover-class="hoverClass" wx:for="{{searchList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
   <view style="display: flex; justify-content: space-between; align-items:center">
     <view class="word" style="align-items: stretch; height:fit-content">
       <view class="tag" bindtap="colorfulPoint">
@@ -18,15 +22,17 @@
         {{item.tabs}}
       </view>
       <view class="title">{{item.title}}</view>
-      <view class="body">{{item.body}}</view>
+      <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
       <view class="last">
         <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
         <text class="watched">{{item.watched}} 浏览</text> ·
         <text class="watched">{{item.collectNum}} 关注</text>
       </view>
     </view>
-    <view class="image" style="margin:32rpx" wx:if="{{item.image[0]}}">
-      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 200rpx; height: 200rpx;"></image>
+    <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
     </view>
   </view>
 </view>
+<view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+<view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>

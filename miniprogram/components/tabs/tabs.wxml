@@ -1,11 +1,23 @@
 <!--components/tabs/tabs.wxml-->
-
-<view class="tabs" style="padding-top: {{top+30}}px;">
-  <view wx:for="{{tabs}}" wx:key="id" class="tabsContent {{item.Active?'active':''}}" 
-  data-index="{{index}}"
-  bindtap="tabsTap">
-    {{item.name}}
-  </view>
+<view class="tabs" style="top: {{top+32}}px; z-index: 1;">
+  <block wx:for="{{tabs}}" wx:key="id">
+    <view data-index="{{index}}" class="tabsContent {{ activeTab === index ? 'active' : ''}}" bindtap="tabsTap">
+      {{item.name}}
+    </view>
+  </block>
 </view>
 
-
+<swiper style="width: 100%; height: 100%; position: absolute;" current="{{activeTab}}" bindchange="swiperChange">
+  <swiper-item wx:for="{{tabs}}" wx:key="id">
+    <scroll-view 
+    style="width: 100%; height: 100%;" 
+    scroll-y="{{true}}"
+    enhanced="{{true}}"
+    fast-deceleration="{{true}}"
+    refresher-enabled 
+    scroll-top='{{scrollTop}}' 
+    refresher-triggered="{{refresherTriggered}}" bindscrolltolower="reachBottom" bindrefresherrefresh="refresh">
+      <slot name="tab-content-{{index}}"></slot>
+    </scroll-view>
+  </swiper-item>
+</swiper>

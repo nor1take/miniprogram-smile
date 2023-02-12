@@ -1,17 +1,21 @@
 // components/tabs/tabs.js
 Component({
+  options: {
+    multipleSlots: true   //使用[具名插槽]要配置multipleSlots
+  },
   /**
    * 组件的属性列表
    */
   properties: {
-    tabs:{
-      type:Array,
-      value:[]
-    },
-    top:{
-        type:Number,
-        value:0
-    }
+    top:{type:Number, value:0,},
+    left:{type:Number, value:0,},
+    right:{type:Number, value:0,},
+    bottom:{type:Number, value:0,},
+    
+    tabs: { type: Array, value: [] },
+    scrollTop: { type: Number, value: 0 },
+    activeTab: { type: Number, value: 0 },
+    refresherTriggered:{type:Boolean,value:false}
   },
   
   /**
@@ -20,26 +24,35 @@ Component({
   data: {
     currentView:0,
   },
-
+  observers: {
+    activeTab: function activeTab(_activeTab) {
+      const len = this.data.tabs.length
+      if (len === 0) return
+      let currentView = _activeTab - 1
+      if (currentView < 0) currentView = 0
+      if (currentView > len - 1) currentView = len - 1
+      this.setData({currentView})
+    }
+  },
   /**
    * 组件的方法列表
    */
   methods: {
     tabsTap:function(e){
-      // console.log(e.currentTarget.dataset.index)
-      const {index} = e.currentTarget.dataset;
-      let currentView = index - 1
-      if (currentView < 0) currentView = 0
-      if (currentView > 5) currentView = 4
-      this.setData({currentView})
-      //子向父传递参数index，父自定义事件 bind+itemChange
-      this.triggerEvent('itemChange',{index})
-      
+      const { index } = e.currentTarget.dataset;
+      this.setData({activeTab: index})
+      this.triggerEvent('tabclick', { index })
     },
-    search:function(){
-      wx.navigateTo({
-        url: '../1-3 Search/Search',
-      })
+    swiperChange: function (e) {
+      const index = e.detail.current;
+      this.setData({activeTab: index})
+      this.triggerEvent('change', { index })
     },
+    reachBottom:function(){
+      this.triggerEvent('reachBottom')
+    },
+    refresh:function(){
+      this.triggerEvent('refresh')
+    }
   }
 })

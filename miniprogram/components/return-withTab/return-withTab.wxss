@@ -1,1 +1,29 @@
 /* components/return-withTab/return-withTab.wxss */
+.topBlock{
+  background-color: white;
+  box-shadow:0 0 10rpx #d2d2d2;
+}
+.topWord{
+  width: 100%;
+  height: 32px;
+  /* border: 1rpx solid black; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 18px;
+  font-weight: bold;
+  color: #181818;
+}
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark)
+{
+  .topWord{
+    color: #dddddd;
+  }
+  .topBlock{
+    background-color: black;
+    box-shadow:0 0 10rpx black;
+  }
+}

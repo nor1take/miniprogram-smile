@@ -1,0 +1,112 @@
+.topBlock{
+  background-color: #f3f3f3;
+}
+movable-area {
+  z-index: 1;
+  width: 91%;
+  height: 81%;
+
+  border-radius: 100rpx;
+
+  position: fixed;
+  bottom: 16rpx;
+  left: 32rpx;
+
+  /* background-color: blanchedalmond; */
+  overflow: visible;
+  pointer-events:none;
+}
+movable-view{
+  width: 110rpx;
+  height: 100rpx;
+
+  border: 1rpx solid transparent;
+  border-radius: 100rpx;
+
+  background-color: black;
+  opacity: 0.77;
+  box-shadow:0 0 20rpx #7B7B7B;
+  color: white;
+  font-size: 70rpx;
+
+  display: flex;
+  padding-bottom: 10rpx;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: auto;
+  backdrop-filter: blur(5px);
+}
+
+.swiperContainer{
+  width: 100%;
+  /* border: 1rpx solid black; */
+  margin-right: 32rpx;  margin-left: 32rpx;
+  border-radius: 40rpx;
+  height: 80rpx;
+}
+.swiperItem{
+  background-color: #3d3d3d;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+.topContainer{
+  width: 100%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  /* border: 1rpx solid black;  */
+  margin-top: 16rpx;
+}
+.sort{
+  margin-right: 32rpx;
+
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sortImage{
+  width: 37rpx; 
+  height: 37rpx; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 5rpx;
+}
+.sortWord{
+  width: max-content;
+  margin-left: 8rpx;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  
+  color:#0C88B5;
+  font-size: 28rpx; 
+}
+
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark){
+  .topBlock{
+    background-color: #3d3d3d;
+  }
+  movable-view{
+    background-color: white;
+    box-shadow:0 0 20rpx black;
+    color: black;
+  }
+  
+  .swiperItem{
+    background-color: black;
+    color: #dddddd;
+  }
+}
+
+
+
+
+

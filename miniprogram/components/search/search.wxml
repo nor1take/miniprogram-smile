@@ -1,1 +1,48 @@
-<icon type="search" color="#3d3d3d" style="position: fixed; top:{{top}}px; left: 16px; z-index: 1;" size="30" bindtap="search"></icon>
+<!-- <icon type="search" color="#3d3d3d" style="position: fixed; top:{{top}}px; left: 16px; z-index: 2;" size="30" bindtap="search"></icon> -->
+<!-- 左侧菜单 -->
+<view class="coverMenu" style=" width:{{left}}px; left: -{{left}}px;" animation="{{menuAnimation}}">
+  <view class="userInfo" style="margin-top: {{top}}px;">
+    <view class="image">
+      <image src="{{avatarUrl}}" style="height: 40px; width: 40px; border-radius: 40px;"></image>
+    </view>
+    <view class="nickname">{{nickName}}</view>
+  </view>
+  <view class="buttonArea">
+    <view class="button" hover-class="hoverClass" bindtap="myAsk">
+      <image src="../../icon/folder-unknow-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
+      我的发帖
+    </view>
+    <view class="button"  hover-class="hoverClass" bindtap="myCollect">
+      <image src="../../icon/star-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
+      我的关注
+    </view>
+    <view class="button"  hover-class="hoverClass" bindtap="myComment">
+      <image src="../../icon/question-answer-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
+      我的回应
+    </view>
+    <view style="margin: 32rpx; margin-top: 0; margin-bottom: 0; border-top: 1px solid #dddddd;"></view>
+    <view class="button"  hover-class="hoverClass" bindtap="help">
+      <image src="../../icon/question-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
+      使用帮助
+    </view>
+    <view class="feedback_button">
+      <button class="feedbackButton" hover-class="hoverClass" plain="{{false}}" open-type="feedback">
+        <image src="../../icon/customer-service-2-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx"></image>
+      意见反馈</button>
+    </view>
+  </view>
+</view>
+<view class="coverBackground" animation="{{backAnimation}}"></view>
+<view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>
+
+<!-- 顶部 -->
+<view class="topBlock" style="width: 100%; height: {{top+32+8}}px; position: fixed; z-index: 2; top:0"></view>
+
+<view class="container" style="width: 100%; position: fixed; top:{{top}}px; z-index: 2;">
+  <view class="container" style="width: {{left}}px;">
+    <view bindtap="menu">
+      <image src="../../icon/menu-line.png" style="width: 25px; height: 25px; margin-left: 32rpx;"></image>
+    </view>
+    <view class="searchInput" bindtap="search"></view>
+  </view>
+</view>

@@ -11,7 +11,11 @@ Component({
     bottom:{
       type:Number,
       value:0
-    }
+    },
+    topWord:{
+      type:String,
+      value:''
+    },
   },
 
   /**
@@ -26,6 +30,7 @@ Component({
    */
   methods: {
     return: function (e) {
+      console.log('返回')
       wx.navigateBack()
     },
   }

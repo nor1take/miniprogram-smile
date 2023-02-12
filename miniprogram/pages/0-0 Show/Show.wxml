@@ -1,0 +1,58 @@
+<wxs src="../../filter.wxs" module="filter" />
+<search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}'></search>
+<movable-area>
+  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask">+</movable-view>
+</movable-area>
+
+<!-- <view style="width: 100%; height: {{top+32+8}}px;"></view> -->
+<view class="topBlock" style="width: 100%; height: {{top+32+8}}px;"></view>
+<view class="topContainer">
+  <swiper class="swiperContainer" vertical autoplay circular>
+    <swiper-item class="swiperItem" bindtap="alwaysTop">
+      <image src="../../icon/download-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">置顶：新版有哪些更新？</view>
+    </swiper-item>
+    <swiper-item class="swiperItem" bindtap="hot">
+      <image src="../../icon/fire-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">热门</view>
+    </swiper-item>
+  </swiper>
+  <view class="sort" bindtap="sort">
+    <view class="sortImage">
+      <image src="../../icon/sort-asc.png" mode="heightFix" style="width: 37rpx; height: 37rpx;"></image>
+    </view>
+    <view class="sortWord">{{sortWord}}</view>
+  </view>
+</view>
+<block wx:if="{{questionList.length == 0}}">
+  <view class="bottom" style="margin-top: 40%;">还没有人发帖哦~</view>
+</block>
+<view class="background" hover-class="hoverClass" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+  <view style="display: flex; justify-content: space-between; align-items:center;">
+    <view class="word">
+      <view class="tag">
+        <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
+        <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
+        <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
+        {{item.tabs}}
+      </view>
+      <view class="title">{{item.title}}</view>
+      <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+      <view class="last">
+        <block wx:if="{{sortWord === '最新回应' && item.Ayear!='' }}">
+          <showTime year="{{year}}" dbyear="{{item.Ayear}}" month="{{month}}" dbmonth="{{item.Amonth}}" day="{{day}}" dbday="{{item.Aday}}" h="{{h}}" dbh="{{item.Ah}}" m="{{m}}" dbm="{{item.Am}}" s="{{s}}" dbs="{{item.As}}"></showTime> 回应 ·
+        </block>
+        <block wx:else>
+          <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
+        </block>
+        <text class="watched">{{item.watched}} 浏览</text> ·
+        <text class="watched">{{item.collectNum}} 关注</text>
+      </view>
+    </view>
+    <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
+    </view>
+  </view>
+</view>
+<view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+<view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>

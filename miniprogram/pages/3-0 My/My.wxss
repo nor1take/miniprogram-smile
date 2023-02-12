@@ -1,43 +1,45 @@
-.userInfoContainer{
-  width: 100%;
-  height: 532rpx;
-
-  position: fixed;
-  top: 0;
-
-  background: linear-gradient(to top,white, transparent);
-
-  display: flex;
-  align-items: center;
+page{
+  background-color: white;
 }
-.userInfo{
-  width: 100%;
-  height: 200rpx;
-
-  margin: 32rpx;
-  margin-top: 200rpx;
-  border-radius: 30rpx;
-  backdrop-filter: blur(10px);
-  box-shadow:0 0 30rpx #7B7B7B;
-
-  display: flex;
-  align-items: center;
-
-  padding: 16rpx;
-
-  font-size: 34rpx;
-  font-weight: 500;
+.topBlock{
+  background-color: white;
+  box-shadow:0 0 10rpx #d2d2d2;
 }
-
-.box{
-  border-top: 1rpx solid #E7E7E7;
-  border-radius: 20rpx;
-  
+.topWord{
+  width: 100%;
+  height: 32px;
+  /* border: 1rpx solid black; */
   display: flex;
   align-items: center;
-  padding: 16rpx;
   justify-content: center;
-  font-size: 34rpx;
+  font-size: 18px;
+  font-weight: bold;
+  color: #181818;
+}
+
+.messageBackground{
+  border-bottom: 1rpx solid #DDDDDD;
+  /* border-bottom: 1rpx solid #DDDDDD; */
+  margin: 16rpx;
+}
+.top{
+  /* border: 1rpx solid black; */
+  height: fit-content;
+  
+  margin: 32rpx;
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
+
+  font-size: 30rpx;
+}
+
+.showTime{
+  /* border: 1rpx solid black; */
+  margin: 32rpx;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+  display: flex;
+  justify-content: space-between;
 }
 .red-point{
   width: 30rpx;
@@ -56,8 +58,74 @@
   font-size: 20rpx;
   font-weight: bolder;
 }
-.buttonBox{
-  border-radius: 20rpx;
+.nickName{
+  /* border: 1rpx solid black; */
+  color: #0C88B5;
+  margin-right: 8rpx;
+}
+.background{
+  border: 1rpx solid transparent;
+  border-radius: 10rpx;
+  box-shadow:0 0 0rpx transparent;
+  background-color: #F6F6F6;
+  padding: 32rpx;
+  color: #7b7b7b;
+}
+.title{
+  color: #7B7B7B;
+  font-size: 30rpx;
+  margin: 32rpx;
+  margin-top: 16rpx;
+}
+.bottom{
   width: 100%;
+  height: 60rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #ACACAC;
 }
 
+
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark)
+{
+  page{
+    background-color: black;
+  }
+  .topBlock{
+    background-color: black;
+    box-shadow:0 0 10rpx black;
+  }
+  .topWord{
+    color: #DDDDDD;
+  }
+
+  .messageBackground{
+    border-bottom: 1rpx solid #7b7b7b; 
+  }
+  
+  .red-point{ 
+    color:black;
+  }
+
+  .background{
+    border: 1rpx solid transparent;
+    box-shadow:0 0 0rpx transparent;
+    background-color: #7b7b7b;
+    color: #D2D2D2;
+  }
+  .title{
+    color: #D2D2D2;
+    font-size: 30rpx;
+    margin: 32rpx;
+    margin-top: 16rpx;
+  }
+  .bottom{
+    color: #ACACAC;
+  }
+}

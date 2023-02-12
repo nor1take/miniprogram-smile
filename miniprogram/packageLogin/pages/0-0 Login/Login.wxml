@@ -5,13 +5,11 @@
 <block wx:if="{{show}}">
   <view style="opacity: 0;" animation="{{animationData}}">
     <view class="wordContainer">
-      <view class="word">* 为了维护平台的纯净和安全，新用户需要登录</view>
-      <view class="word">* 登录只会获取用户的头像和昵称</view>
-      <view class="word">* 登录后才能体验发帖、评论等功能</view>
+      <view class="word"></view>
     </view>
 
     <view class="wholePage">
-      <button style="color: #3d3d3d;" open-type="getUserInfo" bindtap="getUserInfo">登录</button>
+      <button open-type="getUserInfo" bindtap="getUserInfo">登录</button>
     </view>
   </view>
 </block>

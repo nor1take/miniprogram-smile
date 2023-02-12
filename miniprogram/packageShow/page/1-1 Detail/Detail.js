@@ -4,23 +4,72 @@ const _ = db.command
 const question = db.collection('question')
 const comment = db.collection('comment')
 const commentAgain = db.collection('commentAgain')
-const collect = db.collection('collect')
-const likerList = db.collection('likerList')
 
-Array.prototype.myUcase = function () {
-  if (this.length) {
-    var i;
-    var j;
-    for (i = 0; i < 3; i++) {
-      for (j = 0; j < this.length; j++) {
-        if (i == this[j].commentIndex) { break; }
+function uploadManyImages(tempFiles, page) {
+  let randString
+  for (var i = 0; i < tempFiles.length; i++) {
+    randString = Math.floor(Math.random() * 1000000).toString()
+    wx.cloud.uploadFile({
+      cloudPath: app.globalData.openId + '/' + randString + '.png', // 上传至云端的路径
+      filePath: tempFiles[i].tempFilePath, // 小程序临时文件路径
+      success: res => {
+        page.data.fileID.push(res.fileID)
+        console.log(1)
+        // 返回文件 ID
+        page.setData({
+          fileID: page.data.fileID
+        })
+        wx.hideLoading()
+        wx.showToast({
+          title: '上传成功',
+        })
+        console.log(page.data.fileID)
+      },
+      fail: err => {
+        console.error('[上传文件] 失败：', err)
+        wx.hideLoading()
+        wx.showToast({
+          icon: 'none',
+          title: '上传失败',
+        })
       }
-      if (j == this.length) {
-        this.push({ commentIndex: i, like: 0 })
-      }
+    })
+  }
+}
+
+function deleteCommentCloudImage(list) {
+  for (var i = 0; i < list.length; i++) {
+    for (var j = 0; j < list[i].image_upload.length; j++) {
+      let id = list[i].image_upload[j]
+      console.log(id)
+      wx.cloud.deleteFile({
+        fileList: [id],
+        success: res => {
+          console.log('成功删除', res)
+        },
+        fail: err => {
+          console.log(err)
+        }
+      })
     }
   }
-};
+}
+function deleteQuestionCloudImage(list) {
+  for (var i = 0; i < list[0].image.length; i++) {
+    let id = list[0].image[i]
+    console.log(id)
+    wx.cloud.deleteFile({
+      fileList: [id],
+      success: res => {
+        console.log('成功删除', res)
+      },
+      fail: err => {
+        console.log(err)
+      }
+    })
+  }
+}
+
 Page({
   /**
    * 页面的初始数据
@@ -29,7 +78,11 @@ Page({
     pureDataPattern: /^_/
   },
   data: {
-    loading: false,
+    // animationData: {},
+    isFold: true,
+    sortWord: "按最新",
+    fileID: [],
+
     height: 0,
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -46,32 +99,229 @@ Page({
 
     inputValue: '',
 
-    like: [],
-    like2: []
+    top: 48,
+    left: 281,
+    right: 367,
+    bottom: 80,
   },
-  otherData: {
-    isDelete: false,
+  fold: function () {
+    const { isFold } = this.data
+    if (isFold) {
+      this.setData({
+        isFold: false
+      })
+    }
+    else {
+      this.setData({
+        isFold: true
+      })
+    }
+  },
+  NewCommentFirst: function () {
+    comment.where({
+      questionId: app.globalData.questionId
+      /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+    }).orderBy('time', 'desc').
+      get().then(res => {
+        // console.log('成功获取 评论', res.data)
+        this.setData({
+          commentList: res.data,
+        })
+      })
+  },
+  OldCommentFirst: function () {
+    comment.where({
+      questionId: app.globalData.questionId
+      /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+    }).orderBy('time', 'asc').
+      get().then(res => {
+        // console.log('成功获取 评论', res.data)
+        this.setData({
+          commentList: res.data,
+          openId: app.globalData.openId
+        })
+      })
+  },
+  LikemostCommentFisrt: function () {
+    comment.where({
+      questionId: app.globalData.questionId
+      /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+    }).orderBy('likerNum', 'desc').orderBy('time', 'asc').
+      get().then(res => {
+        // console.log('成功获取 评论', res.data)
+        this.setData({
+          commentList: res.data,
+          openId: app.globalData.openId
+        })
+      })
+  },
+  showActionSheetChange: function (word) {
+    wx.showActionSheet({
+      itemList: word,
+      itemColor: '#0C88B5',
+    })
+      .then((res) => {
+        var d = new Date();
+        if (res.tapIndex === 0) {
+          wx.showToast({
+            title: '“最新回应”优先',
+            icon: 'none',
+            duration: 1500
+          })
+          this.NewCommentFirst()
+          this.setData({
+            sortWord: '按最新',
+            year: d.getFullYear(),
+            month: d.getMonth() + 1,
+            day: d.getDate(),
+            h: d.getHours(),
+            m: d.getMinutes(),
+            s: d.getSeconds(),
+          })
+        }
+        else if (res.tapIndex === 1) {
+          wx.showToast({
+            title: '“最早回应”优先',
+            icon: 'none',
+            duration: 1500
+          })
+          this.OldCommentFirst()
+          this.setData({
+            sortWord: '按最早',
+            year: d.getFullYear(),
+            month: d.getMonth() + 1,
+            day: d.getDate(),
+            h: d.getHours(),
+            m: d.getMinutes(),
+            s: d.getSeconds(),
+          })
+        }
+        else {
+          wx.showToast({
+            title: '“赞数最多”优先',
+            icon: 'none',
+            duration: 1500
+          })
+          this.LikemostCommentFisrt()
+          this.setData({
+            sortWord: '按赞数',
+            year: d.getFullYear(),
+            month: d.getMonth() + 1,
+            day: d.getDate(),
+            h: d.getHours(),
+            m: d.getMinutes(),
+            s: d.getSeconds(),
+          })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
+  sort: function () {
+    let word0 = ['✓ “最新回应”优先', '“最早回应”优先', '“赞数最多”优先'];
+    let word1 = ['“最新回应”优先', '✓ “最早回应”优先', '“赞数最多”优先'];
+    let word2 = ['“最新回应”优先', '“最早回应”优先', '✓ “赞数最多”优先'];
+    const { sortWord } = this.data
+    if (sortWord == '按最新') this.showActionSheetChange(word0)
+    else if (sortWord == '按最早') this.showActionSheetChange(word1)
+    else this.showActionSheetChange(word2)
+  },
+
+  upload: function (e) {
+    this.setData({
+      inputContent: true
+    })
+    console.log('上传图片')
+    wx.chooseMedia({
+      count: 9,
+      sizeType: ['original', 'compressed'],
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      camera: 'back',
+      success: res => {
+        wx.showLoading({
+          title: '上传中'
+        })
+        console.log(res.tempFiles)
+        uploadManyImages(res.tempFiles, this)
+      },
+      fail: err => {
+        console.log(err)
+        this.setData({
+          inputContent: false,
+          tapAnswerButton: true,
+          tapReplyButton: false,
+          tapAgainButton: false,
+        })
+      },
+    })
+  },
+  //点击图片删除
+  deleteImage: function (e) {
+    console.log('图片id', e.currentTarget.id)
+    const { index } = e.currentTarget.dataset
+    const { id } = e.currentTarget
+    wx.showActionSheet({
+      itemList: ['删除'],
+      itemColor: '#FA5151',
+      success: res => {
+        console.log(res.tapIndex)
+        this.data.fileID.splice(index, 1)
+        wx.showToast({
+          title: '删除成功',
+          icon:'none'
+        })
+        if (this.data.fileID.length === 0) {
+          this.setData({
+            fileID: this.data.fileID,
+            inputContent: false,
+            tapAnswerButton: true,
+            tapReplyButton: false,
+            tapAgainButton: false,
+          })
+        }
+        else {
+          this.setData({
+            fileID: this.data.fileID,
+          })
+        }
+        wx.cloud.deleteFile({
+          fileList: [id],
+          success: res => {
+            console.log('成功删除', res)
+          },
+          fail: err => {
+            // handle error
+            console.log(err)
+          }
+        })
+      },
+      fail(res) {
+        console.log(res.errMsg)
+      }
+    })
   },
 
   //1-1 获取数据库数据
-  getQuestionData: function () {
+  getQuestionandCollectData: function () {
     question.where({
       _id: app.globalData.questionId
     }).get().then(res => {
       console.log(res.data[0])
       this.setData({
         questionList: res.data,
-        collectNum: res.data[0].collectNum
+        collectNum: res.data[0].collector.length,
+        openId: app.globalData.openId
       })
-
       console.log('成功获取 问题', res.data[0]._openid)
-      const { _openid } = res.data[0]
 
+      /** 如果发帖人是当前人，app.globalData.messageNum、question的message */
+      const { _openid } = res.data[0]
       if (_openid == app.globalData.openId) {
         app.globalData.messageNum = app.globalData.messageNum - res.data[0].message
         if (app.globalData.messageNum < 0) app.globalData.messageNum = 0
-
-        db.collection('question').where({
+        question.where({
           _id: app.globalData.questionId
         }).update({
           data: {
@@ -81,153 +331,143 @@ Page({
       }
     })
   },
-  getCommentData: function () {
+  collectAdd: function () {
+    wx.showToast({
+      title: '关注成功',
+      icon: 'none'
+    })
+    const { questionList } = this.data
+    let { collectNum } = this.data
+    console.log('关注 add', questionList[0].collector)
+    questionList[0].collector.push(app.globalData.openId)
+    collectNum++;
+    this.setData({
+      questionList,
+      collectNum
+    })
+    question.doc(app.globalData.questionId).update({
+      data: {
+        collector: _.addToSet(app.globalData.openId),
+        collectNum: collectNum
+      }
+    })
+  },
+  collectCancel: function () {
+    wx.showToast({
+      title: '取消关注',
+      icon: 'none'
+    })
+    const { questionList } = this.data
+    let { collectNum } = this.data
+    console.log('关注 cancel', questionList[0].collector)
+    // questionList[0].collector.push(app.globalData.openId)
+    let collectorIndex = questionList[0].collector.indexOf(app.globalData.openId)
+    questionList[0].collector.splice(collectorIndex, 1)
+    collectNum--;
+    this.setData({
+      questionList,
+      collectNum
+    })
+    question.doc(app.globalData.questionId).update({
+      data: {
+        collector: _.pull(app.globalData.openId),
+        collectNum: collectNum
+      }
+    })
+  },
+  getCommentandLikeData: function () {
     comment.where({
       questionId: app.globalData.questionId
-    }).get().then(res => {
-      console.log('成功获取 评论', res.data)
-      this.setData({
-        commentList: res.data
+      /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+    }).orderBy('time', 'desc').
+      get().then(res => {
+        // console.log('成功获取 评论', res.data)
+        this.setData({
+          commentList: res.data,
+          openId: app.globalData.openId
+        })
       })
-    })
   },
-  getLikerData: function () {
-    likerList.where({
-      questionId: app.globalData.questionId,
-      _openid: app.globalData.openId
-    }).orderBy('commentIndex', 'asc').get().then(res => {
-      var likerList = res.data
-      likerList.myUcase()
-      this.setData({
-        likerList: likerList
-      })
-    }).catch((err) => {
-      console.log(err)
+  likeCancel: function (e) {
+    const commentId = e.target.id
+    console.log('取消点赞', e)
+    const commentIndex = e.target.dataset.index
+    console.log(this.data.commentList)
+    const { commentList } = this.data
+    let likerIndex = commentList[commentIndex].liker.indexOf(app.globalData.openId)
+    commentList[commentIndex].liker.splice(likerIndex, 1)
+    let likerNum = commentList[commentIndex].liker.length
+    this.setData({
+      commentList
     })
+
+    comment.doc(commentId).update({
+      data: {
+        liker: _.pull(app.globalData.openId),
+        likerNum: likerNum
+      }
+    }).then(res => {
+      console.log('like Cancel', res)
+    }).catch(err => { console.log(err) })
+
   },
-  getCollectState: function () {
-    db.collection('collect').where({
-        questionId: app.globalData.questionId,
-        _openid: app.globalData.openId
-      }).get().then(res => {
-        if (res.data.length) {
-          this.setData({
-            isCollect: true
-          })
-        }
-      }).catch(() => {
-        console.log('没有人收藏')
-      })
+  likeAdd: function (e) {
+    var d = new Date();
+    console.log('点赞', e)
+    const commentId = e.target.id
+    const commentIndex = e.target.dataset.index
+    console.log(this.data.commentList)
+    const { commentList } = this.data
+    commentList[commentIndex].liker.push(app.globalData.openId)
+    let likerNum = commentList[commentIndex].liker.length
+    this.setData({
+      commentList
+    })
+
+    comment.doc(commentId).update({
+      data: {
+        liker: _.addToSet(app.globalData.openId),
+        likerNum: likerNum,
+        likeTime: d,
+        Lyear: d.getFullYear(),
+        Lmonth: d.getMonth() + 1,
+        Lday: d.getDate(),
+        Lh: d.getHours(),
+        Lm: d.getMinutes(),
+        Ls: d.getSeconds(),
+      }
+    }).then(res => {
+      console.log('like Add', res)
+    }).catch(err => { console.log(err) })
   },
 
   getData: function () {
-    this.getCollectState()
-    this.getQuestionData()
-    this.getCommentData()
-    this.getLikerData()
+    this.getQuestionandCollectData()
+    this.getCommentandLikeData()
   },
+  // goodAnimation: function () {
+  //   var animation = wx.createAnimation({
+  //     duration: 200,
+  //     timingFunction: 'ease',
+  //   })
+  //   this.animation = animation
+  //   this.animation.scale(0.3, 0.3).step({duration: 100}),
+  //   this.animation.scale(1.1, 1.1).step(),
+  //     this.setData({
+  //       animationData1: this.animation.export(),
+  //     })
+  //     setTimeout(()=>{
+  //       this.animation.scale(1, 1).step({duration: 100}),
+  //       this.setData({
+  //         animationData1: this.animation.export(),
+  //       })
+  //     }, 300)
+  // },
 
-  good: function (e) {
-    const { like } = this.data
-    const { index } = e.currentTarget.dataset
-    //点赞：如果like[index] == 0，让like[index] = 1
-    if (!like[index]) {
-      like[index] = 1
-      this.setData({
-        like: like
-      })
 
-      likerList.add({
-        data: {
-          questionId: app.globalData.questionId,
-          commentIndex: e.currentTarget.dataset.index,
-          like: 2,
-        }
-      }).then(res => {
-        console.log('成功在 集合likeList 中插入数据！')
-      })
-
-      comment.doc(e.currentTarget.id).update({
-        data: {
-          good: _.inc(1)
-        },
-      }).then((res) => {
-        console.log('成功更新 集合comment 的赞数')
-      })
-    }
-    else if (like[index]) {
-      like[index] = 0
-      this.setData({
-        like: like
-      })
-      console.log('更新后的数组', this.data.like)
-      likerList.where({
-        questionId: app.globalData.questionId,
-        commentIndex: e.currentTarget.dataset.index,
-      }).remove()
-      console.log('当前评论的commentId：', e.currentTarget.id)
-      comment.doc(e.currentTarget.id).update({
-        data: {
-          good: _.inc(-1)
-        },
-      }).then((res) => {
-        console.log('成功更新 集合comment 的赞数')
-      })
-    }
-  },
-  good2: function (e) {
-    const { like2 } = this.data
-    const { index } = e.currentTarget.dataset
-    
-    if (!like2[index]) {
-      like2[index] = 1
-      this.setData({
-        like2: like2
-      })
-
-      likerList.where({
-        questionId: app.globalData.questionId,
-        commentIndex: e.currentTarget.dataset.index,
-      }).remove()
-
-      comment.doc(e.currentTarget.id).update({
-        data: {
-          good: _.inc(-1)
-        },
-      }).then((res) => {
-        console.log('成功更新 集合comment 的赞数')
-      })
-    }
-
-    else if (like2[index]) {
-      like2[index] = 0
-      this.setData({
-        like2: like2
-      })
-
-      likerList.add({
-        data: {
-          questionId: app.globalData.questionId,
-          commentIndex: e.currentTarget.dataset.index,
-          like: 2,
-        }
-      })
-        .then(res => {
-          console.log('成功在 集合likeList 中插入数据！')
-        })
-
-      comment.doc(e.currentTarget.id).update({
-        data: {
-          good: _.inc(1)
-        },
-      }).then((res) => {
-        console.log('成功更新 集合comment 的赞数')
-      })
-    }
-
-  },
 
   //0-4-1 评论的评论
+
   commentAgain: function (e) {
     // console.log(e.currentTarget.dataset.openid)
     // console.log(e.currentTarget.dataset.nickname)
@@ -306,7 +546,8 @@ Page({
   },
   // 0-4-3 回复评论的输入框失去焦点
   loseFocus: function (e) {
-    if (e.detail.value == '') {
+    console.log('失去焦点')
+    if (!this.data.inputContent) {
       this.setData({
         tapAnswerButton: true,
         tapReplyButton: false,
@@ -328,9 +569,9 @@ Page({
             data: {
               solved: true
             }
-          }).then(()=>{
+          }).then(() => {
             this.setData({
-              'questionList[0].solved' : true,
+              'questionList[0].solved': true,
             })
             wx.showToast({
               title: '状态更新成功！',
@@ -350,9 +591,9 @@ Page({
               data: {
                 solved: false
               }
-            }).then(()=>{
+            }).then(() => {
               this.setData({
-                'questionList[0].solved' : false,
+                'questionList[0].solved': false,
               })
               wx.showToast({
                 title: '状态更新成功！',
@@ -366,13 +607,10 @@ Page({
         })
       }
     }
-
-
   },
   //问题右上角三个点
   threePointTap: function () {
     const { questionList } = this.data
-    const that = this
     if (app.globalData.openId == questionList[0]._openid) {
       wx.showActionSheet({
         itemList: ['删除'],
@@ -388,49 +626,51 @@ Page({
             success(res) {
               if (res.confirm) {
                 console.log('用户点击确定')
-                that.otherData = {
-                  isDelete: true
-                }
+                app.globalData.questionDelete = true
                 wx.showLoading({
                   title: '删除中',
                 })
-                question.where({
-                  _openid: '{openid}',
-                  _id: app.globalData.questionId
-                }).remove({
-                  success: function () {
-                    comment.where({
+                Promise.all([
+                  question.where({
+                    _openid: '{openid}',
+                    _id: app.globalData.questionId
+                  }).get().then(res => {
+                    console.log(res.data)
+                    deleteQuestionCloudImage(res.data)
+                  }),
+                  comment.where({
+                    questionId: app.globalData.questionId
+                  }).get().then(res => {
+                    console.log(res.data)
+                    deleteCommentCloudImage(res.data)
+                  }),
+                  commentAgain.where({
+                    questionId: app.globalData.questionId
+                  }).get().then(res => {
+                    console.log(res.data)
+                    deleteCommentCloudImage(res.data)
+                  })
+                ]).then(() => {
+                  Promise.all([
+                    question.where({
+                      _openid: '{openid}',
+                      _id: app.globalData.questionId
+                    }).remove(),
+                    commentAgain.where({
                       questionId: app.globalData.questionId
-                    }).remove({
-                      success: function () {
-                        likerList.where({
-                          questionId: app.globalData.questionId
-                        }).remove({
-                          success: function () {
-                            collect.where({
-                              questionId: app.globalData.questionId
-                            }).remove({
-                              success: function () {
-                                commentAgain.where({
-                                  questionId: app.globalData.questionId
-                                }).remove({
-                                  success: function () {
-                                    wx.hideLoading()
-                                    wx.showToast({
-                                      title: '删除成功',
-                                      icon: 'success',
-                                      duration: 1500
-                                    })
-                                    setTimeout(function () { wx.navigateBack(); }, 1500);
-                                  }
-                                })
-                              }
-                            })
-                          }
-                        })
-                      }
+                    }).remove(),
+                    commentAgain.where({
+                      questionId: app.globalData.questionId
+                    }).remove()
+                  ]).then(() => {
+                    wx.hideLoading()
+                    wx.showToast({
+                      title: '删除成功',
+                      icon: 'success',
+                      duration: 1500
                     })
-                  }
+                    setTimeout(function () { wx.navigateBack(); }, 1500);
+                  })
                 })
               } else if (res.cancel) {
                 console.log('用户点击取消')
@@ -468,6 +708,14 @@ Page({
     }
 
   },
+
+  deleteCommentEnd: function () {
+    const { sortWord } = this.data
+    this.getQuestionandCollectData()
+    if (sortWord == "按最新") this.NewCommentFirst()
+    else if (sortWord == "按最早") this.OldCommentFirst()
+    else this.LikemostCommentFisrt()
+  },
   //评论右上角三个点
   threePointTap2: function (e) {
     console.log(e.currentTarget.dataset.index)
@@ -496,32 +744,43 @@ Page({
                 wx.showLoading({
                   title: '删除中',
                 })
-                const { index } = e.currentTarget.dataset
-                let commenter = this.data.questionList[0].commenter
-                commenter.reverse()
+                let { commenter } = this.data.questionList[0]
+                let index = commenter.findIndex((value) => value.openId == this.data.openId);
                 commenter.splice(index, 1)
-                commenter.reverse()
-                comment.doc(e.currentTarget.id).get().then((res) => {
-                  console.log(res.data.commenter.length)
-                  question.doc(app.globalData.questionId).update({
-                    data: {
-                      commentNum: _.inc(-(res.data.commenter.length + 1)),
-                      commenter
-                    }
-                  }).then(() => {
-                    comment.doc(e.currentTarget.id).remove().then(() => {
-                      commentAgain.where({
-                        commentId: e.currentTarget.id
-                      }).remove().then(() => {
-                        wx.hideLoading()
-                        this.getData();
-                        wx.showToast({
-                          title: '删除成功',
-                          icon: 'success',
-                          duration: 1000
-                        })
-                      })
+                Promise.all([
+                  comment.doc(e.currentTarget.id).get().then(res => {
+                    console.log(res.data)
+                    deleteCommentCloudImage(res.data)
+                  }),
+                  commentAgain.where({
+                    commentId: e.currentTarget.id
+                  }).get().then(res => {
+                    console.log(res.data)
+                    deleteCommentCloudImage(res.data)
+                  }),
+                  comment.doc(e.currentTarget.id).get().then((res) => {
+                    console.log(res.data.commenter.length)
+                    question.doc(app.globalData.questionId).update({
+                      data: {
+                        commentNum: _.inc(-(res.data.commenter.length + 1)),
+                        commenter
+                      }
                     })
+                  })
+                ]).then(() => {
+                  Promise.all([
+                    comment.doc(e.currentTarget.id).remove(),
+                    commentAgain.where({
+                      commentId: e.currentTarget.id
+                    }).remove()
+                  ]).then(() => {
+                    wx.hideLoading()
+                    wx.showToast({
+                      title: '删除成功',
+                      icon: 'success',
+                      duration: 1000
+                    })
+                    this.deleteCommentEnd();
                   })
                 })
               }
@@ -530,7 +789,7 @@ Page({
               }
             })
           }
-        })
+        }).catch(err => { console.log(err) })
       }
       //[举报]同[关注]
       else {
@@ -556,76 +815,8 @@ Page({
         })
       }
     })
-
-
   },
-  //点击[关注]==收藏collect
-  collectTap: function () {
-    console.log('关注')
-    const { isCollect } = this.data
-    if (isCollect) {
-      wx.showToast({
-        title: '取消关注',
-        icon: 'none',
-        duration: 1000
-      })
-      this.setData({
-        isCollect: false,
-        collectNum: this.data.collectNum - 1
-      })
-      console.log(this.data.collectNum)
-      const { collector } = this.data.questionList[0];
-      var index = collector.indexOf(app.globalData.openId);
-      collector.splice(index, 1);
 
-      question.doc(app.globalData.questionId).update({
-        data: {
-          collector,
-          collectNum: _.inc(-1)
-        }
-      }).then(
-        console.log('question集合的collector数组已移除')
-      )
-
-      db.collection('collect').where({
-        _openid: app.globalData.openId,
-        questionId: app.globalData.questionId
-      }).remove({
-        success: function (res) {
-          console.log('collect集合成功移除')
-        }
-      })
-    }
-    else {
-      wx.showToast({
-        title: '关注成功',
-        icon: 'none',
-        duration: 1000
-      })
-      this.setData({
-        isCollect: true,
-        collectNum: this.data.collectNum + 1
-      })
-      console.log(this.data.collectNum)
-      question.doc(app.globalData.questionId).update({
-        data: {
-          collector: _.push(app.globalData.openId),
-          collectNum: _.inc(1)
-        }
-      }).then(
-        console.log('question成功'),
-      )
-
-      db.collection('collect').add({
-        data: {
-          questionId: app.globalData.questionId,
-          collect: true
-        }
-      }).then(res => {
-        console.log('collect成功')
-      })
-    }
-  },
   //0-5 点击[回应]按钮，更新参数answer → 让底部评论框激活focus（弹起）
   answer: function () {
     this.setData({
@@ -633,16 +824,20 @@ Page({
     })
   },
   imageTap: function (e) {
-    console.log(e.currentTarget.dataset.src)
+    console.log(e.currentTarget.dataset.imagelist)
+    let {imagelist} = e.currentTarget.dataset
+    
     wx.previewImage({
-      urls: [e.currentTarget.dataset.src]
+      current: e.currentTarget.dataset.src,
+      urls: imagelist
     })
   },
   //0-6 底部评论框的输入状态，更新参数inputContent → 让[发送]按钮激活disable
   input: function (e) {
-    if (e.detail.value == '') {
+    if (e.detail.value === '') {
       this.setData({
-        inputContent: false
+        inputContent: false,
+        _commentBody: ''
       })
     }
     else {
@@ -676,6 +871,51 @@ Page({
     })
   },
 
+  sendEnd: function () {
+    const { sortWord } = this.data
+    wx.showToast({
+      title: '发送成功',
+      icon: 'none'
+    })
+    if (sortWord == "按最新") {
+      this.NewCommentFirst()
+      if (this.data.tapAnswerButton) {
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 1250
+        })
+      }
+    }
+    else if (sortWord == "按最早") {
+      this.OldCommentFirst()
+      if (this.data.tapAnswerButton) {
+        wx.pageScrollTo({
+          scrollTop: 10000000,
+          duration: 1250
+        })
+      }
+    }
+    else {
+      this.LikemostCommentFisrt()
+      if (this.data.tapAnswerButton) {
+        wx.pageScrollTo({
+          scrollTop: 10000000,
+          duration: 1250
+        })
+      }
+    }
+    this.getQuestionandCollectData()
+    this.setData({
+      inputValue: '',
+      inputContent: false,
+      tapAnswerButton: true,
+      tapReplyButton: false,
+      tapAgainButton: false,
+      answer: false,
+
+      fileID: [],
+    })
+  },
   //2 写入数据库：[发送]按钮
   sendComment: function (e) {
     wx.showToast({
@@ -684,64 +924,94 @@ Page({
     })
     var d = new Date();
     if (this.data.tapAnswerButton) {
-      question.doc(app.globalData.questionId).update({
-        data: {
-          answerTime: d,
-          Ayear: d.getFullYear(),
-          Amonth: d.getMonth() + 1,
-          Aday: d.getDate(),
-          Ah: d.getHours(),
-          Am: d.getMinutes(),
-          As: d.getSeconds(),
-          commentNum: _.inc(1),
-          message: _.inc(1),
+      question.doc(app.globalData.questionId).get().then(res => {
+        if (res.data._openid != this.data.openId) {
+          question.doc(app.globalData.questionId).update({
+            data: {
+              answerTime: d,
+              Ayear: d.getFullYear(),
+              Amonth: d.getMonth() + 1,
+              Aday: d.getDate(),
+              Ah: d.getHours(),
+              Am: d.getMinutes(),
+              As: d.getSeconds(),
+              commentNum: _.inc(1),
+              message: _.inc(1),
 
-          commenter: _.push({
-            each: [app.globalData.nickName],
-            position: 0,
-          }) //头插法
+              commenter: _.push({
+                each: [{ nickName: app.globalData.nickName, openId: app.globalData.openId }],
+                position: 0,
+              }) //头插法
+            }
+          })
+            .then(() => {
+              comment.add({
+                data: {
+                  //时间
+                  likeTime: '',
+
+                  time: d,
+                  year: d.getFullYear(),
+                  month: d.getMonth() + 1,
+                  day: d.getDate(),
+                  h: d.getHours(),
+                  m: d.getMinutes(),
+                  s: d.getSeconds(),
+
+                  questionId: app.globalData.questionId,
+                  body: this.data._commentBody,
+                  commentNum: 0,
+                  nickname: app.globalData.nickName,
+                  image: app.globalData.avatarUrl,
+                  commenter: [],
+                  liker: [],
+                  likerNum: 0,
+                  image_upload: this.data.fileID,
+                },
+              }).then(() => {
+                wx.hideToast()
+                this.sendEnd()
+              })
+            })
         }
-      }).then(() => {
-        comment.add({
-          data: {
-            //时间
-            time: d,
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            day: d.getDate(),
-            h: d.getHours(),
-            m: d.getMinutes(),
-            s: d.getSeconds(),
+        else {
+          question.doc(app.globalData.questionId).update({
+            data: {
+              commentNum: _.inc(1),
+            }
+          })
+            .then(() => {
+              comment.add({
+                data: {
+                  //时间
+                  likeTime: '',
 
-            questionId: app.globalData.questionId,
-            body: this.data._commentBody,
-            good: 0,
-            commentNum: 0,
-            nickname: app.globalData.nickName,
-            image: app.globalData.avatarUrl,
-            commentAgainBody: '',
-            commenter: []
-          },
-        }).then(() => {
-          wx.hideToast()
-          wx.showToast({
-            title: '发送成功',
-            icon: 'none'
-          })
-          this.setData({
-            inputValue: '',
-            inputContent: false,
-            tapAnswerButton: true,
-            tapReplyButton: false,
-            tapAgainButton: false,
-            answer: false
-          })
-          this.getData()
-          wx.pageScrollTo({
-            scrollTop: 10000000000,
-            duration: 1250
-          })
-        })
+                  time: d,
+                  year: d.getFullYear(),
+                  month: d.getMonth() + 1,
+                  day: d.getDate(),
+                  h: d.getHours(),
+                  m: d.getMinutes(),
+                  s: d.getSeconds(),
+
+                  questionId: app.globalData.questionId,
+                  body: this.data._commentBody,
+                  commentNum: 0,
+                  nickname: app.globalData.nickName,
+                  image: app.globalData.avatarUrl,
+
+                  commenter: [],
+                  liker: [],
+                  likerNum: 0,
+                  image_upload: this.data.fileID,
+                },
+              }).then(() => {
+                wx.hideToast()
+                this.sendEnd()
+              })
+            })
+        }
+
       })
     }
     else if (this.data.tapReplyButton) {
@@ -761,6 +1031,8 @@ Page({
               newOpenId: app.globalData.openId,
               postOpenId: this.data._postOpenId,
               commentAgainBody: this.data._commentBody,
+
+              image_upload: this.data.fileID,
             })
           }
         })
@@ -782,22 +1054,12 @@ Page({
             questionId: app.globalData.questionId,
             commentId: this.data._commentId,
             isWatched: false,
+
+            image_upload: this.data.fileID,
           }
         }).then(() => {
           wx.hideToast()
-          wx.showToast({
-            title: '发送成功',
-            icon: 'none'
-          })
-          this.setData({
-            inputValue: '',
-            inputContent: false,
-            tapAnswerButton: true,
-            tapReplyButton: false,
-            tapAgainButton: false,
-            answer: false
-          })
-          this.getData()
+          this.sendEnd()
         })
       })
     }
@@ -807,7 +1069,7 @@ Page({
           commentNum: _.inc(1),
         }
       }).then(() => {
-        comment.doc().update({
+        comment.doc(this.data._commentId).update({
           data: {
             commentNum: _.inc(1),
             commenter: _.push({
@@ -817,6 +1079,8 @@ Page({
               newNickName: app.globalData.nickName,
               postNickName: this.data.postNickName,
               commentAgainBody: this.data._commentBody,
+
+              image_upload: this.data.fileID,
             })
           }
         }).then(() => {
@@ -837,27 +1101,16 @@ Page({
               questionId: app.globalData.questionId,
               commentId: this.data._commentId,
               isWatched: false,
+
+              image_upload: this.data.fileID,
             }
           }).then(() => {
             wx.hideToast()
-            wx.showToast({
-              title: '发送成功',
-              icon: 'none'
-            })
-            this.setData({
-              inputValue: '',
-              inputContent: false,
-              tapAnswerButton: true,
-              tapReplyButton: false,
-              tapAgainButton: false,
-              answer: false
-            })
-            this.getData()
+            this.sendEnd()
           })
         })
       })
     }
-
   },
 
   //0-2 获取键盘高度
@@ -872,7 +1125,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function () {
     console.log('openId: ', app.globalData.openId)
     this.getRightTop()
     this.getData()
@@ -883,16 +1136,15 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.setData({
-      loading: true
-    })
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.getData()
+    this.deleteCommentEnd()
+    app.globalData.isClick = true
   },
 
   /**
@@ -906,16 +1158,15 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log('this.otherData.isDelete: ',this.otherData.isDelete)
-    if (this.otherData.isDelete) {
-      app.globalData.questionDelete = true
+    console.log(app.globalData.questionDelete)
+    if (!app.globalData.questionDelete) {
+      app.globalData.questionSolved = this.data.questionList[0].solved,
+        app.globalData.questionCommentNum = this.data.questionList[0].commentNum,
+        app.globalData.questionView = this.data.questionList[0].watched,
+        app.globalData.questionCollect = this.data.collectNum
     }
     else {
-      app.globalData.questionDelete = false
-      app.globalData.questionSolved = this.data.questionList[0].solved,
-      app.globalData.questionCommentNum = this.data.questionList[0].commentNum,
-      app.globalData.questionView = this.data.questionList[0].watched,
-      app.globalData.questionCollect = this.data.collectNum
+      app.globalData.questionDelete = true
     }
   },
 
@@ -937,6 +1188,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: this.data.questionList[0].title,
+      path: 'packageLogin/pages/0-0 Login/Login?id=' + app.globalData.questionId
     }
   }
 })

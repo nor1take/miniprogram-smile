@@ -1,7 +1,4 @@
 /* pages/Search/Search.wxss */
-.searchContainer{
-  width: 100%;
-}
 .searchInput{
   height:32px;
 
@@ -17,4 +14,19 @@
 .background{
   border: 1rpx solid #D2D2D2;
   box-shadow:0 0 0rpx #DDDDDD;
+}
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark)
+{
+  .searchInput{
+    background-color: black;
+
+    color: #DDDDDD;
+  }
+  .background{
+    border: 1rpx solid black;
+    box-shadow:0 0 0rpx black;
+  }
 }

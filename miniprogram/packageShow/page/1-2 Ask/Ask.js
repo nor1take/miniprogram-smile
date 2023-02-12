@@ -1,6 +1,38 @@
 const app = getApp()
 const db = wx.cloud.database()
 const question = db.collection('question')
+
+function uploadManyImages(tempFiles, page) {
+  let randString
+  for (var i = 0; i < tempFiles.length; i++) {
+    randString = Math.floor(Math.random() * 1000000).toString()
+    wx.cloud.uploadFile({
+      cloudPath: app.globalData.openId + '/' + randString + '.png', // 上传至云端的路径
+      filePath: tempFiles[i].tempFilePath, // 小程序临时文件路径
+      success: res => {
+        page.data.fileID.push(res.fileID)
+        console.log(1)
+        // 返回文件 ID
+        page.setData({
+          fileID: page.data.fileID
+        })
+        wx.hideLoading()
+        wx.showToast({
+          title: '上传成功',
+        })
+        console.log(page.data.fileID)
+      },
+      fail: err => {
+        console.error('[上传文件] 失败：', err)
+        wx.hideLoading()
+        wx.showToast({
+          icon: 'none',
+          title: '上传失败',
+        })
+      }
+    })
+  }
+}
 Page({
   options: {
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
@@ -14,7 +46,12 @@ Page({
     _unknown: false,
     focus: false,
 
-    fileID:[]
+    fileID: [],
+
+    top: 48,
+    left: 281,
+    right: 367,
+    bottom: 80,
   },
 
   //0-1 标题的输入状态，更新titleContent数据 → 发布按钮的disable
@@ -91,7 +128,7 @@ Page({
   //2-1 写入数据库：上传图片
   upload: function (e) {
     wx.chooseMedia({
-      count: 1,
+      count: 9,
       sizeType: ['original', 'compressed'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
@@ -101,34 +138,7 @@ Page({
           title: '上传中'
         })
         console.log(res.tempFiles)
-        let randString = Math.floor(Math.random() * 1000000).toString()
-        wx.cloud.uploadFile({
-          cloudPath: app.globalData.openId + '/' + randString + '.png', // 上传至云端的路径
-          filePath: res.tempFiles[0].tempFilePath, // 小程序临时文件路径
-          success: res => {
-            this.data.fileID.push(res.fileID)
-            console.log(1)
-            // 返回文件 ID
-            this.setData({
-              fileID: this.data.fileID
-            })
-            wx.hideLoading()
-            wx.showToast({
-              title: '上传成功',
-            })
-            // console.log('fileID: ', res.fileID)
-            // console.log('cloudPath: ', cloudPath)
-            console.log(this.data.fileID)
-          },
-          fail: err => {
-            console.error('[上传文件] 失败：', err)
-            wx.hideLoading()
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            })
-          }
-        })
+        uploadManyImages(res.tempFiles, this)
       },
       fail: err => {
         console.log(err)
@@ -181,7 +191,7 @@ Page({
         tabs: this.data.tabs,
 
         watched: 0,
-        
+
         commentNum: 0,
         commenter: [],
         message: 0,
@@ -217,6 +227,10 @@ Page({
       success: res => {
         console.log(res.tapIndex)
         this.data.fileID.splice(index, 1)
+        wx.showToast({
+          title: '删除成功',
+          icon:'none'
+        })
         this.setData({
           fileID: this.data.fileID
         })
@@ -226,7 +240,7 @@ Page({
             console.log('成功删除', res.tempFilePath)
           },
           fail: err => {
-            // handle error
+            console.log(err)
           }
         })
       },
@@ -249,12 +263,4 @@ Page({
   onReady: function () {
     setTimeout(this.focus, 250)
   },
-    /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    return {
-      title: '提问',
-    }
-  }
 })

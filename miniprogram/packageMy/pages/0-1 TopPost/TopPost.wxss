@@ -1,41 +1,37 @@
-/* pages/0-1 TopPost/TopPost.wxss */
-.C{
-  color: white;
-  width: 100%;
-  height: 90%;
-  bottom: 0;
-  position: absolute;
-}
-.T{
-  font-size: 44rpx;
-  font-weight: bolder;
+.title_help{
+
   margin: 32rpx;
-}
-.BT{
+  margin-top: 16rpx;  margin-bottom: 0rpx;
+  /* border: 1rpx solid black; */
+  
+  background-color: white;
+  padding: 32rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   font-size: 34rpx;
-  font-weight: bold;
+}
+.body_help{
   margin: 32rpx;
-  margin-bottom: 16rpx;
-  display: flex;
-  align-items: center;
+  margin-top: 0rpx;  margin-bottom: 0rpx;
+  background-color: #eeeeee;
+  padding: 32rpx;
 }
-.B{
-  font-size: 30rpx;
+.item{
   margin: 32rpx;
-  margin-bottom: 16rpx;
-  margin-top: 16rpx;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
 }
-.imageContainer{
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-  width: 100%; 
-  height: fit-content;
-}
-image{
-  width: 80%; 
-  border-radius: 60rpx;
+
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark)
+{
+  .title_help{  
+    background-color: black;
+  }
+  .body_help{
+    background-color: #7b7b7b;
+  }
 }

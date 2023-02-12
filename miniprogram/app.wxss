@@ -1,37 +1,40 @@
 /* 长宽、布局（位置、margin、padding）、特性（本身[边界]、内部）、其他 */
-
-/* Page: Show/Classify */
-
-.topPostbackground{
-  margin: 32rpx;
-
-  border: 1rpx solid #3d3d3d;
-  border-radius: 30rpx;
-  background-color: #3d3d3d;
-  box-shadow:0 0 30rpx #7B7B7B;
+page {
+  background-color: #F3F3F3;
 }
-.background{
+
+button {
+  font-weight: bold;
+}
+
+.background {
   margin: 32rpx;
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
 
   border: 1rpx solid #E7E7E7;
-  border-radius: 30rpx;
+  border-radius: 40rpx;
+
   background-color: white;
-  box-shadow:0 0 30rpx #DDDDDD;
+  box-shadow: 0 0 10rpx #dddddd;
 }
 
-.tag{
-  width:fit-content;
+.tag {
+  width: fit-content;
 
   margin: 32rpx;
 
   display: flex;
-  align-content: center;
+  align-items: center;
 
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 500;
-  color: #3d3d3d;
+  color: #7B7B7B;
+
+  /* border: 1rpx solid black; */
 }
-.point{
+
+.point {
   width: 30rpx;
   height: 30rpx;
 
@@ -44,54 +47,24 @@
   align-items: center;
   justify-content: center;
 
-  color:white;
+  color: white;
   font-size: 20rpx;
   font-weight: bolder;
 }
 
-.gray-point{
-  width: 30rpx;
-  height: 30rpx;
-
-  margin-top: 5rpx;
-  margin-right: 10rpx;
-
-  border-radius: 30rpx;
-  background-color: #E7E7E7;
-
+.title {
+  width: fit-content;
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.red-point{
-  width: 30rpx;
-  height: 30rpx;
 
-  margin-top: 5rpx;
-  margin-right: 10rpx;
 
-  border-radius: 30rpx;
-  /* background-color: #FA5151; */
-  background-color: #07C160;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color:white;
-  font-size: 20rpx;
-  font-weight: bolder;
-}
-
-.title{
-  width:fit-content;
-  display: flex;
-  font-size: 34rpx;
-  font-weight: 500;
   margin: 32rpx;
   margin-bottom: 16rpx;
+
+  font-size: 32rpx;
+  font-weight: bold;
 }
-.body{
+
+.body {
   margin: 32rpx;
   margin-top: 16rpx;
   display: flex;
@@ -99,17 +72,19 @@
   color: #7B7B7B;
   /* word-break: break-all; */
 }
-.last{
-  margin: 32rpx;
 
+.last {
+  margin: 32rpx;
   font-size: 24rpx;
   color: #ACACAC;
 }
-.watched{
+
+.watched {
   font-size: 24rpx;
   color: #ACACAC;
 }
-.bottom{
+
+.bottom {
   width: 100%;
   height: 60rpx;
 
@@ -119,7 +94,40 @@
   font-size: 28rpx;
   color: #ACACAC;
 }
-.hoverClass{
+
+.hoverClass {
   background-color: #F3F3F3;
-  box-shadow:0 0 0rpx #DDDDDD;
+  box-shadow: 0 0 0rpx #DDDDDD;
+}
+
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark) {
+  page {
+    background-color: #3d3d3d;
+  }
+
+  .background {
+    border: 1rpx solid black;
+    background-color: black;
+    box-shadow: 0 0 10rpx black;
+  }
+
+  .tag {
+    color: #dddddd;
+  }
+
+  .point {
+    color: black;
+  }
+
+  .body {
+    color: #7B7B7B;
+  }
+
+  .hoverClass {
+    background-color: #7b7b7b;
+    box-shadow: 0 0 0rpx black;
+  }
 }

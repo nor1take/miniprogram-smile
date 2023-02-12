@@ -39,3 +39,24 @@
   font-size: 28rpx;
   margin: 16rpx;
 }
+button{
+  font-size: 32rpx;
+  padding-left: 128rpx; padding-right: 128rpx;
+  color: #3d3d3d;
+}
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark)
+{
+  .topWord{
+    color: #dddddd;
+  }
+
+  .word{
+    color: #7B7B7B;
+  }
+  button{
+    color: #acacac;
+  }
+}

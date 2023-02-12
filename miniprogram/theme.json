@@ -1,0 +1,40 @@
+{
+  "light":{
+    "backgroundColor": "#FFFFFF",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTextStyle":"black",
+
+    "tabFontColor": "#3d3d3d",
+    "tabSelectedColor": "#000000",
+    "tabBgColor": "#ffffff",
+    "tabBorderStyle": "white",
+
+    "questionIconPath":"icon/_question.png",
+    "selectedQuestionIconPath":"icon/question.png",
+
+    "classIconPath":"icon/_class.png",
+    "selectedClassIconPath":"icon/class.png",
+
+    "messageIconPath":"icon/_message.png",
+    "selectedMessageIconPath":"icon/message.png"
+  },
+  "dark":{
+    "backgroundColor": "#000000",
+    "navigationBarBackgroundColor": "#000000",
+    "navigationBarTextStyle":"white",
+
+    "tabFontColor": "#dddddd",
+    "tabSelectedColor": "#ffffff",
+    "tabBgColor": "#000",
+    "tabBorderStyle": "black",
+
+    "questionIconPath":"icon/_question_dark.png",
+    "selectedQuestionIconPath":"icon/question_dark.png",
+
+    "classIconPath":"icon/_class_dark.png",
+    "selectedClassIconPath":"icon/class_dark.png",
+
+    "messageIconPath":"icon/_message_dark.png",
+    "selectedMessageIconPath":"icon/message_dark.png"
+  }
+}

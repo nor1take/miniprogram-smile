@@ -1,92 +1,43 @@
-<return top="{{top}}"color="#F3F3F3"></return>
+<wxs src="../../../filter.wxs" module="filter" />
 
+<return top="{{top}}" topWord="我的发帖"></return>
 
-<!--0-3 顶部tabs -->
-<tabs tabs='{{tabs}}' top='{{top}}' binditemChange="tabsTap"></tabs>
+<tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+  <block wx:for="{{tabs}}" wx:key="id">
+    <view slot="tab-content-{{index}}">
+      <view style="height: {{top+32+32}}px; width: 100%;"></view>
+      <block wx:if="{{item.questionList.length == 0 && activeTab === 0}}">
+        <view class="bottom" style="margin-top: 40%;">你还没有发帖~ 点击下方+发帖 ↓</view>
+        <view style="margin: 32rpx;padding-bottom: 20rpx; display: flex;align-items: center;justify-content: center;font-size: 100px; color: #d2d2d2; border: 1rpx dashed #d2d2d2;" bindtap="ask">+</view>
+      </block>
+      <block wx:elif="{{item.questionList.length == 0}}">
+        <view class="bottom" style="margin-top: 40%;">这里空空如也~</view>
+      </block>
+      <view class="background" hover-class="hoverClass" wx:for="{{item.questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+        <view style="display: flex; justify-content: space-between; align-items:center">
+          <view class="word" style="align-items: stretch; height:fit-content">
+            <view class="tag">
+              <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
 
-<block wx:if="{{tabs[0].Active}}">
-  <view class="background" hover-class="hoverClass" wx:for="{{questionListAll}}" wx:key="_id" id="{{item._id}}" bindtap="beWatched">
-    <view style="display: flex; justify-content: space-between; align-items:center">
-      <view class="word" style="align-items: stretch; height:fit-content">
-        <view class="tag" bindtap="colorfulPoint">
-          <block wx:if="{{item.solved}}">
-            <text class="point" style="background-color: {{colorGreen}};">{{item.commentNum}}</text>
-          </block>
-          <block wx:else>
-            <text class="point" style="background-color: {{colorGray}};" wx:if="{{item.commentNum==0}}"></text>
-            <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum>0}}">{{item.commentNum}}</text>
-          </block>
-          {{item.tabs}}
-        </view>
-        <view class="title">{{item.title}}</view>
-        <view class="body">{{item.body}}</view>
-        <view class="last">
-          <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
-          <text class="watched">{{item.watched}} 浏览</text> ·
-          <text class="watched">{{item.collectNum}} 关注</text>
+              <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
+              <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
+              {{item.tabs}}
+            </view>
+            <view class="title">{{item.title}}</view>
+            <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+            <view class="last">
+              <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
+              <text class="watched">{{item.watched}} 浏览</text> ·
+              <text class="watched">{{item.collectNum}} 关注</text>
+            </view>
+          </view>
+          <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+            <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
+          </view>
         </view>
       </view>
-      <view class="image" style="margin:32rpx" wx:if="{{item.image[0]}}">
-        <image src="{{item.image[0]}}" mode="aspectFill" style="width: 200rpx; height: 200rpx;"></image>
-      </view>
+      <view class="bottom" wx:if="{{ activeTab===index && !isBottom && reachBottom}}">加载中...</view>
+      <view class="bottom" wx:if="{{ activeTab===index && isBottom}}">已经触底了~</view>
     </view>
-  </view>
-</block>
-
-<block wx:if="{{tabs[1].Active}}">
-  <view class="background" hover-class="hoverClass" wx:for="{{questionListNo}}" wx:key="_id" id="{{item._id}}" bindtap="beWatched">
-    <view style="display: flex; justify-content: space-between; align-items:center">
-      <view class="word" style="align-items: stretch; height:fit-content">
-        <view class="tag" bindtap="colorfulPoint">
-          <block wx:if="{{item.solved}}">
-            <text class="point" style="background-color: {{colorGreen}};">{{item.commentNum}}</text>
-          </block>
-          <block wx:else>
-            <text class="point" style="background-color: {{colorGray}};" wx:if="{{item.commentNum==0}}"></text>
-            <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum>0}}">{{item.commentNum}}</text>
-          </block>
-          {{item.tabs}}
-        </view>
-        <view class="title">{{item.title}}</view>
-        <view class="body">{{item.body}}</view>
-        <view class="last">
-          <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
-          <text class="watched">{{item.watched}} 浏览</text> ·
-          <text class="watched">{{item.collectNum}} 关注</text>
-        </view>
-      </view>
-      <view class="image" style="margin:32rpx" wx:if="{{item.image[0]}}">
-        <image src="{{item.image[0]}}" mode="aspectFill" style="width: 200rpx; height: 200rpx;"></image>
-      </view>
-    </view>
-  </view>
-</block>
-
-<block wx:if="{{tabs[2].Active}}">
-  <view class="background" hover-class="hoverClass" wx:for="{{questionListYes}}" wx:key="_id" id="{{item._id}}" bindtap="beWatched">
-    <view style="display: flex; justify-content: space-between; align-items:center">
-      <view class="word" style="align-items: stretch; height:fit-content">
-        <view class="tag" bindtap="colorfulPoint">
-          <block wx:if="{{item.solved}}">
-            <text class="point" style="background-color: {{colorGreen}};">{{item.commentNum}}</text>
-          </block>
-          <block wx:else>
-            <text class="point" style="background-color: {{colorGray}};" wx:if="{{item.commentNum==0}}"></text>
-            <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum>0}}">{{item.commentNum}}</text>
-          </block>
-          {{item.tabs}}
-        </view>
-        <view class="title">{{item.title}}</view>
-        <view class="body">{{item.body}}</view>
-        <view class="last">
-          <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
-          <text class="watched">{{item.watched}} 浏览</text> ·
-          <text class="watched">{{item.collectNum}} 关注</text>
-        </view>
-      </view>
-      <view class="image" style="margin:32rpx" wx:if="{{item.image[0]}}">
-        <image src="{{item.image[0]}}" mode="aspectFill" style="width: 200rpx; height: 200rpx;"></image>
-      </view>
-    </view>
-  </view>
-</block>
+  </block>
+</tabs>
