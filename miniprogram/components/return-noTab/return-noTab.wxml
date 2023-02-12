@@ -1,0 +1,5 @@
+<!-- 返回 -->
+<view style="position: fixed; top: {{top}}px; left: 16px; z-index: 1; font-size: 24px;color:#3d3d3d;" bindtap="return">←</view>
+
+<!-- 顶部占位 -->
+<view style="height: {{bottom}}px; width: 100%;"></view>

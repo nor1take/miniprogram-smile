@@ -1,0 +1,10 @@
+<!--pages/Show/components/showTime.wxml-->
+<text class="watched" wx:if="{{year!=dbyear}}">{{dbyear}}-{{dbmonth}}-{{dbday}}</text>
+  <text class="watched" wx:elif="{{month!=dbmonth}}">{{dbmonth}}-{{dbday}}</text>
+  <text class="watched" wx:elif="{{day!=dbday}}">{{day - dbday}} 天前</text>
+  <text class="watched" wx:elif="{{h!=dbh && (h-dbh)!=1}}">{{h - dbh}} 小时前</text>
+  <text class="watched" wx:elif="{{h!=dbh && (h-dbh)==1 && m >= dbm}}">{{h - dbh}} 小时前</text>
+  <text class="watched" wx:elif="{{h!=dbh && (h-dbh)==1 && m < dbm}}">{{m + 60 - dbm}} 分钟前</text>
+  <text class="watched" wx:elif="{{m!=dbm && (m-dbm)<0}}">刚刚</text>
+  <text class="watched" wx:elif="{{m!=dbm && (m-dbm)!=1}}">{{m - dbm}} 分钟前</text>
+  <text class="watched" wx:elif="{{s!=dbs}}">刚刚</text>

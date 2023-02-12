@@ -1,0 +1,28 @@
+<!--pages/My/My.wxml-->
+<view class="page">
+    <image src="{{src}}" mode="widthFix" style="width: 100%;"></image>
+    <view class="userInfoContainer">
+        <view class="userInfo" wx:if="{{nickName}}" animation="{{animationData}}" style="opacity: 0;">
+            <image src="{{avatarUrl}}" style="width: 100rpx; height: 100rpx; margin: 16rpx; border-radius: 20rpx;"></image>
+            <view>{{nickName}}</view>
+        </view>
+    </view>
+
+    <view class="background" wx:if="{{nickName}}" animation="{{animationData}}" style="opacity: 0;">
+        <view hover-class="hoverClass" class="box" style="border-top: 1rpx solid transparent;border-bottom-left-radius: 0; border-bottom-right-radius: 0;" bindtap="myAsk">我的提问</view>
+        <view hover-class="hoverClass" class="box" style="border-radius: 0;" bindtap="myCollect">我的关注</view>
+        <view hover-class="hoverClass" class="box" style="border-top-left-radius: 0; border-top-right-radius: 0;" bindtap="myMessage">我的消息
+            <text class="red-point" wx:if="{{messageNum}}">{{messageNum}}</text>
+        </view>
+    </view>
+    
+    <!-- <button style="margin-top: 128rpx; opacity: 0;" wx:if="{{!nickName}}" type="primary" open-type="getUserInfo" bindtap="getUserInfo" animation="{{animationData}}">登录</button> -->
+
+    <view class="background" wx:if="{{nickName}}" animation="{{animationData}}" style="opacity: 0;">
+        <view class="buttonBox">
+            <button style="width: 100%; border-radius: 20rpx; font-size: 34rpx; font-weight: normal; justify-content: flex-start; border: 1rpx solid transparent; background-color: white;" open-type="feedback">意见反馈</button>
+        </view>
+        <view hover-class="hoverClass" class="box" style="border-radius: 0;" bindtap="help">使用帮助</view>
+    </view>
+</view>
+<!-- <button bindtap="update">更新</button> -->

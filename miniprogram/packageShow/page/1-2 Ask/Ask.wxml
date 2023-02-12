@@ -1,0 +1,60 @@
+<return top="{{top}}" bottom="{{bottom}}"></return>
+
+<!-- 表单 -->
+<form catchsubmit="formSubmit" catchreset="formReset">
+    <view class="titleContainer">
+        <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的问题" name="title" bindinput="title">
+        </textarea>
+    </view>
+    <view class="bodyContainer">
+        <textarea class="body" placeholder="补充说明你的问题（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body">
+            </textarea>
+    </view>
+
+    <view class="imageUpload-area">
+        <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="id">
+            <image src="{{item}}" mode="aspectFill" style="height: 214rpx; width: 214rpx;  margin-left: 16rpx;" bindtap="imageTap" id="{{item}}" data-index="{{index}}">{{item}}</image>
+        </block>
+        <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">+</view>
+        <view class="upload" wx:else bindtap="upload">+</view>
+    </view>
+    <view class="tip">* 每次只能上传 1 张图片。如有多张图片，请分多次上传。</view>
+    <view class="tagsArea">
+        <view class="text">推荐标签</view>
+        <view class="tags">
+            <view class="item" wx:if="{{tabs!='学习'}}" bindtap="tapStudy">学习</view>
+            <view class="item" wx:elif="{{tabs=='学习'}}" style=" border: 3rpx solid black; color: black; font-weight: bold; ">学习</view>
+
+            <view class="item" wx:if="{{tabs!='生活'}}" bindtap="tapLife">生活</view>
+            <view class="item" wx:if="{{tabs=='生活'}}" style=" border: 3rpx solid black; color: black; font-weight: bold; ">生活</view>
+
+            <view class="item" wx:if="{{tabs!='求...'}}" bindtap="tapAskfor">求(组队/资料...)</view>
+            <view class="item" wx:if="{{tabs=='求...'}}" style=" border: 3rpx solid black; color: black; font-weight: bold; ">求(组队/资料...)</view>
+        </view>
+        <view class="tags">
+            <view class="item" wx:if="{{tabs!='我丢了...'}}" bindtap="tapLost">我丢了...</view>
+            <view class="item" wx:if="{{tabs=='我丢了...'}}" style=" border: 3rpx solid black; color: black; font-weight: bold; ">我丢了...</view>
+
+            <view class="item" wx:if="{{tabs!='我捡到...'}}" bindtap="tapFind">我捡到...</view>
+            <view class="item" wx:if="{{tabs=='我捡到...'}}" style=" border: 3rpx solid black; color: black; font-weight: bold; ">我捡到...</view>
+        </view>
+        <view class="tags">
+            <view class="item" wx:if="{{id==6}}" style=" border: 3rpx solid black; color: black; font-weight: bold;">
+                <input placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" focus bindinput="tagsInput" />
+            </view>
+            <view class="item" wx:if="{{id!=6}}" bindtap="tapDIY">
+                +自定义标签
+            </view>
+        </view>
+    </view>
+
+    <view class="switch">
+        <view class="switchContent">匿名发布</view>
+        <switch bindchange="switchChange"/>
+    </view>
+
+    <view class="btn-area">
+        <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
+        <button wx:else disabled="true" size="default" type="primary" bindtap="toast1Tap" formType="submit">发布</button>
+    </view>
+</form>

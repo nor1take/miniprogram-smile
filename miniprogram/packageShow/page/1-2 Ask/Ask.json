@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "return":"../../../components/return-noTab/return-noTab"
+  },
+  "navigationBarTitleText": "我想问..."
+}

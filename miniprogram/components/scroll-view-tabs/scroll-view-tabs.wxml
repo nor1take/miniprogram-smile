@@ -1,0 +1,18 @@
+<icon type="search" color="#3d3d3d" style="position: fixed; top:{{top}}px; left: 16px; z-index: 1;" size="30" bindtap="search"></icon>
+
+  <scroll-view  class="tabs" scroll-into-view="item_{{currentView}}" style="width: 100%; padding-top: {{top+30}}px;"
+  scroll-x
+  scroll-with-animation
+  enhanced
+  show-scrollbar="{{false}}">
+  <view wx:for="{{tabs}}" wx:key="id" class="tabsContent" 
+  data-index="{{index}}" id="item_{{index}}"
+  bindtap="tabsTap">
+    <text class="{{item.Active?'active':''}}">{{item.name}}</text>
+  </view>
+</scroll-view>
+<view><slot></slot></view>
+
+
+
+

@@ -1,0 +1,11 @@
+<!--components/tabs/tabs.wxml-->
+
+<view class="tabs" style="padding-top: {{top+30}}px;">
+  <view wx:for="{{tabs}}" wx:key="id" class="tabsContent {{item.Active?'active':''}}" 
+  data-index="{{index}}"
+  bindtap="tabsTap">
+    {{item.name}}
+  </view>
+</view>
+
+

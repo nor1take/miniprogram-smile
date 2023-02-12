@@ -1,0 +1,48 @@
+<!--pages/0-1 TopPost/TopPost.wxml-->
+<view style="position: fixed; top: {{top}}px; left: 16px; z-index: 1; font-size: 24px;color:white;" bindtap="return">←</view>
+<view style="width: 100%; height: 100%; position: fixed; background-color: #3d3d3d; z-index: -1;"></view>
+<view class="C">
+  <view class="T">:)</view>
+  <view class="T">你好，朋友！</view>
+  <view class="B">阅读以下的说明，你将会有更好的使用体验。</view>
+  <view style="width: 100%;height: 50rpx;"></view>
+  <view class="T">首页</view>
+  <view class="BT">
+  <view>1 左上角搜索</view>
+  <icon type="search"></icon>
+  </view>
+  <view class="B">通过关键词搜索。</view>
+  <view class="B">搜索范围：标签、标题、问题补充。</view>
+  <view class="BT">2 右下角提问 +</view>
+  <view class="B">可以在一定区域内移动，且具有移动惯性。</view>
+  <view class="BT">* 提出的问题必须包括：标题、标签。</view>
+  <view class="B">如需上传图片，每次只能上传 1 张图片。如有多张图片，请分多次上传。如需删除图片，轻轻点击图片，然后根据提示即可删除。</view>
+  <view class="B">自定义标签将收纳在“分类”中的“自定义”中。</view>
+  <view class="BT">* 问题提出后有三种状态：</view>
+
+  <view class="B">灰色<text class="point" style="background-color: #E7E7E7;"></text>：初始状态。</view>
+  <view class="B">橙色<text class="point" style="background-color: #F9A826;"></text>已有人回应，但提问者认为问题没有得到解决。</view>
+  <view class="B">绿色<text class="point" style="background-color: #07C160;"></text>：提问者觉得问题已经得到解决。</view>
+  <view class="B"> </view>
+  <view class="B">提问者可在问题详情页，点击左上角的 Point 将问题状态调整为“已解决”。以同样的方法还可以将问题改回为“待解决”。</view>
+  <view class="imageContainer">
+    <image src="{{src}}" mode="widthFix"></image>
+  </view>
+  
+  <view class="BT">* 问题的举报与删除</view>
+  <view class="B">在问题的详情页，点击右上角3个点 [···] 可以对问题进行举报和删除。</view>
+  <view class="B">只有提问人才能删除提问。评论同理。</view>
+  <view class="B">每人只能举报一次，举报后不能撤销，请慎用举报功能！</view>
+  <view style="width: 100%;height: 25rpx;"></view>
+  <view class="T">分类</view>
+  <view class="B">略</view>
+  <view style="width: 100%;height: 25rpx;"></view>
+  <view class="T">我的</view>
+  <view class="BT">1 我的提问</view>
+  <view class="B">分成“全部提问”、“待回应”、“已回应”。</view>
+  <view class="B">提问者可以在“已回应的”问题中选出已经解决的问题，将其状态改为“已解决”（状态更改方法同上）。</view>
+  <view class="BT">2 意见反馈</view>
+  <view class="B">请在此提交你的意见反馈。</view>
+
+  <view style="width: 100%;height: 200rpx;"></view>
+</view>

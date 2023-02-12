@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "showTime":"../../components/showTime/showTime",
+    "tabs":"../../components/scroll-view-tabs/scroll-view-tabs"
+  },
+  "enablePullDownRefresh":true,
+  "onReachBottomDistance": 100
+}

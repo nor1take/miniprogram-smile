@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "showTime":"../../../components/showTime/showTime",
+    "tabs":"../../../components/tabs/tabs"
+  }
+}

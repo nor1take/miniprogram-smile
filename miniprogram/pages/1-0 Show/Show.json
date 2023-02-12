@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "showTime":"../../components/showTime/showTime",
+    "tabs":"../../components/tabs/tabs",
+    "search":"../../components/search/search"
+  },
+  "enablePullDownRefresh":true,
+  "onReachBottomDistance": 100 
+}
