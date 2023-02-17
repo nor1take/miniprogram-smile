@@ -632,7 +632,6 @@ Page({
                 })
                 Promise.all([
                   question.where({
-                    _openid: '{openid}',
                     _id: app.globalData.questionId
                   }).get().then(res => {
                     console.log(res.data)
