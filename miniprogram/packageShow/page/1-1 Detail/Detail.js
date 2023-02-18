@@ -611,7 +611,7 @@ Page({
   //问题右上角三个点
   threePointTap: function () {
     const { questionList } = this.data
-    if (app.globalData.openId == questionList[0]._openid) {
+    if (app.globalData.openId == questionList[0]._openid || app.globalData.isManager) {
       wx.showActionSheet({
         itemList: ['删除'],
         itemColor: '#FA5151',
@@ -651,7 +651,7 @@ Page({
                     question.where({
                       _id: app.globalData.questionId
                     }).remove(),
-                    commentAgain.where({
+                    comment.where({
                       questionId: app.globalData.questionId
                     }).remove(),
                     commentAgain.where({
@@ -678,21 +678,38 @@ Page({
         }
       })
     }
-    //[举报]同[关注]
+    //warn
     else {
       wx.showActionSheet({
         itemList: ['举报'],
         itemColor: '#FA5151',
         success: res => {
           console.log(res.tapIndex)
-          wx.showToast({
-            title: '已举报',
-            icon: 'none',
-            duration: 1500
-          })
-          question.doc(app.globalData.questionId).update({
-            data: {
-              warner: _.addToSet(app.globalData.openId)
+          wx.showModal({
+            title: "举报理由",
+            content: "该帖 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
+            editable: true,
+            confirmText: "提交举报",
+            confirmColor: "#FA5151",
+            success: res => {
+              question.doc(app.globalData.questionId).update({
+                data: {
+                  warnerDetail: _.addToSet({
+                    nickName: app.globalData.nickName,
+                    _openid: app.globalData.openId,
+                    reason: res.content
+                  }),
+                  warner: _.addToSet(app.globalData.openId)
+                }
+              })
+              wx.showToast({
+                title: '感谢举报！管理员会尽快处理',
+                icon: 'none',
+                duration: 1500
+              })
+            },
+            fail: err => {
+              console.log(err)
             }
           })
         },
@@ -719,7 +736,7 @@ Page({
     comment.doc(e.currentTarget.id).get().then((res) => {
       commentList = res.data
       console.log(res.data._openid)
-      if (app.globalData.openId == commentList._openid) {
+      if (app.globalData.openId == commentList._openid || app.globalData.isManager) {
         wx.showActionSheet({
           itemList: ['删除'],
           itemColor: '#FA5151',
@@ -785,21 +802,38 @@ Page({
           }
         }).catch(err => { console.log(err) })
       }
-      //[举报]同[关注]
+      //warn
       else {
         wx.showActionSheet({
           itemList: ['举报'],
           itemColor: '#FA5151',
           success: res => {
             console.log(res.tapIndex)
-            wx.showToast({
-              title: '已举报',
-              icon: 'none',
-              duration: 1500
-            })
-            comment.doc(e.currentTarget.id).update({
-              data: {
-                warner: _.addToSet(app.globalData.openId)
+            wx.showModal({
+              title: "举报理由",
+              content: "该评论或评论的回复 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
+              editable: true,
+              confirmText: "提交举报",
+              confirmColor: "#FA5151",
+              success: res => {
+                comment.doc(e.currentTarget.id).update({
+                  data: {
+                    warnerDetail: _.addToSet({
+                      nickName: app.globalData.nickName,
+                      _openid: app.globalData.openId,
+                      reason: res.content
+                    }),
+                    warner: _.addToSet(app.globalData.openId)
+                  }
+                })
+                wx.showToast({
+                  title: '感谢举报！管理员会尽快处理',
+                  icon: 'none',
+                  duration: 1500
+                })
+              },
+              fail: err => {
+                console.log(err)
               }
             })
           },

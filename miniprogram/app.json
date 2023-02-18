@@ -1,5 +1,5 @@
 {
-  "entryPagePath":"packageLogin/pages/0-0 Login/Login",
+  "entryPagePath": "packageLogin/pages/0-0 Login/Login",
   "pages": [
     "pages/0-0 Show/Show",
     "pages/2-0 Classify/Classify",
@@ -10,7 +10,7 @@
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "@navigationBarBackgroundColor",
     "navigationStyle": "custom",
-    "navigationBarTextStyle":"@navigationBarTextStyle",
+    "navigationBarTextStyle": "@navigationBarTextStyle",
     "initialRenderingCache": "static"
   },
   "tabBar": {
@@ -54,7 +54,8 @@
         "pages/0-1 TopPost/TopPost",
         "pages/3-1 MyAsk/MyAsk",
         "pages/3-2 MyCollect/MyCollect",
-        "pages/3-3 MyComment/MyComment"
+        "pages/3-3 MyComment/MyComment",
+        "pages/3-4 WarnPosts/WarnPosts"
       ]
     },
     {

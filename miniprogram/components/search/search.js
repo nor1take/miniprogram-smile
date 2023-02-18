@@ -10,6 +10,7 @@ Component({
     bottom: { type: Number, value: 80, },
     nickName: { type: String, value: '' },
     avatarUrl: { type: String, value: '' },
+    isManager: { type: Boolean, value: false },
   },
 
   /**
@@ -70,25 +71,30 @@ Component({
         menu: false
       })
     },
-    myAsk:function(){
+    myAsk: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-1 MyAsk/MyAsk',
-      }) 
+      })
     },
     myCollect: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-2 MyCollect/MyCollect',
       })
     },
-    myComment:function(){
+    myComment: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-3 MyComment/MyComment',
       })
     },
-    help:function(){
+    help: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/0-1 TopPost/TopPost',
       })
     },
+    warn: function(){
+      wx.navigateTo({
+        url: '../../packageMy/pages/3-4 WarnPosts/WarnPosts',
+      })
+    }
   }
 })

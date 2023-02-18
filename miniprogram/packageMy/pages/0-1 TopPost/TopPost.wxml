@@ -1,7 +1,7 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="使用帮助"></return>
 
 <view class="title_help" bindtap="help" data-id="新版">
-  * 新版更新说明
+  * 更新说明
   <image wx:if="{{currentId===0}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>

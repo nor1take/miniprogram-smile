@@ -30,6 +30,11 @@
         <image src="../../icon/customer-service-2-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx"></image>
       意见反馈</button>
     </view>
+
+    <view wx:if="{{isManager}}" class="button"  hover-class="hoverClass" bindtap="warn">
+      <image src="../../icon/error-warning-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
+      处理举报
+    </view>
   </view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>

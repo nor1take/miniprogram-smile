@@ -47,6 +47,7 @@ Page({
       .then((res) => {
         console.log('用户已登录：', res.data)
         if (res.data.length) {
+          app.globalData.isManager = res.data[0].isManager
           wx.switchTab({
             url: '../../../pages/0-0 Show/Show'
           })

@@ -1,5 +1,5 @@
 <wxs src="../../filter.wxs" module="filter" />
-<search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}'></search>
+<search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}'></search>
 <movable-area>
   <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask">+</movable-view>
 </movable-area>
@@ -10,7 +10,7 @@
   <swiper class="swiperContainer" vertical autoplay circular>
     <swiper-item class="swiperItem" bindtap="alwaysTop">
       <image src="../../icon/download-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">置顶：新版有哪些更新？</view>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">置顶：使用帮助</view>
     </swiper-item>
     <swiper-item class="swiperItem" bindtap="hot">
       <image src="../../icon/fire-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>

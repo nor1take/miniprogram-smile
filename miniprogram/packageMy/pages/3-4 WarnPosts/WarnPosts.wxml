@@ -1,0 +1,53 @@
+<wxs src="../../../filter.wxs" module="filter" />
+
+<return top="{{top}}" topWord="处理举报"></return>
+
+<tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+
+  <view slot="tab-content-0">
+    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+
+    <view class="background" hover-class="hoverClass" wx:for="{{tabs[0].questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+      <view style="display: flex; justify-content: space-between; align-items:center">
+        <view class="word" style="align-items: stretch; height:fit-content">
+          <view class="last">_id/questionId：{{item._id}}</view>
+          <view class="last">_openid/发布者：<text class="nickName">{{item.nickName}} - {{item._openid}}</text></view>
+          <view class="title">{{item.title}}</view>
+          <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+          <view class="last">
+            <text class="watched">{{item.warner.length}} 举报</text>
+            <block wx:for="{{item.warnerDetail}}">
+              <view class="watched">{{index}} - <text class="nickName">{{item.nickName}} - {{item._openid}}</text>：{{item.reason}}</view>
+            </block>
+          </view>
+        </view>
+        <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+          <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
+        </view>
+      </view>
+    </view>
+    <view class="bottom" wx:if="{{ activeTab===index && !isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{ activeTab===index && isBottom}}">已经触底了~</view>
+  </view>
+
+  <view slot="tab-content-1">
+    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+    <block wx:for="{{tabs[1].questionList}}" wx:key="id">
+      <view class="messageBackground" bindtap="gotoDetail" id="{{item.questionId}}">
+        <view class="last">_id/commentId：{{item._id}}</view>
+        <view class="last">_openid/发布者：<text class="nickName">{{item.nickname}} - {{item._openid}}</text></view>
+        <view class="title" style="font-weight: 500;">{{item.body}} <text wx:if="{{item.image_upload.length>0}}">[图片评论]</text></view>
+        <view class="last">
+          <text class="watched">{{item.warner.length}} 举报</text>
+          <block wx:for="{{item.warnerDetail}}">
+            <view class="watched">{{index}} - <text class="nickName">{{item.nickName}} - {{item._openid}}</text>：{{item.reason}}</view>
+          </block>
+        </view>
+      </view>
+
+    </block>
+    <view class="bottom" wx:if="{{ activeTab===1 && !isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{ activeTab===1 && isBottom}}">已经触底了~</view>
+  </view>
+
+</tabs>

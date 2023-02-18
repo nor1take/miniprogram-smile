@@ -199,8 +199,8 @@ Page({
         collector: [],
         collectNum: 0,
 
-        warn: 0,
         warner: [],
+        warnerDetail: [],
 
         solved: false
       },
@@ -229,7 +229,7 @@ Page({
         this.data.fileID.splice(index, 1)
         wx.showToast({
           title: '删除成功',
-          icon:'none'
+          icon: 'none'
         })
         this.setData({
           fileID: this.data.fileID

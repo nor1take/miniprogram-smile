@@ -30,6 +30,8 @@ Page({
     right: 367,
     bottom: 80,
 
+    isManager: app.globalData.isManager,
+
     reachBottom: false,
 
     questionList: [
