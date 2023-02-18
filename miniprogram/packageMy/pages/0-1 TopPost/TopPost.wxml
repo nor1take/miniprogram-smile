@@ -1,4 +1,5 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="使用帮助"></return>
+
 <view class="title_help" bindtap="help" data-id="新版">
   * 新版更新说明
   <image wx:if="{{currentId===0}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
@@ -15,22 +16,6 @@
   <view class="item">8、增加轮播条。点击轮播条即可跳转到相应页面。目前有“置顶”和“热门”。</view>
 </view>
 
-<view class="title_help" bindtap="help" data-id="菜单">
-  菜单
-  <image wx:if="{{currentId===1}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
-</view>
-<view wx:if="{{currentId===1}}" class="body_help">
-  <view class="item">点击左上角按钮呼出菜单，点击右侧灰黑色区域菜单收回。</view>
-</view>
-<view class="title_help" bindtap="help" data-id="搜索">
-  搜索
-  <image wx:if="{{currentId===2}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
-</view>
-<view wx:if="{{currentId===2}}" class="body_help">
-  <view class="item">支持搜索“标签/标题/正文”的关键字、词。</view>
-</view>
 <view class="title_help" bindtap="help" data-id="发帖">
   * 发帖
   <image wx:if="{{currentId===3}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
@@ -44,15 +29,6 @@
   <view class="item">④选择匿名发帖(可选)。</view>
 </view>
 
-<view class="title_help" bindtap="help" data-id="消息">
-  消息
-  <image wx:if="{{currentId===4}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
-</view>
-<view wx:if="{{currentId===4}}" class="body_help">
-  <view class="item">当你有消息未读时，“消息”右上角会显示红点和未读消息数。</view>
-</view>
-
 <view class="title_help" bindtap="help" data-id="左上角圆点">
   * 帖子左上角颜色圆点说明
   <image wx:if="{{currentId===5}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
@@ -64,6 +40,33 @@
   <view class="item" style="color: #F9A826;">橙色：问题帖子已有人回应，但是提问者认为问题并没有得到解决。</view>
   <view class="item" style="color: #07C160;">绿色：发帖人觉得问题已经得到解决。</view>
   <view class="item">* 发帖人可在帖子的详情页点击左上角圆点，根据提示调整帖子的状态。</view>
+</view>
+
+<view class="title_help" bindtap="help" data-id="菜单">
+  菜单
+  <image wx:if="{{currentId===1}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
+  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+</view>
+<view wx:if="{{currentId===1}}" class="body_help">
+  <view class="item">点击左上角按钮呼出菜单，点击右侧灰黑色区域菜单收回。</view>
+</view>
+
+<view class="title_help" bindtap="help" data-id="搜索">
+  搜索
+  <image wx:if="{{currentId===2}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
+  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+</view>
+<view wx:if="{{currentId===2}}" class="body_help">
+  <view class="item">支持搜索“标签/标题/正文”的关键字、词。</view>
+</view>
+
+<view class="title_help" bindtap="help" data-id="消息">
+  消息
+  <image wx:if="{{currentId===4}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
+  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+</view>
+<view wx:if="{{currentId===4}}" class="body_help">
+  <view class="item">当你有消息未读时，“消息”右上角会显示红点和未读消息数。</view>
 </view>
 
 <view style="width: 100%; height: 30%; position: absolute; "></view>

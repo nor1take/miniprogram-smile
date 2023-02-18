@@ -270,7 +270,7 @@ Page({
         this.data.fileID.splice(index, 1)
         wx.showToast({
           title: '删除成功',
-          icon:'none'
+          icon: 'none'
         })
         if (this.data.fileID.length === 0) {
           this.setData({
@@ -634,25 +634,21 @@ Page({
                   question.where({
                     _id: app.globalData.questionId
                   }).get().then(res => {
-                    console.log(res.data)
                     deleteQuestionCloudImage(res.data)
                   }),
                   comment.where({
                     questionId: app.globalData.questionId
                   }).get().then(res => {
-                    console.log(res.data)
                     deleteCommentCloudImage(res.data)
                   }),
                   commentAgain.where({
                     questionId: app.globalData.questionId
                   }).get().then(res => {
-                    console.log(res.data)
                     deleteCommentCloudImage(res.data)
                   })
                 ]).then(() => {
                   Promise.all([
                     question.where({
-                      _openid: '{openid}',
                       _id: app.globalData.questionId
                     }).remove(),
                     commentAgain.where({
@@ -705,7 +701,6 @@ Page({
         }
       })
     }
-
   },
 
   deleteCommentEnd: function () {
@@ -824,8 +819,8 @@ Page({
   },
   imageTap: function (e) {
     console.log(e.currentTarget.dataset.imagelist)
-    let {imagelist} = e.currentTarget.dataset
-    
+    let { imagelist } = e.currentTarget.dataset
+
     wx.previewImage({
       current: e.currentTarget.dataset.src,
       urls: imagelist

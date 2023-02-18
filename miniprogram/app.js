@@ -19,6 +19,8 @@ App({
     avatarUrl:'',
     
     messageNum: 0,
+    
+    isManager: false
 
   },
   onLaunch: function () {

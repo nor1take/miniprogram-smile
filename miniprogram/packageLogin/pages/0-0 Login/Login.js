@@ -20,7 +20,8 @@ Page({
       userInfo.add({
         data: {
           nickName: res.userInfo.nickName,
-          avatarUrl: res.userInfo.avatarUrl
+          avatarUrl: res.userInfo.avatarUrl,
+          isManager: false
         }
       }).then(() => {
         wx.switchTab({
