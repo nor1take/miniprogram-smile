@@ -1,6 +1,5 @@
 {
   "usingComponents": {
-    "showTime":"../../../components/showTime/showTime",
     "return":"../../../components/return-noTab/return-noTab"
   },
   "enablePullDownRefresh":true,

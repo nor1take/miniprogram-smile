@@ -55,9 +55,12 @@ Page({
   },
   hot: function () {
     console.log('热门')
-    wx.showToast({
-      title: '功能尚未开放 敬请期待！',
-      icon: 'none'
+    // wx.showToast({
+    //   title: '功能尚未开放 敬请期待！',
+    //   icon: 'none'
+    // })
+    wx.navigateTo({
+      url: '../4-0 Hot/Hot',
     })
   },
   getNewData: function () {

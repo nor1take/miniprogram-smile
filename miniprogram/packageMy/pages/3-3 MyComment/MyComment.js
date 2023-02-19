@@ -49,16 +49,8 @@ Page({
     })
   },
   getData: function () {
-    var d = new Date();
     this.getNewData()
     this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-
       top: app.globalData.top,
       left: app.globalData.left,
       right: app.globalData.right,

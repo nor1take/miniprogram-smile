@@ -185,17 +185,6 @@ Page({
       })
   },
 
-  getTime: function () {
-    var d = new Date();
-    this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-    })
-  },
 
   onLoad: function () {
     this.getData()
@@ -356,7 +345,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.getTime()
     if (this.data.activeTab === 0) {
       this.updateQuestionListOther()
     }

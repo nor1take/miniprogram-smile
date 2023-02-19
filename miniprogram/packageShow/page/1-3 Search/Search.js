@@ -83,20 +83,7 @@ Page({
       bottom: res.bottom
     })
   },
-  getTime: function () {
-    var d = new Date();
-    this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-    })
-  },
-  getData: function () {
-    this.getTime()
-  },
+
   //2 点击，跳转到Detail页面
   beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
@@ -116,7 +103,6 @@ Page({
    */
   onLoad: function (options) {
     this.getRightTop()
-    this.getData()
   },
 
   /**

@@ -3,7 +3,8 @@
   "pages": [
     "pages/0-0 Show/Show",
     "pages/2-0 Classify/Classify",
-    "pages/3-0 My/My"
+    "pages/3-0 My/My",
+    "pages/4-0 Hot/Hot"
   ],
   "window": {
     "backgroundColor": "@backgroundColor",

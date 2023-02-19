@@ -1,4 +1,4 @@
-<wxs src="../../../filter.wxs" module="filter" />
+<wxs src="../../../util/filter.wxs" module="filter" />
 
 <return top="{{top}}" topWord="处理举报"></return>
 

@@ -158,25 +158,13 @@ Page({
     this.setData({
       loading: true
     })
-    var d = new Date();
+    var d = new Date().getTime();
     question.add({
       data: {
         //时间
-        answerTime: '',
-        Ayear: '',
-        Amonth: '',
-        Aday: '',
-        Ah: '',
-        Am: '',
-        As: '',
+        answerTime: null,
 
         time: d,
-        year: d.getFullYear(),
-        month: d.getMonth() + 1,
-        day: d.getDate(),
-        h: d.getHours(),
-        m: d.getMinutes(),
-        s: d.getSeconds(),
 
         image: this.data.fileID,
 
@@ -194,6 +182,7 @@ Page({
 
         commentNum: 0,
         commenter: [],
+        
         message: 0,
 
         collector: [],

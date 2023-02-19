@@ -1,6 +1,5 @@
 {
   "usingComponents": {
-    "showTime":"../../components/showTime/showTime",
     "tabs":"../../components/scroll-view-tabs/scroll-view-tabs"
   }
 }

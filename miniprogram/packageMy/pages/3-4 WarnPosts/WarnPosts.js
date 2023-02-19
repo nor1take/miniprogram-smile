@@ -110,14 +110,9 @@ Page({
 
   },
   getData: function () {
-    var d = new Date();
+
     this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
+
 
       top: app.globalData.top,
       // height:app.globalData.height
@@ -134,17 +129,7 @@ Page({
   },
 
 
-  getTime: function () {
-    var d = new Date();
-    this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-    })
-  },
+
 
 
   /**
@@ -215,7 +200,6 @@ Page({
   },
 
   onShow: function () {
-    this.getTime()
     console.log(app.globalData.isAsk)
 
     if (app.globalData.isAsk) {

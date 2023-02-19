@@ -1,0 +1,35 @@
+var abbreviation = function (value) {
+  if (value.length > 40) {
+    return value.slice(0, 40) + '...'
+  } else {
+    return value
+  }
+}
+
+var timeString = function (time) {
+  var t1 = getDate().getTime();
+  var t2 = time;
+  var d = (t1 - t2) / 1000;
+
+  if (d < 30) return "刚刚";
+  else if (d < 60) return (parseInt(d) + " 秒前");
+  else if (d < 60 * 60) return (parseInt(d / 60) + " 分钟前");
+  else if (d < 60 * 60 * 24) return (parseInt(d / 60 / 60) + " 小时前");
+  else if (d < 60 * 60 * 24 * 2) return "昨天";
+  else if (d < 60 * 60 * 24 * 3) return "前天";
+  else if (d < 60 * 60 * 24 * 30) return (parseInt(d / 60 / 60 / 24) + " 天前");
+  else {
+    var date = getDate(time * 1000);
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds();
+    return Y + M + D + h + m + s;
+  }
+}
+module.exports = {
+  abbreviation: abbreviation,
+  timeString: timeString
+}

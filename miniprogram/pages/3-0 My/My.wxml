@@ -1,4 +1,4 @@
-<wxs src="../../filter.wxs" module="filter" />
+<wxs src="../../util/filter.wxs" module="filter" />
 <view class="topBlock" style="height: {{top+32+32}}px; width: 100%; position: fixed;z-index: 1;"></view>
 <view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2;">
   消息
@@ -12,7 +12,7 @@
     <block wx:for="{{tabs[0].questionList}}" wx:key="id">
       <view class="messageBackground" bindtap="gotoDetail" id="{{item._id}}">
         <view class="showTime">
-          <showTime year="{{year}}" dbyear="{{item.Ayear}}" month="{{month}}" dbmonth="{{item.Amonth}}" day="{{day}}" dbday="{{item.Aday}}" h="{{h}}" dbh="{{item.Ah}}" m="{{m}}" dbm="{{item.Am}}" s="{{s}}" dbs="{{item.As}}"></showTime>
+          <text>{{filter.timeString(item.answerTime)}}</text>
           <text class="red-point" wx:if="{{item.message}}">{{item.message}}</text>
         </view>
         <view class="top">
@@ -48,7 +48,7 @@
     <block wx:for="{{tabs[1].questionList}}" wx:key="id">
       <view class="messageBackground" bindtap="gotoDetail2" id="{{item.questionId}}" data-commentId="{{item._id}}">
         <view class="showTime">
-          <showTime year="{{year}}" dbyear="{{item.Ayear}}" month="{{month}}" dbmonth="{{item.Amonth}}" day="{{day}}" dbday="{{item.Aday}}" h="{{h}}" dbh="{{item.Ah}}" m="{{m}}" dbm="{{item.Am}}" s="{{s}}" dbs="{{item.As}}"></showTime>
+          <text>{{filter.timeString(item.answerTime)}}</text>
           <text class="red-point" wx:if="{{!item.isWatched}}">1</text>
         </view>
         <view class="top">
@@ -69,7 +69,7 @@
     <block wx:for="{{tabs[2].questionList}}" wx:key="id">
       <view class="messageBackground" bindtap="gotoDetail3" id="{{item.questionId}}">
         <view class="showTime">
-          <showTime year="{{year}}" dbyear="{{item.Lyear}}" month="{{month}}" dbmonth="{{item.Lmonth}}" day="{{day}}" dbday="{{item.Lday}}" h="{{h}}" dbh="{{item.Lh}}" m="{{m}}" dbm="{{item.Lm}}" s="{{s}}" dbs="{{item.Ls}}"></showTime>
+          <text>{{filter.timeString(item.likeTime)}}</text>
         </view>
         <view class="top">{{item.liker.length}} 个人赞了你的评论：</view>
         <view class="background" style="font-size: 30rpx;">

@@ -11,7 +11,7 @@
     isInArray: isInArray
   };
 </wxs>
-<wxs src="../../../filter.wxs" module="filter" />
+<wxs src="../../../util/filter.wxs" module="filter" />
 
 <return top="{{top}}" bottom="{{bottom}}"></return>
 
@@ -70,7 +70,7 @@
 
 
     <view class="last">
-      <showTime year="1980" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime> ·
+      <text>{{filter.timeString(item.time)}}</text> ·
       <text class="watched">{{item.watched}} 浏览</text> ·
       <text class="watched">{{collectNum}} 关注</text>
     </view>
@@ -112,7 +112,7 @@
     <!-- 三、评论时间 点赞按钮 评论按钮-->
     <view class="commentLast">
       <view class="commentTime">
-        <showTime year="{{year}}" dbyear="{{item.year}}" month="{{month}}" dbmonth="{{item.month}}" day="{{day}}" dbday="{{item.day}}" h="{{h}}" dbh="{{item.h}}" m="{{m}}" dbm="{{item.m}}" s="{{s}}" dbs="{{item.s}}"></showTime>
+        <text>{{filter.timeString(item.time)}}</text>
       </view>
       <view class="buttonArea">
         <view class="LikeCommentbutton-area">

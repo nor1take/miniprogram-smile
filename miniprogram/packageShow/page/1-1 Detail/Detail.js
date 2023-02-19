@@ -161,7 +161,6 @@ Page({
       itemColor: '#0C88B5',
     })
       .then((res) => {
-        var d = new Date();
         if (res.tapIndex === 0) {
           wx.showToast({
             title: '“最新回应”优先',
@@ -171,12 +170,6 @@ Page({
           this.NewCommentFirst()
           this.setData({
             sortWord: '按最新',
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            day: d.getDate(),
-            h: d.getHours(),
-            m: d.getMinutes(),
-            s: d.getSeconds(),
           })
         }
         else if (res.tapIndex === 1) {
@@ -188,12 +181,6 @@ Page({
           this.OldCommentFirst()
           this.setData({
             sortWord: '按最早',
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            day: d.getDate(),
-            h: d.getHours(),
-            m: d.getMinutes(),
-            s: d.getSeconds(),
           })
         }
         else {
@@ -205,12 +192,6 @@ Page({
           this.LikemostCommentFisrt()
           this.setData({
             sortWord: '按赞数',
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            day: d.getDate(),
-            h: d.getHours(),
-            m: d.getMinutes(),
-            s: d.getSeconds(),
           })
         }
       })
@@ -412,7 +393,7 @@ Page({
 
   },
   likeAdd: function (e) {
-    var d = new Date();
+    var d = new Date().getTime();
     console.log('点赞', e)
     const commentId = e.target.id
     const commentIndex = e.target.dataset.index
@@ -429,12 +410,6 @@ Page({
         liker: _.addToSet(app.globalData.openId),
         likerNum: likerNum,
         likeTime: d,
-        Lyear: d.getFullYear(),
-        Lmonth: d.getMonth() + 1,
-        Lday: d.getDate(),
-        Lh: d.getHours(),
-        Lm: d.getMinutes(),
-        Ls: d.getSeconds(),
       }
     }).then(res => {
       console.log('like Add', res)
@@ -876,18 +851,6 @@ Page({
     }
   },
 
-  //1-2 获取时间
-  getTime: function () {
-    var d = new Date();
-    this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-    })
-  },
   //1-3 获取右上角按钮数据
   getRightTop: function () {
     const res = wx.getMenuButtonBoundingClientRect()
@@ -950,19 +913,13 @@ Page({
       title: '发送中...',
       icon: 'none'
     })
-    var d = new Date();
+    var d = new Date().getTime();
     if (this.data.tapAnswerButton) {
       question.doc(app.globalData.questionId).get().then(res => {
         if (res.data._openid != this.data.openId) {
           question.doc(app.globalData.questionId).update({
             data: {
               answerTime: d,
-              Ayear: d.getFullYear(),
-              Amonth: d.getMonth() + 1,
-              Aday: d.getDate(),
-              Ah: d.getHours(),
-              Am: d.getMinutes(),
-              As: d.getSeconds(),
               commentNum: _.inc(1),
               message: _.inc(1),
 
@@ -979,12 +936,6 @@ Page({
                   likeTime: '',
 
                   time: d,
-                  year: d.getFullYear(),
-                  month: d.getMonth() + 1,
-                  day: d.getDate(),
-                  h: d.getHours(),
-                  m: d.getMinutes(),
-                  s: d.getSeconds(),
 
                   questionId: app.globalData.questionId,
                   body: this.data._commentBody,
@@ -1015,12 +966,7 @@ Page({
                   likeTime: '',
 
                   time: d,
-                  year: d.getFullYear(),
-                  month: d.getMonth() + 1,
-                  day: d.getDate(),
-                  h: d.getHours(),
-                  m: d.getMinutes(),
-                  s: d.getSeconds(),
+
 
                   questionId: app.globalData.questionId,
                   body: this.data._commentBody,
@@ -1068,12 +1014,7 @@ Page({
         commentAgain.add({
           data: {
             answerTime: d,
-            Ayear: d.getFullYear(),
-            Amonth: d.getMonth() + 1,
-            Aday: d.getDate(),
-            Ah: d.getHours(),
-            Am: d.getMinutes(),
-            As: d.getSeconds(),
+
             commentAgainBody: this.data._commentBody,
             newOpenId: app.globalData.openId,
             postOpenId: this.data._postOpenId,
@@ -1115,12 +1056,7 @@ Page({
           commentAgain.add({
             data: {
               answerTime: d,
-              Ayear: d.getFullYear(),
-              Amonth: d.getMonth() + 1,
-              Aday: d.getDate(),
-              Ah: d.getHours(),
-              Am: d.getMinutes(),
-              As: d.getSeconds(),
+
               commentAgainBody: this.data._commentBody,
               newOpenId: app.globalData.openId,
               postOpenId: this.data._postOpenId,
@@ -1157,7 +1093,6 @@ Page({
     console.log('openId: ', app.globalData.openId)
     this.getRightTop()
     this.getData()
-    this.getTime()
   },
 
   /**
