@@ -162,7 +162,7 @@ Page({
     question.add({
       data: {
         //时间
-        answerTime: null,
+        answerTime: 0,
 
         time: d,
 
@@ -178,7 +178,7 @@ Page({
         tabsId: this.data.id,
         tabs: this.data.tabs,
 
-        watched: 0,
+        watched: 1,
 
         commentNum: 0,
         commenter: [],

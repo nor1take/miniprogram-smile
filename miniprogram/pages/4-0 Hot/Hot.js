@@ -9,30 +9,46 @@ Page({
    * 页面的初始数据
    */
   data: {
+    top: 48,
+    left: 281,
+    right: 367,
+    bottom: 80,
 
+    color1: '#DF3E3E',
+    color2: '#FE721D',
+    color3: '#F5AD01',
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    var now = new Date().getTime();
     question
       .aggregate()
       .project({
-        tabsId: 1,
+        _id: 1,
+        title: 1,
+        image: 1,
         time: 1,
-        totalScores: $.sum([
-          $.multiply([$.log10('$watched'), 4]),
-          '$collectNum',
-          $.divide(['$commentNum', 4])
+        totalScores: $.divide([
+          $.sum([
+            $.multiply([$.log10('$watched'), 4]),
+            '$collectNum',
+            $.divide(['$commentNum', 4])
+          ]),
+          $.pow([$.subtract([now, '$time']), 1.5])
         ])
       })
       .sort({
-        time: -1,
         totalScores: -1
-      }).end()
+      })
+      .end()
       .then((res) => {
         console.log(res.list)
+        this.setData({
+          questionList: res.list
+        })
       })
   },
 

@@ -6,6 +6,11 @@ var abbreviation = function (value) {
   }
 }
 
+var int = function (score) {
+  var value = score * 1000000000;
+  return value.toFixed(2);
+}
+
 var timeString = function (time) {
   if (time == null || time == 0) return '';
   var t1 = getDate().getTime();
@@ -32,5 +37,6 @@ var timeString = function (time) {
 }
 module.exports = {
   abbreviation: abbreviation,
-  timeString: timeString
+  timeString: timeString,
+  int: int
 }

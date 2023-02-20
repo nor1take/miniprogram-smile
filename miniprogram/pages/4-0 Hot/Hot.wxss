@@ -1,1 +1,30 @@
 /* pages/4-0 Hot/Hot.wxss */
+.background{
+  border: 1rpx solid transparent;
+  border-radius: 15rpx;
+  box-shadow:0 0 0rpx transparent;
+  background-color: white;
+  padding: 32rpx;
+}
+
+.index{
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  font-size: 30rpx;
+  font-weight: bolder;
+  color: #7B7B7B;
+}
+
+.title {
+  font-size: 36rpx;
+  margin: 32rpx;
+}
+
+@media (prefers-color-scheme: dark) {
+  .background{
+    background-color: black;
+  }
+}
