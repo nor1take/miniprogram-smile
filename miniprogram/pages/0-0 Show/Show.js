@@ -188,24 +188,16 @@ Page({
     })
   },
   getCommentMessage_withOpenid: function () {
+    console.log(app.globalData.openId)
     return new Promise((resolve) => {
-      wx.cloud.callFunction({
-        name: 'getOpenId',
-      }).then(res => {
-        console.log('成功获取OpenID：', res.result.OPENID)
-        app.globalData.openId = res.result.OPENID
-        commentAgain.where({
-          postOpenId: '{openid}',
-          _openid: _.neq(res.result.OPENID),
-          isWatched: false
-        }).count().then(res => {
-          resolve()
-          this.CommentMessageData = { CommentMessageNum: res.total }
-        })
-      }).catch(() => {
-        console.log('获取openid失败')
+      commentAgain.where({
+        postOpenId: '{openid}',
+        _openid: _.neq(app.globalData.openId),
+        isWatched: false
+      }).count().then(res => {
+        resolve()
+        this.CommentMessageData = { CommentMessageNum: res.total }
       })
-
     })
   },
   getQuestionMessage: function () {
@@ -271,7 +263,7 @@ Page({
           this.setData({
             nickName: res.data[0].nickName,
             avatarUrl: res.data[0].avatarUrl
-          })
+          });
         app.globalData.nickName = res.data[0].nickName,
           app.globalData.avatarUrl = res.data[0].avatarUrl,
           console.log('成功获取昵称、头像：', app.globalData.nickName)

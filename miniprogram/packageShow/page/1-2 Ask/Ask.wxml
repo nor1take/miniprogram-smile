@@ -55,7 +55,7 @@
 
     <view class="btn-area">
         <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
-        <button wx:else disabled="true" size="default" type="primary" bindtap="toast1Tap" formType="submit">发布</button>
+        <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
     </view>
 </form>
 <view style="width: 100%; height: 10%; position: absolute;"></view>

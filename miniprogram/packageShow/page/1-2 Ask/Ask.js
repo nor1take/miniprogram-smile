@@ -3,11 +3,11 @@ const db = wx.cloud.database()
 const question = db.collection('question')
 
 function uploadManyImages(tempFiles, page) {
-  let randString
+  let onlyString
   for (var i = 0; i < tempFiles.length; i++) {
-    randString = Math.floor(Math.random() * 1000000).toString()
+    onlyString = new Date().getTime().toString()
     wx.cloud.uploadFile({
-      cloudPath: app.globalData.openId + '/' + randString + '.png', // 上传至云端的路径
+      cloudPath: app.globalData.openId + '/' + onlyString + '.png', // 上传至云端的路径
       filePath: tempFiles[i].tempFilePath, // 小程序临时文件路径
       success: res => {
         page.data.fileID.push(res.fileID)
@@ -182,7 +182,7 @@ Page({
 
         commentNum: 0,
         commenter: [],
-        
+
         message: 0,
 
         collector: [],

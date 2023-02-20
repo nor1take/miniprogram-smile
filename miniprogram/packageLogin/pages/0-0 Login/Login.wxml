@@ -3,13 +3,14 @@
 </view>
 
 <block wx:if="{{show}}">
-  <view style="opacity: 0;" animation="{{animationData}}">
-    <view class="wordContainer">
-      <view class="word"></view>
-    </view>
+  <view class="wholePage">
+    <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image class="avatar" src="{{avatarUrl}}"></image>
+    </button>
+    <form catchsubmit="login">
+      <input type="nickname" bindnicknamereview="onNickNameReview" confirm-type="done" placeholder="请输入昵称" name='nickName' />
+      <button form-type='submit'>登录</button>
+    </form>
 
-    <view class="wholePage">
-      <button open-type="getUserInfo" bindtap="getUserInfo">登录</button>
-    </view>
   </view>
 </block>

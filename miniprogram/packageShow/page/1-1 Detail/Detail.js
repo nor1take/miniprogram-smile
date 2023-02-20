@@ -14,7 +14,6 @@ function uploadManyImages(tempFiles, page) {
       filePath: tempFiles[i].tempFilePath, // 小程序临时文件路径
       success: res => {
         page.data.fileID.push(res.fileID)
-        console.log(1)
         // 返回文件 ID
         page.setData({
           fileID: page.data.fileID
@@ -23,7 +22,6 @@ function uploadManyImages(tempFiles, page) {
         wx.showToast({
           title: '上传成功',
         })
-        console.log(page.data.fileID)
       },
       fail: err => {
         console.error('[上传文件] 失败：', err)
@@ -41,14 +39,13 @@ function deleteCommentCloudImage(list) {
   for (var i = 0; i < list.length; i++) {
     for (var j = 0; j < list[i].image_upload.length; j++) {
       let id = list[i].image_upload[j]
-      console.log(id)
       wx.cloud.deleteFile({
         fileList: [id],
         success: res => {
           console.log('成功删除', res)
         },
         fail: err => {
-          console.log(err)
+          console.error(err)
         }
       })
     }
@@ -57,14 +54,13 @@ function deleteCommentCloudImage(list) {
 function deleteQuestionCloudImage(list) {
   for (var i = 0; i < list[0].image.length; i++) {
     let id = list[0].image[i]
-    console.log(id)
     wx.cloud.deleteFile({
       fileList: [id],
       success: res => {
         console.log('成功删除', res)
       },
       fail: err => {
-        console.log(err)
+        console.error(err)
       }
     })
   }
@@ -123,7 +119,6 @@ Page({
       /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
     }).orderBy('time', 'desc').
       get().then(res => {
-        // console.log('成功获取 评论', res.data)
         this.setData({
           commentList: res.data,
         })
@@ -135,7 +130,6 @@ Page({
       /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
     }).orderBy('time', 'asc').
       get().then(res => {
-        // console.log('成功获取 评论', res.data)
         this.setData({
           commentList: res.data,
           openId: app.globalData.openId
@@ -148,7 +142,6 @@ Page({
       /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
     }).orderBy('likerNum', 'desc').orderBy('time', 'asc').
       get().then(res => {
-        // console.log('成功获取 评论', res.data)
         this.setData({
           commentList: res.data,
           openId: app.globalData.openId
@@ -196,7 +189,7 @@ Page({
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
       })
   },
   sort: function () {
@@ -289,7 +282,6 @@ Page({
     question.where({
       _id: app.globalData.questionId
     }).get().then(res => {
-      console.log(res.data[0])
       this.setData({
         questionList: res.data,
         collectNum: res.data[0].collector.length,
@@ -933,8 +925,6 @@ Page({
               comment.add({
                 data: {
                   //时间
-                  likeTime: '',
-
                   time: d,
 
                   questionId: app.globalData.questionId,
@@ -963,8 +953,6 @@ Page({
               comment.add({
                 data: {
                   //时间
-                  likeTime: '',
-
                   time: d,
 
 
