@@ -1,4 +1,5 @@
 // components/search/search.js
+
 Component({
   /**
    * 组件的属性列表
@@ -20,7 +21,9 @@ Component({
     menu: false,
     menuAnimation: {},
     backAnimation: {},
+    defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
   },
+
   /**
    * 组件的方法列表
    */
@@ -28,6 +31,12 @@ Component({
     search: function () {
       wx.navigateTo({
         url: '../../packageShow/page/1-3 Search/Search',
+      })
+    },
+
+    modify: function(){
+      wx.navigateTo({
+        url: '../../packageLogin/pages/0-0 Login/Login',
       })
     },
 

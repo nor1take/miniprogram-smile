@@ -19,6 +19,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    isLogin: false,
     sortWord: '最新发帖',
 
     colorGray: '#E7E7E7',
@@ -30,7 +31,7 @@ Page({
     right: 367,
     bottom: 80,
 
-    isManager: app.globalData.isManager,
+    isManager: false,
 
     reachBottom: false,
 
@@ -188,15 +189,22 @@ Page({
     })
   },
   getCommentMessage_withOpenid: function () {
-    console.log(app.globalData.openId)
     return new Promise((resolve) => {
-      commentAgain.where({
-        postOpenId: '{openid}',
-        _openid: _.neq(app.globalData.openId),
-        isWatched: false
-      }).count().then(res => {
-        resolve()
-        this.CommentMessageData = { CommentMessageNum: res.total }
+      wx.cloud.callFunction({
+        name: 'getOpenId',
+      }).then(res => {
+        console.log('成功获取OpenID：', res.result.OPENID)
+        app.globalData.openId = res.result.OPENID
+        commentAgain.where({
+          postOpenId: '{openid}',
+          _openid: _.neq(app.globalData.openId),
+          isWatched: false
+        }).count().then(res => {
+          resolve()
+          this.CommentMessageData = { CommentMessageNum: res.total }
+        })
+      }).catch(() => {
+        console.log('获取openid失败')
       })
     })
   },
@@ -259,20 +267,32 @@ Page({
       _openid: '{openid}'
     }).get()
       .then((res) => {
+        this.setData({
+          nickName: res.data[0].nickName,
+          avatarUrl: res.data[0].avatarUrl,
+          isLogin: true,
+          isManager: res.data[0].isManager,
+        })
         app.globalData.isLogin = true,
-          this.setData({
-            nickName: res.data[0].nickName,
-            avatarUrl: res.data[0].avatarUrl
-          });
-        app.globalData.nickName = res.data[0].nickName,
+          app.globalData.isManager = res.data[0].isManager,
+          app.globalData.nickName = res.data[0].nickName,
           app.globalData.avatarUrl = res.data[0].avatarUrl,
-          console.log('成功获取昵称、头像：', app.globalData.nickName)
+          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
       })
       .catch(() => {
         console.log('用户未登录')
+        this.setData({
+          nickName: '',
+          avatarUrl: '',
+          isLogin: false,
+        })
+        app.globalData.isLogin = false,
+        wx.showToast({
+          icon: 'none',
+          title: '游客模式。登录后体验 ‘发帖’ ‘评论’ 功能',
+          duration: 3500,
+        })
       })
-  },
-  getOpenID: function () {
   },
   getOtherData: function () {
     this.getCurrentMessageNum_withOpenid()
@@ -281,9 +301,10 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function () {
-    console.log('app.globalData.questionId', app.globalData.questionId)
-    if (app.globalData.questionId != undefined) {
+  onLoad: function (options) {
+    console.log('options.id', options.id)
+    if (options.id != undefined) {
+      app.globalData.questionId = options.id
       setTimeout(function () {
         wx.navigateTo({
           url: '../../packageShow/page/1-1 Detail/Detail',
@@ -296,9 +317,10 @@ Page({
           watched: _.inc(1)
         }
       }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+    } else {
+      this.getData()
+      this.getOtherData()
     }
-    this.getData()
-    this.getOtherData()
   },
 
   /**
@@ -313,6 +335,7 @@ Page({
   onShow: function () {
     // console.log(app.globalData)
     this.getCurrentMessageNum()
+    this.getNicknameandImage()
     const { questionList } = this.data
     const { questionIndex } = app.globalData
     if (app.globalData.isClick) {
@@ -425,7 +448,6 @@ Page({
         }
       })
     }
-
   },
 
   /**
@@ -434,7 +456,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: '实时',
-      path: 'packageLogin/pages/0-0 Login/Login'
+      path: 'pages/0-0 Show/Show'
     }
   }
 })

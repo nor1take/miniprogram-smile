@@ -1,5 +1,5 @@
 {
-  "entryPagePath": "packageLogin/pages/0-0 Login/Login",
+  "entryPagePath": "pages/0-0 Show/Show",
   "pages": [
     "pages/0-0 Show/Show",
     "pages/2-0 Classify/Classify",
@@ -66,14 +66,6 @@
       ]
     }
   ],
-  "preloadRule": {
-    "packageLogin/pages/0-0 Login/Login": {
-      "packages": [
-        "__APP__"
-      ],
-      "network": "all"
-    }
-  },
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents",
   "darkmode": true,

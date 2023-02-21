@@ -11,13 +11,19 @@ Page({
    */
   data: {
     avatarUrl: defaultAvatarUrl,
+    nickName: '',
     show: false,
     pass: false,
+
+    top: 48,
+    left: 281,
+    right: 367,
+    bottom: 80,
   },
 
   login: function (e) {
     console.log("login")
-    const  nickName  = e.detail.value.nickName;
+    const nickName = e.detail.value.nickName;
     if (nickName.length == 0 || nickName == null) {
       wx.showToast({
         title: '昵称不能为空',
@@ -25,31 +31,48 @@ Page({
       })
     } else {
       wx.showLoading({
-        title: '登录中…',
+        title: '提交中…',
       })
+      const onlyString = new Date().getTime().toString();
       wx.cloud.uploadFile({
-        cloudPath: app.globalData.openId + '/' + 'avatar.png', // 上传至云端的路径
+        cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString + '.png', // 上传至云端的路径
         filePath: this.data.avatarUrl, // 小程序临时文件路径
         success: res => {
-          wx.hideLoading()
-          userInfo.add({
-            data: {
-              nickName: nickName,
-              avatarUrl: res.fileID,
-              isManager: false
-            }
-          }).then(() => {
-            wx.switchTab({
-              url: '../../../pages/0-0 Show/Show'
+          if (!app.globalData.isLogin) {
+            userInfo.add({
+              data: {
+                nickName: nickName,
+                avatarUrl: res.fileID,
+                isManager: false
+              }
+            }).then(() => {
+              wx.hideLoading()
+              wx.switchTab({
+                url: '../../../pages/0-0 Show/Show'
+              })
             })
-          })
+          } else {
+            userInfo.where({
+              _openid: '{openid}'
+            }).update({
+              data: {
+                nickName: nickName,
+                avatarUrl: res.fileID,
+              }
+            }).then(() => {
+              wx.hideLoading()
+              wx.switchTab({
+                url: '../../../pages/0-0 Show/Show'
+              })
+            })
+          }
         },
         fail: err => {
           console.error('[上传文件] 失败：', err)
           wx.hideLoading()
           wx.showToast({
             icon: 'none',
-            title: '登录失败',
+            title: '失败',
           })
         }
       })
@@ -72,39 +95,20 @@ Page({
     })
   },
 
-  getOpenId() {
-    wx.cloud.callFunction({
-      name: 'getOpenId',
-    }).then(res => {
-      console.log('成功获取OpenID：', res.result.OPENID)
-      app.globalData.openId = res.result.OPENID
-    }).catch(() => {
-      console.log('获取openid失败')
-    })
-  },
-
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getOpenId()
     // console.log('options', options)
-    if (options != undefined) {
-      app.globalData.questionId = options.id
-    }
     userInfo.where({
       _openid: '{openid}'
     }).get()
       .then((res) => {
         if (res.data.length) {
-          console.log('用户已登录：', res.data)
-          app.globalData.isManager = res.data[0].isManager
-          wx.switchTab({
-            url: '../../../pages/0-0 Show/Show'
-          })
-        } else {
+          console.log('用户已登录：', res.data[0])
           this.setData({
-            show: true
+            avatarUrl: res.data[0].avatarUrl,
+            nickName: res.data[0].nickName
           })
         }
       })
@@ -112,13 +116,4 @@ Page({
         console.log(err)
       })
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    return {
-      title: '登录',
-    }
-  }
 })

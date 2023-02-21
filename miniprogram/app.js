@@ -20,8 +20,8 @@ App({
     
     messageNum: 0,
     
-    isManager: false
-
+    isManager: false,
+    isLogin: false
   },
   onLaunch: function () {
     if (!wx.cloud) {

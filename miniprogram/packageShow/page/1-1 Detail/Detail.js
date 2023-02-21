@@ -74,6 +74,7 @@ Page({
     pureDataPattern: /^_/
   },
   data: {
+    isLogin: false,
     // animationData: {},
     isFold: true,
     sortWord: "按最新",
@@ -1078,7 +1079,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
-    console.log('openId: ', app.globalData.openId)
     this.getRightTop()
     this.getData()
   },
@@ -1094,6 +1094,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.setData({
+      isLogin: app.globalData.isLogin
+    })
     this.deleteCommentEnd()
     app.globalData.isClick = true
   },
@@ -1139,7 +1142,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: this.data.questionList[0].title,
-      path: 'packageLogin/pages/0-0 Login/Login?id=' + app.globalData.questionId
+      path: 'pages/0-0 Show/Show?id=' + app.globalData.questionId
     }
   }
 })

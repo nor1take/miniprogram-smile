@@ -1,16 +1,11 @@
-<view class="topWordContanier">
-  <view class="topWord">:)</view>
+<return top="{{top}}" bottom="{{bottom}}" topWord="修改头像和昵称"></return>
+<view class="wholePage">
+  <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+    <image class="avatar" src="{{avatarUrl}}"></image>
+  </button>
+  <form catchsubmit="login">
+    <input type="nickname" bindnicknamereview="onNickNameReview" confirm-type="done" placeholder="请输入昵称" name='nickName' value="{{nickName}}" />
+    <button form-type='submit'>提交</button>
+  </form>
+
 </view>
-
-<block wx:if="{{show}}">
-  <view class="wholePage">
-    <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-      <image class="avatar" src="{{avatarUrl}}"></image>
-    </button>
-    <form catchsubmit="login">
-      <input type="nickname" bindnicknamereview="onNickNameReview" confirm-type="done" placeholder="请输入昵称" name='nickName' />
-      <button form-type='submit'>登录</button>
-    </form>
-
-  </view>
-</block>

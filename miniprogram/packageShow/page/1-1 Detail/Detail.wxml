@@ -164,7 +164,7 @@
   </block>
 </view>
 
-<view class="bottomInput-Container" style="bottom: {{height}}px;">
+<view wx:if="{{isLogin}}" class="bottomInput-Container" style="bottom: {{height}}px;">
   <view class="imageArea" bindtap="upload">
     <image src="../../../icon/image-add-fill.png" style="width: 50rpx; height: 50rpx;"></image>
   </view>

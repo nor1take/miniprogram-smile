@@ -6,11 +6,11 @@
   <block wx:for="{{tabs}}" wx:key="id">
     <view slot="tab-content-{{index}}">
       <view style="height: {{top+32+32}}px; width: 100%;"></view>
-      <block wx:if="{{item.questionList.length == 0 && activeTab === 0}}">
+      <!-- <block wx:if="{{item.questionList.length == 0 && activeTab === 0}}">
         <view class="bottom" style="margin-top: 40%;">你还没有发帖~ 点击下方+发帖 ↓</view>
         <view style="margin: 32rpx;padding-bottom: 20rpx; display: flex;align-items: center;justify-content: center;font-size: 100px; color: #d2d2d2; border: 1rpx dashed #d2d2d2;" bindtap="ask">+</view>
-      </block>
-      <block wx:elif="{{item.questionList.length == 0}}">
+      </block> -->
+      <block wx:if="{{item.questionList.length == 0}}">
         <view class="bottom" style="margin-top: 40%;">这里空空如也~</view>
       </block>
       <view class="background" hover-class="hoverClass" wx:for="{{item.questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">

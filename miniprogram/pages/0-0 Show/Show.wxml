@@ -1,6 +1,6 @@
 <wxs src="../../util/filter.wxs" module="filter" />
 <search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}'></search>
-<movable-area>
+<movable-area wx:if="{{isLogin}}">
   <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask">+</movable-view>
 </movable-area>
 

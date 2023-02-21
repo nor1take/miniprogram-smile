@@ -1,11 +1,11 @@
 <!-- <icon type="search" color="#3d3d3d" style="position: fixed; top:{{top}}px; left: 16px; z-index: 2;" size="30" bindtap="search"></icon> -->
 <!-- 左侧菜单 -->
 <view class="coverMenu" style=" width:{{left}}px; left: -{{left}}px;" animation="{{menuAnimation}}">
-  <view class="userInfo" style="margin-top: {{top}}px;">
+  <view class="userInfo" style="margin-top: {{top}}px;" bindtap="modify">
     <view class="image">
-      <image src="{{avatarUrl}}" style="height: 40px; width: 40px; border-radius: 40px;"></image>
+      <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="height: 40px; width: 40px; border-radius: 40px;"></image>
     </view>
-    <view class="nickname">{{nickName}}</view>
+    <view class="nickname">{{nickName == '' ? '未登录' : nickName}}</view>
   </view>
   <view class="buttonArea">
     <view class="button" hover-class="hoverClass" bindtap="myAsk">
