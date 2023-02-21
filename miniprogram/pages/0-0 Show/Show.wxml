@@ -1,7 +1,7 @@
 <wxs src="../../util/filter.wxs" module="filter" />
 <search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}'></search>
 <movable-area wx:if="{{isLogin}}">
-  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask">+</movable-view>
+  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask">发帖</movable-view>
 </movable-area>
 
 <!-- <view style="width: 100%; height: {{top+32+8}}px;"></view> -->
@@ -40,7 +40,7 @@
       <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
       <view class="last">
         <block wx:if="{{sortWord === '最新回应' && item.Ayear!='' }}">
-          <text>{{filter.timeString(item.time)}}</text>
+          <text>{{filter.timeString(item.answerTime)}}</text>
           回应 ·
         </block>
         <block wx:else>

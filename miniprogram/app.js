@@ -21,7 +21,8 @@ App({
     messageNum: 0,
     
     isManager: false,
-    isLogin: false
+    isLogin: false,
+    isAuthentic: false
   },
   onLaunch: function () {
     if (!wx.cloud) {

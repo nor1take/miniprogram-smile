@@ -17,7 +17,7 @@ movable-area {
   pointer-events:none;
 }
 movable-view{
-  width: 110rpx;
+  width: 100rpx;
   height: 100rpx;
 
   border: 1rpx solid transparent;
@@ -27,10 +27,9 @@ movable-view{
   opacity: 0.77;
   box-shadow:0 0 20rpx #7B7B7B;
   color: white;
-  font-size: 70rpx;
+  font-size: 25rpx;
 
   display: flex;
-  padding-bottom: 10rpx;
   align-items: center;
   justify-content: center;
 

@@ -90,7 +90,7 @@ Page({
   getPostData: function () {
     return new Promise((resolve) => {
       question.where({
-        warner: _.neq(0),
+        warner: _.neq([]),
       }).orderBy('warner', 'desc').get().then(res => {
         resolve()
         console.log(res.data)
@@ -101,7 +101,7 @@ Page({
   getCommentData: function () {
     return new Promise((resolve) => {
       comment.where({
-        warner: _.neq(0),
+        warner: _.neq([]),
       }).orderBy('warner', 'desc').get().then(res => {
         resolve()
         this.questionListCommentData = { questionListComment: res.data }
@@ -127,10 +127,6 @@ Page({
       })
     })
   },
-
-
-
-
 
   /**
    * 生命周期函数--监听页面加载

@@ -43,7 +43,9 @@ Page({
               data: {
                 nickName: nickName,
                 avatarUrl: res.fileID,
-                isManager: false
+                isManager: false,
+                isForbidden: false,
+                isAuthentic: false
               }
             }).then(() => {
               wx.hideLoading()

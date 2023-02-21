@@ -1,0 +1,5 @@
+<!--packageLogin/pages/0-1 Forbidden/Forbidden.wxml-->
+<view class="forbidden">
+  <view class="title">该账号已被封禁</view>
+  <button open-type="feedback">联系客服</button>
+</view>

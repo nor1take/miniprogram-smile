@@ -267,14 +267,21 @@ Page({
       _openid: '{openid}'
     }).get()
       .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.navigateTo({
+            url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
+          })
+        }
         this.setData({
           nickName: res.data[0].nickName,
           avatarUrl: res.data[0].avatarUrl,
           isLogin: true,
-          isManager: res.data[0].isManager,
+          isManager: res.data[0].isManager
         })
         app.globalData.isLogin = true,
           app.globalData.isManager = res.data[0].isManager,
+          app.globalData.isAuthentic = res.data[0].isAuthentic,
+          
           app.globalData.nickName = res.data[0].nickName,
           app.globalData.avatarUrl = res.data[0].avatarUrl,
           console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
@@ -287,11 +294,11 @@ Page({
           isLogin: false,
         })
         app.globalData.isLogin = false,
-        wx.showToast({
-          icon: 'none',
-          title: '游客模式。登录后体验 ‘发帖’ ‘评论’ 功能',
-          duration: 3500,
-        })
+          wx.showToast({
+            icon: 'none',
+            title: '游客模式。登录后体验 ‘发帖’ ‘评论’ 功能',
+            duration: 3500,
+          })
       })
   },
   getOtherData: function () {

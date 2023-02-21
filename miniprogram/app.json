@@ -62,7 +62,8 @@
     {
       "root": "packageLogin",
       "pages": [
-        "pages/0-0 Login/Login"
+        "pages/0-0 Login/Login",
+        "pages/0-1 Forbidden/Forbidden"
       ]
     }
   ],
