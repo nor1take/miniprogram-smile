@@ -1,4 +1,5 @@
 // pages/4-0 Hot/Hot.js
+const app = getApp()
 const db = wx.cloud.database()
 const $ = db.command.aggregate
 const _ = db.command
@@ -19,10 +20,24 @@ Page({
     color3: '#F5AD01',
   },
 
+  beWatched: function (e) {
+    app.globalData.questionId = e.currentTarget.id
+    app.globalData.questionIndex = e.currentTarget.dataset.index
+
+    wx.navigateTo({
+      url: '../../packageShow/page/1-1 Detail/Detail',
+    })
+    question.doc(e.currentTarget.id).update({
+      data: {
+        watched: _.inc(1)
+      }
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(options) {
+  getData() {
     var now = new Date().getTime();
     question
       .aggregate()
@@ -51,46 +66,15 @@ Page({
         })
       })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide() {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-
+  onLoad() {
+    this.getData()
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-
-  },
+    this.getData()
+    setTimeout(function () { wx.stopPullDownRefresh() }, 500)
+  }
 })

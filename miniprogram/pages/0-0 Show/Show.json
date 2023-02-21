@@ -4,6 +4,5 @@
     "search":"../../components/search/search"
   },
   "enablePullDownRefresh":true,
-  "backgroundColor": "#f3f3f3",
   "backgroundTextStyle": "dark"
 }
