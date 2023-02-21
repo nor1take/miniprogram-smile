@@ -31,7 +31,7 @@ Page({
       })
     } else {
       wx.showLoading({
-        title: '提交中…',
+        title: '提交中',
       })
       const onlyString = new Date().getTime().toString();
       wx.cloud.uploadFile({

@@ -1,11 +1,12 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="使用帮助"></return>
 
 <view class="title_help" bindtap="help" data-id="新版">
-  * 更新说明
+  * 主要介绍
   <image wx:if="{{currentId===0}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===0}}" class="body_help">
+  <view class="item">0、点击首页左上方按钮，在滑出的菜单中点击头像进行登录或修改。</view>
   <view class="item">1、支持跟随系统的夜间模式。</view>
   <view class="item">2、评论可以带图。</view>
   <view class="item">3、带有上方标签的页面(如“分类”)可以通过左滑右滑实现不同页面的切换！</view>
