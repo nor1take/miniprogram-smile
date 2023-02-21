@@ -191,7 +191,9 @@ Page({
         warner: [],
         warnerDetail: [],
 
-        solved: false
+        solved: false,
+
+        isAuthentic: app.globalData.isAuthentic
       },
     }).then((res) => {
       console.log(res)

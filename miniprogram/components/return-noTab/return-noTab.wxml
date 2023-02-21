@@ -1,6 +1,6 @@
 <!-- 返回 -->
 <view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2;">
-  <image src="../../icon/back.png" style="height: 28px; width: 28px; margin-left: 16px; margin-right: 16px;" bindtap="return"></image>
+  <image src="../../icon/back.png" style="height: 26px; width: 26px; margin-left: 16px; margin-right: 16px;" bindtap="return"></image>
   {{topWord}}
 </view>
 

@@ -937,6 +937,8 @@ Page({
                   liker: [],
                   likerNum: 0,
                   image_upload: this.data.fileID,
+
+                  isAuthentic: app.globalData.isAuthentic
                 },
               }).then(() => {
                 wx.hideToast()
@@ -956,7 +958,6 @@ Page({
                   //时间
                   time: d,
 
-
                   questionId: app.globalData.questionId,
                   body: this.data._commentBody,
                   commentNum: 0,
@@ -967,6 +968,8 @@ Page({
                   liker: [],
                   likerNum: 0,
                   image_upload: this.data.fileID,
+
+                  isAuthentic: app.globalData.isAuthentic
                 },
               }).then(() => {
                 wx.hideToast()

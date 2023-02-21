@@ -37,24 +37,29 @@
     </view>
     <view class="middle" wx:if="{{!item.unknown}}">
       <image src="{{item.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx;"></image>
-      <view class="nickName">{{item.nickName}}</view>
+      <view class="nickName">{{item.nickName}}
+        <block wx:if="{{item.isAuthentic}}">
+          <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
+          <text style="color: #07C160;">[已认证]</text>
+        </block>
+      </view>
     </view>
     <text class="title" user-select="true">{{item.title}}</text>
 
     <block wx:if="{{(item.body.length > 45 || item.image.length > 0) && isFold}}">
       <text class="body" user-select="true" bindtap="fold">
-      <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
-      </text>
-      <text wx:if="{{item.image.length > 0}}">[图片补充]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
+        <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
+        </text>
+        <text wx:if="{{item.image.length > 0}}">[图片补充]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
       </text>
     </block>
 
     <block wx:else>
       <block wx:if="{{item.body.length > 45 || item.image.length > 0 }}">
         <text class="body" user-select="true" bindtap="fold">
-        <text wx:if="{{item.body.length > 0}}">{{item.body}}
-        </text>
-        <text style="font-weight: bold; color:#0C88B5;"> 收起↑</text></text>
+          <text wx:if="{{item.body.length > 0}}">{{item.body}}
+          </text>
+          <text style="font-weight: bold; color:#0C88B5;"> 收起↑</text></text>
       </block>
       <block wx:else>
         <text class="body" user-select="true">{{item.body}}</text>
@@ -94,7 +99,12 @@
     <view class="commentTop" style="display: flex; justify-content: space-between; align-items: center;">
       <view class="userInfo">
         <image src="{{item.image}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
-        <view class="nickName">{{item.nickname}}</view>
+        <view class="nickName">{{item.nickname}}
+          <block wx:if="{{item.isAuthentic}}">
+            <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
+            <text style="color: #07C160;">[已认证]</text>
+          </block>
+        </view>
       </view>
       <image src="../../../icon/more-fill.png" style="height:20px; width: 20px; margin-right: 32rpx;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></image>
     </view>
