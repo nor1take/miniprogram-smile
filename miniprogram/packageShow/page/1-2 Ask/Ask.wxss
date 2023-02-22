@@ -57,7 +57,7 @@ page {
 
   display: flex;
   flex-wrap: wrap;
-  margin:0 auto;
+  margin: 0 auto;
 
 }
 
@@ -107,15 +107,16 @@ page {
   margin: 32rpx;
   margin-top: 8rpx;
   margin-bottom: 8rpx;
-
   display: flex;
-
+  flex-wrap: wrap;
   font-size: 34rpx;
 }
 
 .item {
+  width: fit-content;
+  height: fit-content;
   margin: 8rpx;
-
+  display: inline;
   border: 1rpx solid #DDDDDD;
   border-radius: 30rpx;
   background-color: white;
@@ -129,7 +130,8 @@ page {
   font-size: 30rpx;
   color: #ACACAC;
 }
-.selectedItem{
+
+.selectedItem {
   margin: 8rpx;
 
   border-radius: 30rpx;
@@ -143,9 +145,9 @@ page {
 
   font-size: 30rpx;
 
-  border: 3rpx solid black; 
-  color: black; 
-  font-weight: bold; 
+  border: 3rpx solid black;
+  color: black;
+  font-weight: bold;
 }
 
 .diy {
@@ -183,19 +185,22 @@ input {
   align-items: center;
   justify-content: center;
 }
-button{
-  border:none;
-}
-button::after {
-  border:none;
-}
-button {
-  border-radius: 40rpx; 
 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  width: max-content; 
+button {
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+button {
+  border-radius: 40rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
 
   font-size: 32rpx;
   padding-left: 128rpx;
@@ -244,11 +249,12 @@ button {
 
     color: #ACACAC;
   }
-  .selectedItem{
+
+  .selectedItem {
     background-color: #3d3d3d;
-    border: 3rpx solid white; 
-    color: #DDDDDD; 
-    font-weight: bold; 
+    border: 3rpx solid white;
+    color: #DDDDDD;
+    font-weight: bold;
   }
 
   .diy {
