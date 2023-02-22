@@ -109,6 +109,7 @@ page {
   margin-bottom: 8rpx;
 
   display: flex;
+  flex-wrap: wrap;
 
   font-size: 34rpx;
 }

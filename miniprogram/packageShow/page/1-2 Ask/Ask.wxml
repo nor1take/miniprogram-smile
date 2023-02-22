@@ -30,15 +30,14 @@
 
             <view class="item" wx:if="{{tabs!='求...'}}" bindtap="tapAskfor">求(组队/资料...)</view>
             <view class="selectedItem" wx:if="{{tabs=='求...'}}">求(组队/资料...)</view>
-        </view>
-        <view class="tags">
+
             <view class="item" wx:if="{{tabs!='我丢了...'}}" bindtap="tapLost">我丢了...</view>
             <view class="selectedItem" wx:if="{{tabs=='我丢了...'}}">我丢了...</view>
 
             <view class="item" wx:if="{{tabs!='我捡到...'}}" bindtap="tapFind">我捡到...</view>
             <view class="selectedItem" wx:if="{{tabs=='我捡到...'}}">我捡到...</view>
-        </view>
-        <view class="tags">
+
+
             <view class="selectedItem" wx:if="{{id==6}}">
                 <input placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" focus bindinput="tagsInput" />
             </view>
