@@ -38,15 +38,7 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
-    tagsList: [
-      '学习',
-      '生活',
-      '成长',
-      '影视',
-      '读书',
-      '游戏',
-      '音乐',
-    ],
+    tagsList: ['学习', '生活', '成长', '影视', '读书', '游戏', '音乐'],
 
     titleContent: false,
     loading: false,

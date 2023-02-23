@@ -19,7 +19,6 @@ Component({
    */
   methods: {
     tagTap: function (e) {
-      console.log(e)
       const { index } = e.currentTarget.dataset
       const { tagname } = e.currentTarget.dataset
       this.setData({

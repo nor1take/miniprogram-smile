@@ -29,39 +29,9 @@
     <switch bindchange="switchChange" />
   </view>
 
-<<<<<<< HEAD
-            <view class="item" wx:if="{{tabs!='求...'}}" bindtap="tapAskfor">求(组队/资料...)</view>
-            <view class="selectedItem" wx:if="{{tabs=='求...'}}">求(组队/资料...)</view>
-
-            <view class="item" wx:if="{{tabs!='我丢了...'}}" bindtap="tapLost">我丢了...</view>
-            <view class="selectedItem" wx:if="{{tabs=='我丢了...'}}">我丢了...</view>
-
-            <view class="item" wx:if="{{tabs!='我捡到...'}}" bindtap="tapFind">我捡到...</view>
-            <view class="selectedItem" wx:if="{{tabs=='我捡到...'}}">我捡到...</view>
-
-            <view class="selectedItem" wx:if="{{id==6}}">
-                <input placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" focus bindinput="tagsInput" />
-            </view>
-            <view class="item" wx:if="{{id!=6}}" bindtap="tapDIY">
-                +自定义标签
-            </view>
-        </view>
-    </view>
-
-    <view class="switch">
-        <view class="switchContent">匿名发布</view>
-        <switch bindchange="switchChange"/>
-    </view>
-
-    <view class="btn-area">
-        <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
-        <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
-    </view>
-=======
   <view class="btn-area">
     <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
     <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
   </view>
->>>>>>> dev
 </form>
 <view style="width: 100%; height: 10%; position: absolute;"></view>
