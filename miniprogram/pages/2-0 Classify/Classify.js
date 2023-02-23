@@ -12,23 +12,16 @@ Page({
     activeTab: 0,
     scrollTop: 0,
     tabs: [
-      {
-        id: 0,
-        name: '自定义',
-        questionList: [
-          { id: 0, title: '', body: '', commentNum: 0, watched: 0 },
-          { id: 1, title: '', body: '', commentNum: 0, watched: 0 },
-          { id: 2, title: '', body: '', commentNum: 0, watched: 0 },
-          { id: 3, title: '', body: '', commentNum: 0, watched: 0 },
-          { id: 4, title: '', body: '', commentNum: 0, watched: 0 },
-          { id: 5, title: '', body: '', commentNum: 0, watched: 0 },
-        ]
-      },
-      { id: 1, name: '失物招领', },
-      { id: 2, name: '寻物启事', },
-      { id: 3, name: '求(组队/资料...)', },
-      { id: 4, name: '学习', },
-      { id: 5, name: '生活', },
+      { id: 0, name: '自定义', questionList: [] },
+      { id: 1, name: '我捡到…', questionList: [] },
+      { id: 2, name: '我丢了…', questionList: [] },
+      { id: 3, name: '求(组队/资料…)', questionList: [] },
+      { id: 4, name: '学习', questionList: [] },
+      { id: 5, name: '生活', questionList: [] },
+      { id: 6, name: '影视', questionList: [] },
+      { id: 7, name: '读书', questionList: [] },
+      { id: 8, name: '游戏', questionList: [] },
+      { id: 9, name: '音乐', questionList: [] },
     ],
 
     colorGray: '#E7E7E7',
@@ -46,7 +39,6 @@ Page({
     showNum: 0,
   },
 
-
   beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
     app.globalData.questionIndex = e.currentTarget.dataset.index
@@ -62,7 +54,8 @@ Page({
     })
   },
   tabsTap: function (e) {
-    const index = e.detail.index
+    const { index } = e.detail
+    this.loadData(index)
     this.setData({
       activeTab: index,
       reachBottom: false,
@@ -70,87 +63,15 @@ Page({
     })
   },
   swiperChange: function (e) {
-    const index = e.detail.index
+    const { index } = e.detail
+    this.loadData(index)
+    this.loadData(index + 1)
     this.setData({
       activeTab: index,
       reachBottom: false,
       isBottom: false
     })
   },
-
-  /* 
-  * 获取数据库数据 
-    return new Promise((resolve) => { .then(resolve())}) 
-  */
-  getOtherData: function () {
-    return new Promise((resolve) => {
-      question.where({
-        tagId: 1
-      }).orderBy('time', 'desc').get().then(res => {
-        // this.setData({
-        //   'tabs[0].questionList': res.data
-        // })
-        resolve()
-        this.questionListOtherData = { questionListOther: res.data }
-      })
-    })
-
-  },
-  getFindData: function () {
-    return new Promise((resolve) => {
-      question.where({
-        tag: "我捡到..."
-      }).orderBy('time', 'desc').get().then(res => {
-        resolve()
-        this.questionListFindData = { questionListFind: res.data }
-      })
-    })
-  },
-  
-  getLostData: function () {
-    return new Promise((resolve) => {
-      question.where({
-        tag: "我丢了..."
-      }).orderBy('time', 'desc').get().then(res => {
-        resolve()
-        this.questionListLostData = { questionListLost: res.data }
-      })
-    })
-
-  },
-  getAskforData: function () {
-    return new Promise((resolve) => {
-      question.where({
-        tag: "求..."
-      }).orderBy('time', 'desc').get().then(res => {
-        resolve()
-        this.questionListAskforData = { questionListAskfor: res.data }
-      })
-    })
-
-  },
-  getStudyData: function () {
-    return new Promise((resolve) => {
-      question.where({
-        tag: "学习"
-      }).orderBy('time', 'desc').get().then(res => {
-        resolve()
-        this.questionListStudyData = { questionListStudy: res.data }
-      })
-    })
-  },
-  getLifeData: function () {
-    return new Promise((resolve) => {
-      question.where({
-        tag: "生活"
-      }).orderBy('time', 'desc').get().then(res => {
-        resolve()
-        this.questionListLifeData = { questionListLife: res.data }
-      })
-    })
-
-  },
-
   getData: function () {
     var d = new Date();
     this.setData({
@@ -166,26 +87,77 @@ Page({
       right: app.globalData.right,
       bottom: app.globalData.bottom,
     })
-    Promise.all([this.getFindData(),
-    this.getLostData(),
-    this.getAskforData(),
-    this.getStudyData(),
-    this.getLifeData(),
-    this.getOtherData()])
-      .then(() => {
-        this.setData({
-          'tabs[0].questionList': this.questionListOtherData.questionListOther,
-          'tabs[1].questionList': this.questionListFindData.questionListFind,
-          'tabs[2].questionList': this.questionListLostData.questionListLost,
-          'tabs[3].questionList': this.questionListAskforData.questionListAskfor,
-          'tabs[4].questionList': this.questionListStudyData.questionListStudy,
-          'tabs[5].questionList': this.questionListLifeData.questionListLife,
-        })
-      })
   },
 
+  loadData: function (index) {
+    if (index >= this.data.tabs.length) return;
+    if (this.data.tabs[index].questionList.length === 0) {
+      if (index === 0) {
+        question.where({
+          tagId: 0
+        }).orderBy('time', 'desc').get().then(res => {
+          this.setData({
+            'tabs[0].questionList': res.data
+          })
+        })
+      } else {
+        const { name } = this.data.tabs[index]
+        question.where({
+          tag: name
+        }).orderBy('time', 'desc').get().then(res => {
+          if (index === 1) {
+            this.setData({
+              'tabs[1].questionList': res.data
+            })
+          } else if (index === 2) {
+            this.setData({
+              'tabs[2].questionList': res.data
+            })
+          } else if (index === 3) {
+            this.setData({
+              'tabs[3].questionList': res.data
+            })
+          } else if (index === 4) {
+            this.setData({
+              'tabs[4].questionList': res.data
+            })
+          } else if (index === 5) {
+            this.setData({
+              'tabs[5].questionList': res.data
+            })
+          } else if (index === 6) {
+            this.setData({
+              'tabs[6].questionList': res.data
+            })
+          } else if (index === 7) {
+            this.setData({
+              'tabs[7].questionList': res.data
+            })
+          } else if (index === 8) {
+            this.setData({
+              'tabs[8].questionList': res.data
+            })
+          } else if (index === 9) {
+            this.setData({
+              'tabs[9].questionList': res.data
+            })
+          } else if (index === 10) {
+            this.setData({
+              'tabs[10].questionList': res.data
+            })
+          } else if (index === 11) {
+            this.setData({
+              'tabs[11].questionList': res.data
+            })
+          }
+        })
+      }
+    }
+  },
 
   onLoad: function () {
+    this.loadData(0)
+    this.loadData(1)
     this.getData()
   },
 
@@ -195,147 +167,68 @@ Page({
   onReady: function () {
   },
 
-  updateQuestionListOther: function () {
-    const { questionList } = this.data.tabs[0]
+  updateList: function (index) {
+    const { questionList } = this.data.tabs[index]
     const { questionIndex } = app.globalData
     if (app.globalData.isClick) {
       if (app.globalData.questionDelete) {
         app.globalData.questionDelete = false
         questionList.splice(questionIndex, 1)
+      }
+      else {
+        questionList[questionIndex].solved = app.globalData.questionSolved,
+          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
+          questionList[questionIndex].watched = app.globalData.questionView,
+          questionList[questionIndex].collectNum = app.globalData.questionCollect
+      }
+      if (index === 0) {
         this.setData({
           'tabs[0].questionList': questionList
         })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[0].questionList': questionList
-        })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
-  },
-  updateQuestionListFind: function () {
-    const { questionList } = this.data.tabs[1]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 1) {
         this.setData({
           'tabs[1].questionList': questionList
         })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[1].questionList': questionList
-        })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
-  },
-  updateQuestionListLost: function () {
-    const { questionList } = this.data.tabs[2]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 2) {
         this.setData({
           'tabs[2].questionList': questionList
         })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[2].questionList': questionList
-        })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
-  },
-  updateQuestionListAskfor: function () {
-    const { questionList } = this.data.tabs[3]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 3) {
         this.setData({
           'tabs[3].questionList': questionList
         })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[3].questionList': questionList
-        })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
-  },
-  updateQuestionListStudy: function () {
-    const { questionList } = this.data.tabs[4]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 4) {
         this.setData({
           'tabs[4].questionList': questionList
         })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[4].questionList': questionList
-        })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
-  },
-  updateQuestionListLife: function () {
-    const { questionList } = this.data.tabs[5]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 5) {
         this.setData({
           'tabs[5].questionList': questionList
         })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
+      } else if (index === 6) {
         this.setData({
-          'tabs[5].questionList': questionList
+          'tabs[6].questionList': questionList
         })
-        // console.log(this.data.tabs[0].questionList[0])
+      } else if (index === 7) {
+        this.setData({
+          'tabs[7].questionList': questionList
+        })
+      } else if (index === 8) {
+        this.setData({
+          'tabs[8].questionList': questionList
+        })
+      } else if (index === 9) {
+        this.setData({
+          'tabs[9].questionList': questionList
+        })
+      } else if (index === 10) {
+        this.setData({
+          'tabs[10].questionList': questionList
+        })
+      } else if (index === 11) {
+        this.setData({
+          'tabs[11].questionList': questionList
+        })
       }
     }
   },
@@ -344,24 +237,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if (this.data.activeTab === 0) {
-      this.updateQuestionListOther()
-    }
-    else if (this.data.activeTab === 1) {
-      this.updateQuestionListFind()
-    }
-    else if (this.data.activeTab === 2) {
-      this.updateQuestionListLost()
-    }
-    else if (this.data.activeTab === 3) {
-      this.updateQuestionListAskfor()
-    }
-    else if (this.data.activeTab === 4) {
-      this.updateQuestionListStudy()
-    }
-    else if (this.data.activeTab === 5) {
-      this.updateQuestionListLife()
-    }
+    this.updateList(this.data.activeTab)
   },
 
   /**
@@ -375,49 +251,40 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  test: function () {
+  stoploading: function () {
     this.setData({ refresherTriggered: false })
   },
   refresh: function () {
-    setTimeout(this.test, 1000)
+    setTimeout(this.stoploading, 1000)
     this.getData()
+    this.loadData(this.data.activeTab + 1)
   },
-  onPullDownRefresh: function () { },
   /**
    * 页面上拉触底事件的处理函数
    */
-  reachBottom: function () {
-    this.setData({
-      reachBottom: true
-    })
-    console.log('触底')
-    console.log(this.showNumData.showNum)
-
-    if (this.data.activeTab === 0) {
-      //↑ ↓ index 修改 0
-      const questionList = this.data.tabs[0].questionList
-      this.showNumData.showNum = questionList.length
-      //question条件修改 1
+  loadmore: function (index) {
+    const questionList = this.data.tabs[index].questionList
+    this.showNumData.showNum = questionList.length
+    if (index === 0) {
       question.where({
-        tagId: 6
+        tagId: 0
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
             isBottom: false,
           })
-          //question条件修改 2
           question.where({
-            tagId: 6
+            tagId: 0
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
             this.setData({
-              //↓ index 修改 3
               'tabs[0].questionList': old_data.concat(new_data),
             })
           })
@@ -428,14 +295,10 @@ Page({
           })
         }
       })
-    }
-    else if (this.data.activeTab === 1) {
-      //↑ ↓ index 修改 0
-      const questionList = this.data.tabs[1].questionList
-      this.showNumData.showNum = questionList.length
-      //question条件修改 1
+    } else {
+      const { name } = this.data.tabs[index]
       question.where({
-        tag: "我捡到..."
+        tag: name
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -443,14 +306,59 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tag: "我捡到..."
+            tag: name
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
-            this.setData({
-              //↓ index 修改 3
-              'tabs[1].questionList': old_data.concat(new_data),
-            })
+            if (index === 1) {
+              this.setData({
+                'tabs[1].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 2) {
+              this.setData({
+                'tabs[2].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 3) {
+              this.setData({
+                'tabs[3].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 4) {
+              this.setData({
+                'tabs[4].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 5) {
+              this.setData({
+                'tabs[5].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 6) {
+              this.setData({
+                'tabs[6].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 7) {
+              this.setData({
+                'tabs[7].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 8) {
+              this.setData({
+                'tabs[8].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 9) {
+              this.setData({
+                'tabs[9].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 10) {
+              this.setData({
+                'tabs[10].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 11) {
+              this.setData({
+                'tabs[11].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 12) {
+              this.setData({
+                'tabs[12].questionList': old_data.concat(new_data),
+              })
+            }
           })
         }
         else {
@@ -460,132 +368,12 @@ Page({
         }
       })
     }
-    else if (this.data.activeTab === 2) {
-      //↑ ↓ index 修改 0
-      const questionList = this.data.tabs[2].questionList
-      this.showNumData.showNum = questionList.length
-      //question条件修改 1
-      question.where({
-        tag: "我丢了..."
-      }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
-          this.setData({
-            isBottom: false,
-          })
-          //question条件修改 2
-          question.where({
-            tag: "我丢了..."
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
-            let new_data = res.data
-            let old_data = questionList
-            this.setData({
-              //↓ index 修改 3
-              'tabs[2].questionList': old_data.concat(new_data),
-            })
-          })
-        }
-        else {
-          this.setData({
-            isBottom: true
-          })
-        }
-      })
-    }
-    else if (this.data.activeTab === 3) {
-      //↑ ↓ index 修改 0
-      const questionList = this.data.tabs[3].questionList
-      this.showNumData.showNum = questionList.length
-      //question条件修改 1
-      question.where({
-        tag: "求..."
-      }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
-          this.setData({
-            isBottom: false,
-          })
-          //question条件修改 2
-          question.where({
-            tag: "求..."
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
-            let new_data = res.data
-            let old_data = questionList
-            this.setData({
-              //↓ index 修改 3
-              'tabs[3].questionList': old_data.concat(new_data),
-            })
-          })
-        }
-        else {
-          this.setData({
-            isBottom: true
-          })
-        }
-      })
-    }
-    else if (this.data.activeTab === 4) {
-      //↑ ↓ index 修改 0
-      const questionList = this.data.tabs[4].questionList
-      this.showNumData.showNum = questionList.length
-      //question条件修改 1
-      question.where({
-        tag: "学习"
-      }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
-          this.setData({
-            isBottom: false,
-          })
-          //question条件修改 2
-          question.where({
-            tag: "学习"
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
-            let new_data = res.data
-            let old_data = questionList
-            this.setData({
-              //↓ index 修改 3
-              'tabs[4].questionList': old_data.concat(new_data),
-            })
-          })
-        }
-        else {
-          this.setData({
-            isBottom: true
-          })
-        }
-      })
-    }
-    else {
-      //↑ ↓ index 修改 0
-      const questionList = this.data.tabs[5].questionList
-      this.showNumData.showNum = questionList.length
-      //question条件修改 1
-      question.where({
-        tag: "生活"
-      }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
-          this.setData({
-            isBottom: false,
-          })
-          //question条件修改 2
-          question.where({
-            tag: "生活"
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
-            let new_data = res.data
-            let old_data = questionList
-            this.setData({
-              //↓ index 修改 3
-              'tabs[5].questionList': old_data.concat(new_data),
-            })
-          })
-        }
-        else {
-          this.setData({
-            isBottom: true
-          })
-        }
-      })
-    }
-
-
   },
-  onReachBottom: function () { },
+  reachBottom: function () {
+    this.setData({
+      reachBottom: true
+    })
+
+    this.loadmore(this.data.activeTab)
+  },
 })
