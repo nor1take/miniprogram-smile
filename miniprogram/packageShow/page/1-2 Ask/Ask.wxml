@@ -37,7 +37,6 @@
             <view class="item" wx:if="{{tabs!='我捡到...'}}" bindtap="tapFind">我捡到...</view>
             <view class="selectedItem" wx:if="{{tabs=='我捡到...'}}">我捡到...</view>
 
-
             <view class="selectedItem" wx:if="{{id==6}}">
                 <input placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" focus bindinput="tagsInput" />
             </view>
