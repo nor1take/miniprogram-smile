@@ -105,8 +105,8 @@ Page({
         this.questionListFindData = { questionListFind: res.data }
       })
     })
-
   },
+  
   getLostData: function () {
     return new Promise((resolve) => {
       question.where({
@@ -138,7 +138,6 @@ Page({
         this.questionListStudyData = { questionListStudy: res.data }
       })
     })
-
   },
   getLifeData: function () {
     return new Promise((resolve) => {
