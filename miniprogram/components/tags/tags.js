@@ -25,6 +25,17 @@ Component({
         activeTag: index
       })
       this.triggerEvent('tagtap', { tagname })
+    },
+
+    tapDIY: function (e) {
+      this.setData({
+        activeTag: -1
+      })
+    },
+
+    input: function (e) {
+      const { value } = e.detail
+      this.triggerEvent('taginput', { value })
     }
   }
 })

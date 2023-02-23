@@ -197,23 +197,6 @@ button {
     color: #7B7B7B;
   }
 
-  .item {
-    background-color: black;
-
-    color: #ACACAC;
-  }
-
-  .selectedItem {
-    background-color: #3d3d3d;
-    border: 3rpx solid white;
-    color: #DDDDDD;
-    font-weight: bold;
-  }
-
-  .diy {
-    color: #ACACAC;
-  }
-
   input {
     color: #DDDDDD;
   }

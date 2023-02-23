@@ -2,4 +2,5 @@
   <block wx:for="{{tagsList}}" wx:key='id'>
     <view class="{{activeTag == index ? 'selectedItem' : 'item'}}" bindtap="tagTap" data-index="{{index}}" data-tagName='{{item}}'>{{item}}</view>
   </block>
+    <input class="{{activeTag == -1 ? 'selectedItem' : 'item'}}" bindtap="tapDIY" bindinput="input" placeholder-class="diy" confirm-type="done" placeholder="+自定义标签"/>
 </view>

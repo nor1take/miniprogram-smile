@@ -34,7 +34,7 @@
         <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
         <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
         <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
-        {{item.tabs}}
+        {{item.tag}}
       </view>
       <view class="title">{{item.title}}</view>
       <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>

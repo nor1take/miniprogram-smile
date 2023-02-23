@@ -56,7 +56,7 @@ Page({
           }),
         },
         {
-          tabs: db.RegExp({
+          tag: db.RegExp({
             regexp: value,
             options: 'i',
           }),
@@ -136,7 +136,6 @@ Page({
         this.setData({
           searchList
         })
-        // console.log(this.data.tabs[0].searchList[0])
       }
     }
     app.globalData.questionDelete = false
@@ -190,7 +189,7 @@ Page({
         }),
       },
       {
-        tabs: db.RegExp({
+        tag: db.RegExp({
           regexp: value,
           options: 'i',
         }),
@@ -214,7 +213,7 @@ Page({
             }),
           },
           {
-            tabs: db.RegExp({
+            tag: db.RegExp({
               regexp: value,
               options: 'i',
             }),

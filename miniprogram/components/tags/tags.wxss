@@ -45,3 +45,21 @@
   color: black;
   font-weight: bold;
 }
+
+/******************************************************************
+** 夜间模式
+******************************************************************/
+@media (prefers-color-scheme: dark) {
+  .item {
+    background-color: black;
+
+    color: #ACACAC;
+  }
+
+  .selectedItem {
+    background-color: #3d3d3d;
+    border: 3rpx solid white;
+    color: #DDDDDD;
+    font-weight: bold;
+  }
+}

@@ -3,12 +3,11 @@
 <!-- 表单 -->
 <form catchsubmit="formSubmit" catchreset="formReset">
   <view class="titleContainer">
-    <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的问题" name="title" bindinput="title">
+    <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的帖子（必填）" name="title" bindinput="title">
         </textarea>
   </view>
   <view class="bodyContainer">
-    <textarea maxlength="-1" class="body" placeholder="补充说明你的问题（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body">
-            </textarea>
+    <textarea maxlength="-1" class="body" placeholder="补充说明你的帖子（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body"></textarea>
   </view>
 
   <view class="imageUpload-area">
@@ -21,16 +20,16 @@
   <view class="tip">* 每次最多能上传 9 张图片。</view>
   <view class="tagsArea">
     <view class="text">推荐标签</view>
-    <tags tagsList='{{tagsList}}' bindtagtap="tagTap"></tags>
+    <tags tagsList='{{tagsList}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
   </view>
 
   <view class="switch">
     <view class="switchContent">匿名发布</view>
-    <switch bindchange="switchChange" />
+    <switch bindchange="switchChange"/>
   </view>
 
   <view class="btn-area">
-    <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
+    <button loading="{{loading}}" wx:if="{{titleContent && tag}}" size="default" type="primary" formType="submit">发布</button>
     <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
   </view>
 </form>

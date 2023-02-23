@@ -85,7 +85,7 @@ Page({
   getOtherData: function () {
     return new Promise((resolve) => {
       question.where({
-        tabsId: 6
+        tagId: 1
       }).orderBy('time', 'desc').get().then(res => {
         // this.setData({
         //   'tabs[0].questionList': res.data
@@ -99,7 +99,7 @@ Page({
   getFindData: function () {
     return new Promise((resolve) => {
       question.where({
-        tabs: "我捡到..."
+        tag: "我捡到..."
       }).orderBy('time', 'desc').get().then(res => {
         resolve()
         this.questionListFindData = { questionListFind: res.data }
@@ -110,7 +110,7 @@ Page({
   getLostData: function () {
     return new Promise((resolve) => {
       question.where({
-        tabs: "我丢了..."
+        tag: "我丢了..."
       }).orderBy('time', 'desc').get().then(res => {
         resolve()
         this.questionListLostData = { questionListLost: res.data }
@@ -121,7 +121,7 @@ Page({
   getAskforData: function () {
     return new Promise((resolve) => {
       question.where({
-        tabs: "求..."
+        tag: "求..."
       }).orderBy('time', 'desc').get().then(res => {
         resolve()
         this.questionListAskforData = { questionListAskfor: res.data }
@@ -132,7 +132,7 @@ Page({
   getStudyData: function () {
     return new Promise((resolve) => {
       question.where({
-        tabs: "学习"
+        tag: "学习"
       }).orderBy('time', 'desc').get().then(res => {
         resolve()
         this.questionListStudyData = { questionListStudy: res.data }
@@ -143,7 +143,7 @@ Page({
   getLifeData: function () {
     return new Promise((resolve) => {
       question.where({
-        tabs: "生活"
+        tag: "生活"
       }).orderBy('time', 'desc').get().then(res => {
         resolve()
         this.questionListLifeData = { questionListLife: res.data }
@@ -195,7 +195,7 @@ Page({
    */
   onReady: function () {
   },
-  
+
   updateQuestionListOther: function () {
     const { questionList } = this.data.tabs[0]
     const { questionIndex } = app.globalData
@@ -405,7 +405,7 @@ Page({
       this.showNumData.showNum = questionList.length
       //question条件修改 1
       question.where({
-        tabsId: 6
+        tagId: 6
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -413,7 +413,7 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tabsId: 6
+            tagId: 6
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
@@ -436,7 +436,7 @@ Page({
       this.showNumData.showNum = questionList.length
       //question条件修改 1
       question.where({
-        tabs: "我捡到..."
+        tag: "我捡到..."
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -444,7 +444,7 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tabs: "我捡到..."
+            tag: "我捡到..."
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
@@ -467,7 +467,7 @@ Page({
       this.showNumData.showNum = questionList.length
       //question条件修改 1
       question.where({
-        tabs: "我丢了..."
+        tag: "我丢了..."
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -475,7 +475,7 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tabs: "我丢了..."
+            tag: "我丢了..."
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
@@ -498,7 +498,7 @@ Page({
       this.showNumData.showNum = questionList.length
       //question条件修改 1
       question.where({
-        tabs: "求..."
+        tag: "求..."
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -506,7 +506,7 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tabs: "求..."
+            tag: "求..."
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
@@ -529,7 +529,7 @@ Page({
       this.showNumData.showNum = questionList.length
       //question条件修改 1
       question.where({
-        tabs: "学习"
+        tag: "学习"
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -537,7 +537,7 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tabs: "学习"
+            tag: "学习"
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList
@@ -560,7 +560,7 @@ Page({
       this.showNumData.showNum = questionList.length
       //question条件修改 1
       question.where({
-        tabs: "生活"
+        tag: "生活"
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -568,7 +568,7 @@ Page({
           })
           //question条件修改 2
           question.where({
-            tabs: "生活"
+            tag: "生活"
           }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionList

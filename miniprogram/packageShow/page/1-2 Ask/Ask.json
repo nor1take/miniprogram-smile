@@ -2,6 +2,5 @@
   "usingComponents": {
     "return":"../../../components/return-noTab/return-noTab",
     "tags":"../../../components/tags/tags"
-  },
-  "navigationBarTitleText": "我想问..."
+  }
 }
