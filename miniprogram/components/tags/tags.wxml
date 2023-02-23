@@ -1,0 +1,5 @@
+<view class="tags">
+  <block wx:for="{{tagsList}}" wx:key='id'>
+    <view class="{{activeTag == index ? 'selectedItem' : 'item'}}" bindtap="tagTap" data-index="{{index}}" data-tagName='{{item}}'>{{item}}</view>
+  </block>
+</view>

@@ -21,17 +21,7 @@
   <view class="tip">* 每次最多能上传 9 张图片。</view>
   <view class="tagsArea">
     <view class="text">推荐标签</view>
-    <view class="tags">
-      <view class="item">学习</view>
-      <view class="item">学习</view>
-      <view class="item">学习哈哈哈哈</view>
-      <view class="item">学习</view>
-      <view class="item">学习</view>
-      <view class="item">学习</view>
-      <view class="item">学习</view>
-      <view class="item">学习</view>
-      <view class="item">学习</view>
-    </view>
+    <tags tagsList='{{tagsList}}' bindtagtap="tagTap"></tags>
   </view>
 
   <view class="switch">

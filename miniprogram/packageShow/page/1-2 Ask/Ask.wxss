@@ -103,53 +103,6 @@ page {
   color: #7B7B7B;
 }
 
-.tags {
-  margin: 32rpx;
-  margin-top: 8rpx;
-  margin-bottom: 8rpx;
-  display: flex;
-  flex-wrap: wrap;
-  font-size: 34rpx;
-}
-
-.item {
-  width: fit-content;
-  height: fit-content;
-  margin: 8rpx;
-  display: inline;
-  border: 1rpx solid #DDDDDD;
-  border-radius: 30rpx;
-  background-color: white;
-
-  display: flex;
-  align-items: center;
-  padding: 32rpx;
-  padding-top: 8rpx;
-  padding-bottom: 8rpx;
-
-  font-size: 30rpx;
-  color: #ACACAC;
-}
-
-.selectedItem {
-  margin: 8rpx;
-
-  border-radius: 30rpx;
-
-
-  display: flex;
-  align-items: center;
-  padding: 32rpx;
-  padding-top: 8rpx;
-  padding-bottom: 8rpx;
-
-  font-size: 30rpx;
-
-  border: 3rpx solid black;
-  color: black;
-  font-weight: bold;
-}
-
 .diy {
   color: #ACACAC;
 }
