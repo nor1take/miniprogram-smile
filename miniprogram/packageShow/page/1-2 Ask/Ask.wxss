@@ -57,7 +57,7 @@ page {
 
   display: flex;
   flex-wrap: wrap;
-  margin:0 auto;
+  margin: 0 auto;
 
 }
 
@@ -103,6 +103,7 @@ page {
   color: #7B7B7B;
 }
 
+<<<<<<< HEAD
 .tags {
   margin: 32rpx;
   margin-top: 8rpx;
@@ -149,6 +150,8 @@ page {
   font-weight: bold; 
 }
 
+=======
+>>>>>>> dev
 .diy {
   color: #ACACAC;
 }
@@ -184,19 +187,22 @@ input {
   align-items: center;
   justify-content: center;
 }
-button{
-  border:none;
-}
-button::after {
-  border:none;
-}
-button {
-  border-radius: 40rpx; 
 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  width: max-content; 
+button {
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+button {
+  border-radius: 40rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
 
   font-size: 32rpx;
   padding-left: 128rpx;
@@ -245,11 +251,12 @@ button {
 
     color: #ACACAC;
   }
-  .selectedItem{
+
+  .selectedItem {
     background-color: #3d3d3d;
-    border: 3rpx solid white; 
-    color: #DDDDDD; 
-    font-weight: bold; 
+    border: 3rpx solid white;
+    color: #DDDDDD;
+    font-weight: bold;
   }
 
   .diy {

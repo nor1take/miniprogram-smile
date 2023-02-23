@@ -38,11 +38,21 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
+    tagsList: [
+      '学习',
+      '生活',
+      '成长',
+      '影视',
+      '读书',
+      '游戏',
+      '音乐',
+    ],
+
     titleContent: false,
     loading: false,
 
-    id: 1,
-    tabs: '学习',
+    tagId: 1,
+    tag: '学习',
     _unknown: false,
     focus: false,
 
@@ -68,50 +78,13 @@ Page({
     }
     // console.log('title',this.data.titleContent)
   },
-  //0-2-1 tags标签，更新id, tags数据 → 发布按钮的disable
-  tapStudy: function (e) {
+  //0-2-1 tags标签 → 发布按钮的disable
+  tagTap: function (e) {
+    const { tagname } = e.detail
+    console.log(tagname)
     this.setData({
-      id: 1,
-      tabs: '学习'
+      tag: tagname
     })
-  },
-  tapLife: function (e) {
-    this.setData({
-      id: 2,
-      tabs: '生活'
-    })
-  },
-  tapLost: function (e) {
-    this.setData({
-      id: 3,
-      tabs: '我丢了...'
-    })
-  },
-  tapFind: function (e) {
-    this.setData({
-      id: 4,
-      tabs: '我捡到...'
-    })
-  },
-  tapAskfor: function (e) {
-    this.setData({
-      id: 5,
-      tabs: '求...'
-    })
-  },
-  tapDIY: function () {
-    this.setData({
-      id: 6,
-      tabs: '其他'
-    })
-  },
-  //0-2-2 自定义标签，更新tabs数据 → 发布按钮的disable
-  tagsInput: function (e) {
-    if (e.detail.value != '') {
-      this.setData({
-        tabs: e.detail.value
-      })
-    }
   },
 
   //1 获取右上角按钮数据
@@ -175,8 +148,8 @@ Page({
         title: e.detail.value.title,
         body: e.detail.value.body,
 
-        tabsId: this.data.id,
-        tabs: this.data.tabs,
+        tagId: this.data.tagId,
+        tag: this.data.tag,
 
         watched: 1,
 

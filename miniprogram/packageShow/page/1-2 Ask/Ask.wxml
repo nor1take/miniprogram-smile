@@ -2,32 +2,34 @@
 
 <!-- 表单 -->
 <form catchsubmit="formSubmit" catchreset="formReset">
-    <view class="titleContainer">
-        <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的问题" name="title" bindinput="title">
+  <view class="titleContainer">
+    <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的问题" name="title" bindinput="title">
         </textarea>
-    </view>
-    <view class="bodyContainer">
-        <textarea maxlength="-1" class="body" placeholder="补充说明你的问题（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body">
+  </view>
+  <view class="bodyContainer">
+    <textarea maxlength="-1" class="body" placeholder="补充说明你的问题（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body">
             </textarea>
-    </view>
+  </view>
 
-    <view class="imageUpload-area">
-        <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="id">
-            <image src="{{item}}" mode="aspectFill" style="height: 214rpx; width: 214rpx;  margin-left: 16rpx; margin-top: 8rpx;" bindtap="imageTap" id="{{item}}" data-index="{{index}}">{{item}}</image>
-        </block>
-        <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">+</view>
-        <view class="upload" wx:else bindtap="upload">+</view>
-    </view>
-    <view class="tip">* 每次最多能上传 9 张图片。</view>
-    <view class="tagsArea">
-        <view class="text">推荐标签</view>
-        <view class="tags">
-            <view class="item" wx:if="{{tabs!='学习'}}" bindtap="tapStudy">学习</view>
-            <view class="selectedItem" wx:elif="{{tabs=='学习'}}">学习</view>
+  <view class="imageUpload-area">
+    <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="id">
+      <image src="{{item}}" mode="aspectFill" style="height: 214rpx; width: 214rpx;  margin-left: 16rpx; margin-top: 8rpx;" bindtap="imageTap" id="{{item}}" data-index="{{index}}">{{item}}</image>
+    </block>
+    <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">+</view>
+    <view class="upload" wx:else bindtap="upload">+</view>
+  </view>
+  <view class="tip">* 每次最多能上传 9 张图片。</view>
+  <view class="tagsArea">
+    <view class="text">推荐标签</view>
+    <tags tagsList='{{tagsList}}' bindtagtap="tagTap"></tags>
+  </view>
 
-            <view class="item" wx:if="{{tabs!='生活'}}" bindtap="tapLife">生活</view>
-            <view class="selectedItem" wx:if="{{tabs=='生活'}}">生活</view>
+  <view class="switch">
+    <view class="switchContent">匿名发布</view>
+    <switch bindchange="switchChange" />
+  </view>
 
+<<<<<<< HEAD
             <view class="item" wx:if="{{tabs!='求...'}}" bindtap="tapAskfor">求(组队/资料...)</view>
             <view class="selectedItem" wx:if="{{tabs=='求...'}}">求(组队/资料...)</view>
 
@@ -55,5 +57,11 @@
         <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
         <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
     </view>
+=======
+  <view class="btn-area">
+    <button loading="{{loading}}" wx:if="{{titleContent && id}}" size="default" type="primary" formType="submit">发布</button>
+    <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
+  </view>
+>>>>>>> dev
 </form>
 <view style="width: 100%; height: 10%; position: absolute;"></view>
