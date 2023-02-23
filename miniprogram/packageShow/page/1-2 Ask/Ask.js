@@ -38,12 +38,12 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
-    tagsList: ['学习', '生活', '影视', '读书', '游戏', '音乐'],
+    tagsList: ['学习', '生活', '影视', '读书', '游戏', '音乐', '求(组队/资料…)', '我捡到…', '我丢了…',  ],
 
     titleContent: false,
     loading: false,
 
-    tagId: 0,
+    tagId: 1,
     tag: '学习',
     _unknown: false,
     focus: false,
@@ -72,14 +72,15 @@ Page({
   },
   //0-2-1 tags标签 → 发布按钮的disable
   tagTap: function (e) {
+    console.log(e)
     const { tagname } = e.detail
     console.log('tagname', tagname)
     this.setData({
       tag: tagname
     })
-    if (this.data.tagId != 0 && this.data.tagsList.includes(tagname)) {
+    if (this.data.tagId != 1 && this.data.tagsList.includes(tagname)) {
       this.setData({
-        tagId: 0
+        tagId: 1
       })
     }
   },
@@ -88,7 +89,7 @@ Page({
     console.log('taginput', value)
     this.setData({
       tag: value,
-      tagId: 1
+      tagId: 0
     })
   },
 

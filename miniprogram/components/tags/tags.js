@@ -28,9 +28,11 @@ Component({
     },
 
     tapDIY: function (e) {
+      const tagname = e.detail.value
       this.setData({
         activeTag: -1
       })
+      this.triggerEvent('tagtap', { tagname })
     },
 
     input: function (e) {
