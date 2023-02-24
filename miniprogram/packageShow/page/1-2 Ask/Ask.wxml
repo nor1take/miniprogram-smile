@@ -29,7 +29,7 @@
   </view>
 
   <view class="btn-area">
-    <button loading="{{loading}}" wx:if="{{titleContent && tag}}" size="default" type="primary" formType="submit">发布</button>
+    <button wx:if="{{titleContent && tag}}" size="default" type="primary" formType="submit">发布</button>
     <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
   </view>
 </form>

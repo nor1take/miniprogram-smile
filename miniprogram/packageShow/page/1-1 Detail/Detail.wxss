@@ -204,6 +204,7 @@
   margin:0 auto;
   
   padding: 16rpx;
+  padding-left: 0;
 
   z-index: 2;
 }
@@ -217,7 +218,6 @@
   justify-content: center;
   margin: 16rpx;
   margin-right: 0;
-
 }
 
 .bottomInput-Container {

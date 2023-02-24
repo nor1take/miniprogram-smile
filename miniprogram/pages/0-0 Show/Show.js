@@ -281,6 +281,7 @@ Page({
         app.globalData.isLogin = true,
           app.globalData.isManager = res.data[0].isManager,
           app.globalData.isAuthentic = res.data[0].isAuthentic,
+          app.globalData.modifyNum =  res.data[0].modifyNum
           
           app.globalData.nickName = res.data[0].nickName,
           app.globalData.avatarUrl = res.data[0].avatarUrl,

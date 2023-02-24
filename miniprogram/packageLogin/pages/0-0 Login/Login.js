@@ -23,62 +23,79 @@ Page({
 
   login: function (e) {
     console.log("login")
-    const nickName = e.detail.value.nickName;
-    if (nickName.length == 0 || nickName == null) {
+    if (app.globalData.modifyNum <= 0) {
       wx.showToast({
-        title: '昵称不能为空',
-        icon: 'none'
+        title: '修改次数用尽',
+        icon: 'error'
       })
     } else {
-      wx.showLoading({
-        title: '提交中',
-      })
-      const onlyString = new Date().getTime().toString();
-      wx.cloud.uploadFile({
-        cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString + '.png', // 上传至云端的路径
-        filePath: this.data.avatarUrl, // 小程序临时文件路径
-        success: res => {
-          if (!app.globalData.isLogin) {
-            userInfo.add({
-              data: {
-                nickName: nickName,
-                avatarUrl: res.fileID,
-                isManager: false,
-                isForbidden: false,
-                isAuthentic: false
-              }
-            }).then(() => {
-              wx.hideLoading()
-              wx.switchTab({
-                url: '../../../pages/0-0 Show/Show'
+      const nickName = e.detail.value.nickName;
+      if (nickName.length == 0 || nickName == null) {
+        wx.showToast({
+          title: '昵称不能为空',
+          icon: 'none'
+        })
+      } else {
+        wx.showLoading({
+          title: '提交中',
+        })
+        const onlyString = new Date().getTime().toString();
+        wx.cloud.uploadFile({
+          cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString + '.png', // 上传至云端的路径
+          filePath: this.data.avatarUrl, // 小程序临时文件路径
+          success: res => {
+            if (!app.globalData.isLogin) {
+              userInfo.add({
+                data: {
+                  nickName: nickName,
+                  avatarUrl: res.fileID,
+                  isManager: false,
+                  isForbidden: false,
+                  isAuthentic: false,
+                  modifyNum: 3
+                }
+              }).then(() => {
+                wx.hideLoading()
+                wx.switchTab({
+                  url: '../../../pages/0-0 Show/Show'
+                })
               })
-            })
-          } else {
-            userInfo.where({
-              _openid: '{openid}'
-            }).update({
-              data: {
-                nickName: nickName,
-                avatarUrl: res.fileID,
-              }
-            }).then(() => {
-              wx.hideLoading()
-              wx.switchTab({
-                url: '../../../pages/0-0 Show/Show'
+            } else {
+              app.globalData.modifyNum = app.globalData.modifyNum - 1;
+              userInfo.where({
+                _openid: '{openid}'
+              }).update({
+                data: {
+                  nickName: nickName,
+                  avatarUrl: res.fileID,
+                  modifyNum: _.inc(-1)
+                }
+              }).then(() => {
+                wx.hideLoading()
+                wx.showToast({
+                  title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
+                  icon: 'none'
+                })
+                setTimeout(function () {
+                  wx.switchTab({
+                    url: '../../../pages/0-0 Show/Show'
+                  })
+                }, 1000);
               })
+            }
+          },
+          fail: err => {
+            console.error('[上传文件] 失败：', err)
+            wx.hideLoading()
+            wx.showToast({
+              icon: 'none',
+              title: '失败',
             })
           }
-        },
-        fail: err => {
-          console.error('[上传文件] 失败：', err)
-          wx.hideLoading()
-          wx.showToast({
-            icon: 'none',
-            title: '失败',
-          })
-        }
-      })
+        })
+      }
     }
+
   },
 
   onChooseAvatar(e) {
