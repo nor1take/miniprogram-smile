@@ -105,7 +105,7 @@ Page({
         } else {
           const onlyString = new Date().getTime().toString();
           wx.cloud.uploadFile({
-            cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString + '.png', // 上传至云端的路径
+            cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString, // 上传至云端的路径
             filePath: this.data.avatarUrl, // 小程序临时文件路径
             success: res => {
               if (!app.globalData.isLogin) {

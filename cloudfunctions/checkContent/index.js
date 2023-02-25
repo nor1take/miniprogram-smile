@@ -32,6 +32,7 @@ exports.main = async (event, context) => {
     return {
       msgR,   //内容检查返回值
       imageR,   //图片检查返回值
+      value
     };
   } catch (err) {
     // 错误处理

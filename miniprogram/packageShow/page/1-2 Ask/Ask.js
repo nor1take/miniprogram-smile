@@ -66,68 +66,53 @@ function checkAndUploadManyImages(tempFiles, page) {
     title: '上传中',
     mask: true
   })
-  let onlyString;
+
   for (var i = 0; i < tempFiles.length; i++) {
     const { tempFilePath } = tempFiles[i]
-    onlyString = new Date().getTime().toString();
-    /**
-     * 1、上传云存储
-     */
-    wx.cloud.uploadFile({
-      cloudPath: app.globalData.openId + '/' + onlyString + '.png', // 上传至云端的路径
-      filePath: tempFilePath, // 小程序临时文件路径
-      success: res => {
-        /**
-         * 2、获取云文件的url
-         */
-        wx.cloud.getTempFileURL({
-          fileList: [res.fileID]
-        }).then(_res => {
-          // get temp file URL
-          console.log(_res.fileList[0].tempFileURL)
-          /**
-           * 3、传入图片url进行审核
-           */
-          wx.cloud.callFunction({
-            name: 'checkContent',
-            data: {
-              value: _res.fileList[0].tempFileURL,
-              scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-            },
-            success: json => {
-              console.log(json.result.imageR.traceId)
-              const {traceId} = json.result.imageR
-              page.data.fileID.push(res.fileID)
-              page.data.traceId.push(traceId)
-              // 返回文件 ID
-              page.setData({
-                fileID: page.data.fileID,
-                traceId: page.data.traceId
-              })
-              wx.hideLoading()
-              wx.showToast({
-                title: '上传成功 等待审核',
-                icon: 'none'
-              })
-            },
-            fail: err => {
-              console.log('checkContent err：', err)
-            }
-          })
-        }).catch(error => {
-          // handle error
-          console.log('err', error)
+    wx.cloud.callFunction({
+      name: 'checkContent',
+      data: {
+        value: wx.cloud.CDN({
+          type: 'filePath',
+          filePath: tempFilePath
+        }),
+        scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+      },
+      success: json => {
+        console.log(json)
+        const { traceId } = json.result.imageR
+
+        wx.cloud.uploadFile({
+          cloudPath: app.globalData.openId + '/' + traceId, // 上传至云端的路径
+          filePath: tempFilePath, // 小程序临时文件路径
+          success: res => {
+            const { fileID } = res
+            console.log('fileID', fileID)
+            page.data.fileID.push(fileID)
+            page.setData({
+              fileID: page.data.fileID,
+            })
+            wx.hideLoading()
+            wx.showToast({
+              title: '上传成功 等待审核',
+              icon: 'none'
+            })
+          },
+          fail: err => {
+            console.error('uploadFile err：', err)
+            wx.hideLoading()
+            wx.showToast({
+              icon: 'error',
+              title: '上传失败',
+            })
+          }
         })
       },
       fail: err => {
-        console.error('uploadFile err：', err)
-        wx.hideLoading()
-        wx.showToast({
-          icon: 'error',
-          title: '上传失败',
-        })
+        console.log('checkContent err：', err)
       }
     })
+
   }
 }
 
@@ -146,7 +131,6 @@ Page({
     focus: false,
 
     fileID: [],
-    traceId:[],
 
     top: 48,
     left: 281,
@@ -277,7 +261,6 @@ Page({
             time: d,
 
             image: that.data.fileID,
-            traceId: that.data.traceId,
 
             unknown: that.data._unknown,
             nickName: app.globalData.nickName,
@@ -330,14 +313,12 @@ Page({
       success: res => {
         console.log(res.tapIndex)
         this.data.fileID.splice(index, 1)
-        this.data.traceId.splice(index, 1)
         wx.showToast({
           title: '删除成功',
           icon: 'none'
         })
         this.setData({
           fileID: this.data.fileID,
-          traceId: this.data.traceId
         })
         wx.cloud.deleteFile({
           fileList: [id],
