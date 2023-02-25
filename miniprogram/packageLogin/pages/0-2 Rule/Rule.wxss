@@ -1,0 +1,12 @@
+.ruleContainer {
+  padding: 32rpx;
+}
+
+.ruleBody {
+  margin: 32rpx;
+}
+
+.ruleTitle {
+  margin: 64rpx;
+  font-weight: bolder;
+}

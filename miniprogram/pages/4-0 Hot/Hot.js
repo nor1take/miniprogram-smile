@@ -50,9 +50,16 @@ Page({
           $.sum([
             $.multiply([$.log10('$watched'), 4]),
             '$collectNum',
-            $.divide(['$commentNum', 4])
+            $.multiply(['$commentNum', 2])
           ]),
-          $.pow([$.subtract([now, '$time']), 1.5])
+          $.pow([
+           $.sum(
+             $.divide([$.subtract([now, '$time']), 2]), 
+             $.divide([$.subtract([now, '$answerTime']), 2]),
+             1
+            ), 
+            1.5
+          ])
         ])
       })
       .sort({

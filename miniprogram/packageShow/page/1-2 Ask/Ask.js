@@ -1,84 +1,133 @@
 const app = getApp()
 const db = wx.cloud.database()
 const question = db.collection('question')
+
+let a = {
+  "event":
+  {
+    "CreateTime": 1677316324,
+    "Event": "wxa_media_check",
+    "FromUserName": "oJ-6m5aJ3V8l-fq_MgUnOv81AYaQ",
+    "MsgType": "event",
+    "ToUserName": "gh_ebf8df85caf6",
+    "appid": "wxe948b891c10e8a38",
+    "detail": [{ "errcode": 0, "label": 100, "prob": 90, "strategy": "content_model", "suggest": "pass" }], "errcode": 0,
+    "errmsg": "ok",
+    "result": { "label": 100, "suggest": "pass" },
+    "trace_id": "63f9d0e1-3696b72c-2e0abae0",
+    "userInfo": { "appId": "wxe948b891c10e8a38", "openId": "oJ-6m5aJ3V8l-fq_MgUnOv81AYaQ" },
+    "version": 2
+  }
+};
+
+
+function matchLabel(labelNum) {
+  switch (labelNum) {
+    case 100:
+      return '正常';
+      break;
+    case 10001:
+      return '广告';
+      break;
+    case 20001:
+      return '时政';
+      break;
+    case 20002:
+      return '色情';
+      break;
+    case 20003:
+      return '辱骂';
+      break;
+    case 20006:
+      return '违法犯罪';
+      break;
+    case 20008:
+      return '欺诈';
+      break;
+    case 20012:
+      return '低俗';
+      break;
+    case 20013:
+      return '版权';
+      break;
+    case 21000:
+      return '其他';
+      break;
+  }
+}
 /**
- * 审核图片，上传审核通过后的图片
+ * 上传需要审核图片。审核不通过通过云函数getMediaCheckResult对图片进行删除
  * @param {*待审核图片列表} tempFiles 
  * @param {*page = this} page 
  */
 function checkAndUploadManyImages(tempFiles, page) {
   console.log(tempFiles)
   wx.showLoading({
-    title: '审核中',
+    title: '上传中',
+    mask: true
   })
   let onlyString;
   for (var i = 0; i < tempFiles.length; i++) {
-    if (tempFiles[i].size > 1024 * 1024) {
-      wx.hideLoading()
-      wx.showToast({
-        title: '图片大于1MB',
-        icon: 'error'
-      });
-      console.log('图片规格 > 1 MB')
-    } else {
-      const { tempFilePath } = tempFiles[i]
-      wx.cloud.callFunction({
-        name: 'checkContent',
-        data: {
-          value: tempFilePath
-        },
-        success: json => {
-          console.log(json)
-          if (json.result.errCode) {
-            wx.hideLoading()
-            wx.showToast({
-              title: '无法上传',
-              icon: 'error'
-            });
-          } else {
-            if (json.result.imageR.errCode == 87014) {
-              console.log("图片含有违法违规内容")
+    const { tempFilePath } = tempFiles[i]
+    onlyString = new Date().getTime().toString();
+    /**
+     * 1、上传云存储
+     */
+    wx.cloud.uploadFile({
+      cloudPath: app.globalData.openId + '/' + onlyString + '.png', // 上传至云端的路径
+      filePath: tempFilePath, // 小程序临时文件路径
+      success: res => {
+        /**
+         * 2、获取云文件的url
+         */
+        wx.cloud.getTempFileURL({
+          fileList: [res.fileID]
+        }).then(_res => {
+          // get temp file URL
+          console.log(_res.fileList[0].tempFileURL)
+          /**
+           * 3、传入图片url进行审核
+           */
+          wx.cloud.callFunction({
+            name: 'checkContent',
+            data: {
+              value: _res.fileList[0].tempFileURL,
+              scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+            },
+            success: json => {
+              console.log(json.result.imageR.traceId)
+              const {traceId} = json.result.imageR
+              page.data.fileID.push(res.fileID)
+              page.data.traceId.push(traceId)
+              // 返回文件 ID
+              page.setData({
+                fileID: page.data.fileID,
+                traceId: page.data.traceId
+              })
               wx.hideLoading()
               wx.showToast({
-                title: '图片含有违法违规内容',
-                icon: 'error'
-              });
-            } else {
-              onlyString = new Date().getTime().toString();
-              wx.cloud.uploadFile({
-                cloudPath: app.globalData.openId + '/' + onlyString + '.png', // 上传至云端的路径
-                filePath: tempFilePath, // 小程序临时文件路径
-                success: res => {
-                  page.data.fileID.push(res.fileID)
-                  // 返回文件 ID
-                  page.setData({
-                    fileID: page.data.fileID
-                  })
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '合规图片已成功',
-                  })
-                },
-                fail: err => {
-                  console.error('uploadFile err：', err)
-                  wx.hideLoading()
-                  wx.showToast({
-                    icon: 'error',
-                    title: '上传失败',
-                  })
-                }
+                title: '上传成功 等待审核',
+                icon: 'none'
               })
+            },
+            fail: err => {
+              console.log('checkContent err：', err)
             }
-          }
-
-        },
-        fail: err => {
-          console.log('checkContent err：', err)
-        }
-      })
-
-
-    }
+          })
+        }).catch(error => {
+          // handle error
+          console.log('err', error)
+        })
+      },
+      fail: err => {
+        console.error('uploadFile err：', err)
+        wx.hideLoading()
+        wx.showToast({
+          icon: 'error',
+          title: '上传失败',
+        })
+      }
+    })
   }
 }
 
@@ -97,6 +146,7 @@ Page({
     focus: false,
 
     fileID: [],
+    traceId:[],
 
     top: 48,
     left: 281,
@@ -162,9 +212,9 @@ Page({
       camera: 'back',
       success: res => {
         wx.showLoading({
-          title: '上传中'
+          title: '上传中',
+          mask: true
         })
-        console.log(res.tempFiles)
         checkAndUploadManyImages(res.tempFiles, this)
       },
       fail: err => {
@@ -185,26 +235,36 @@ Page({
    */
   formSubmit(e) {
     wx.showLoading({
-      title:'审核中'
+      title: '审核中',
+      mask: true
     })
     const { title } = e.detail.value;
     const { body } = e.detail.value;
     const { tag } = this.data;
 
     let that = this
-    
+
     wx.cloud.callFunction({
       name: 'checkContent',
       data: {
-        txt: title + body + tag
+        txt: title + body + tag,
+        scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       }
     }).then((res) => {
-      console.log(res.result.msgR.errCode)
-      if (res.result.msgR.errCode === 87014) {
+      console.log(res)
+      const { label } = res.result.msgR.result
+      const { suggest } = res.result.msgR.result
+      if (suggest === 'risky') {
         wx.hideLoading()
         wx.showToast({
-          title: '包含敏感信息',
-          icon: 'error'
+          title: '危险：包含' + matchLabel(label) + '信息！',
+          icon: 'none'
+        })
+      } else if (suggest === 'review') {
+        wx.hideLoading()
+        wx.showToast({
+          title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
+          icon: 'none'
         })
       } else {
         app.globalData.isAsk = true
@@ -217,6 +277,7 @@ Page({
             time: d,
 
             image: that.data.fileID,
+            traceId: that.data.traceId,
 
             unknown: that.data._unknown,
             nickName: app.globalData.nickName,
@@ -269,17 +330,19 @@ Page({
       success: res => {
         console.log(res.tapIndex)
         this.data.fileID.splice(index, 1)
+        this.data.traceId.splice(index, 1)
         wx.showToast({
           title: '删除成功',
           icon: 'none'
         })
         this.setData({
-          fileID: this.data.fileID
+          fileID: this.data.fileID,
+          traceId: this.data.traceId
         })
         wx.cloud.deleteFile({
           fileList: [id],
           success: res => {
-            console.log('成功删除', res.tempFilePath)
+            console.log('成功删除', res)
           },
           fail: err => {
             console.log(err)

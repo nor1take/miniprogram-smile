@@ -4,84 +4,115 @@ const _ = db.command
 const question = db.collection('question')
 const comment = db.collection('comment')
 const commentAgain = db.collection('commentAgain')
+
+function matchLabel(labelNum) {
+  switch (labelNum) {
+    case 100:
+      return '正常';
+      break;
+    case 10001:
+      return '广告';
+      break;
+    case 20001:
+      return '时政';
+      break;
+    case 20002:
+      return '色情';
+      break;
+    case 20003:
+      return '辱骂';
+      break;
+    case 20006:
+      return '违法犯罪';
+      break;
+    case 20008:
+      return '欺诈';
+      break;
+    case 20012:
+      return '低俗';
+      break;
+    case 20013:
+      return '版权';
+      break;
+    case 21000:
+      return '其他';
+      break;
+  }
+}
+
 /**
- * 审核图片，上传审核通过后的图片
+ * 上传需要审核图片。审核不通过通过云函数getMediaCheckResult对图片进行删除
  * @param {*待审核图片列表} tempFiles 
  * @param {*page = this} page 
  */
 function checkAndUploadManyImages(tempFiles, page) {
   console.log(tempFiles)
   wx.showLoading({
-    title: '审核中',
+    title: '上传中',
+    mask: true
   })
   let onlyString;
   for (var i = 0; i < tempFiles.length; i++) {
-    if (tempFiles[i].size > 1024 * 1024) {
-      wx.hideLoading()
-      wx.showToast({
-        title: '图片大于1MB',
-        icon: 'error'
-      });
-      console.log('图片规格 > 1 MB')
-    } else {
-      const { tempFilePath } = tempFiles[i]
-      wx.cloud.callFunction({
-        name: 'checkContent',
-        data: {
-          value: tempFilePath
-        },
-        success: json => {
-          console.log(json)
-          if (json.result.errCode) {
-            wx.hideLoading()
-            wx.showToast({
-              title: '无法上传',
-              icon: 'error'
-            });
-          } else {
-            if (json.result.imageR.errCode == 87014) {
-              console.log("图片含有违法违规内容")
+    const { tempFilePath } = tempFiles[i]
+    onlyString = new Date().getTime().toString();
+    /**
+     * 1、上传云存储
+     */
+    wx.cloud.uploadFile({
+      cloudPath: app.globalData.openId + '/' + onlyString + '.png', // 上传至云端的路径
+      filePath: tempFilePath, // 小程序临时文件路径
+      success: res => {
+        /**
+         * 2、获取云文件的url
+         */
+        wx.cloud.getTempFileURL({
+          fileList: [res.fileID]
+        }).then(_res => {
+          // get temp file URL
+          console.log(_res.fileList[0].tempFileURL)
+          /**
+           * 3、传入图片url进行审核
+           */
+          wx.cloud.callFunction({
+            name: 'checkContent',
+            data: {
+              value: _res.fileList[0].tempFileURL,
+              scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+            },
+            success: json => {
+              console.log(json.result.imageR.traceId)
+              const {traceId} = json.result.imageR
+              page.data.fileID.push(res.fileID)
+              page.data.traceId.push(traceId)
+              // 返回文件 ID
+              page.setData({
+                fileID: page.data.fileID,
+                traceId: page.data.traceId
+              })
               wx.hideLoading()
               wx.showToast({
-                title: '图片含有违法违规内容',
-                icon: 'error'
-              });
-            } else {
-              onlyString = new Date().getTime().toString();
-              wx.cloud.uploadFile({
-                cloudPath: app.globalData.openId + '/' + onlyString + '.png', // 上传至云端的路径
-                filePath: tempFilePath, // 小程序临时文件路径
-                success: res => {
-                  page.data.fileID.push(res.fileID)
-                  // 返回文件 ID
-                  page.setData({
-                    fileID: page.data.fileID
-                  })
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '合规图片已成功',
-                  })
-                },
-                fail: err => {
-                  console.error('uploadFile err：', err)
-                  wx.hideLoading()
-                  wx.showToast({
-                    icon: 'error',
-                    title: '上传失败',
-                  })
-                }
+                title: '上传成功 等待审核',
+                icon: 'none'
               })
+            },
+            fail: err => {
+              console.log('checkContent err：', err)
             }
-          }
-
-        },
-        fail: err => {
-          console.log('checkContent err：', err)
-        }
-      })
-
-
-    }
+          })
+        }).catch(error => {
+          // handle error
+          console.log('err', error)
+        })
+      },
+      fail: err => {
+        console.error('uploadFile err：', err)
+        wx.hideLoading()
+        wx.showToast({
+          icon: 'error',
+          title: '上传失败',
+        })
+      }
+    })
   }
 }
 
@@ -129,6 +160,7 @@ Page({
     isFold: true,
     sortWord: "按最新",
     fileID: [],
+    traceId:[],
 
     height: 0,
     colorGray: '#E7E7E7',
@@ -150,6 +182,8 @@ Page({
     left: 281,
     right: 367,
     bottom: 80,
+
+    _commentBody: ''
   },
   fold: function () {
     const { isFold } = this.data
@@ -291,6 +325,7 @@ Page({
       success: res => {
         console.log(res.tapIndex)
         this.data.fileID.splice(index, 1)
+        this.data.traceId.splice(index, 1)
         wx.showToast({
           title: '删除成功',
           icon: 'none'
@@ -298,6 +333,7 @@ Page({
         if (this.data.fileID.length === 0) {
           this.setData({
             fileID: this.data.fileID,
+            traceId: this.data.traceId,
             inputContent: false,
             tapAnswerButton: true,
             tapReplyButton: false,
@@ -307,6 +343,7 @@ Page({
         else {
           this.setData({
             fileID: this.data.fileID,
+            traceId: this.data.traceId,
           })
         }
         wx.cloud.deleteFile({
@@ -650,6 +687,7 @@ Page({
                   question.where({
                     _id: app.globalData.questionId
                   }).get().then(res => {
+                    console.log(res.data)
                     deleteQuestionCloudImage(res.data)
                   }),
                   comment.where({
@@ -948,192 +986,218 @@ Page({
       fileID: [],
     })
   },
+
+  sendContent: function (_commentBody) {
+    let that = this
+    var d = new Date().getTime();
+    if (that.data.tapAnswerButton) {
+      question.doc(app.globalData.questionId).get().then(res => {
+        if (res.data._openid != that.data.openId) {
+          question.doc(app.globalData.questionId).update({
+            data: {
+              answerTime: d,
+              commentNum: _.inc(1),
+              message: _.inc(1),
+
+              commenter: _.push({
+                each: [{ nickName: app.globalData.nickName, openId: app.globalData.openId }],
+                position: 0,
+              }) //头插法
+            }
+          })
+            .then(() => {
+              comment.add({
+                data: {
+                  //时间
+                  time: d,
+
+                  questionId: app.globalData.questionId,
+                  body: _commentBody,
+                  commentNum: 0,
+                  nickname: app.globalData.nickName,
+                  image: app.globalData.avatarUrl,
+                  traceId: that.data.traceId,
+                  commenter: [],
+                  liker: [],
+                  likerNum: 0,
+                  image_upload: that.data.fileID,
+
+                  isAuthentic: app.globalData.isAuthentic
+                },
+              }).then(() => {
+                wx.hideLoading()
+                that.sendEnd()
+              })
+            })
+        }
+        else {
+          question.doc(app.globalData.questionId).update({
+            data: {
+              commentNum: _.inc(1),
+            }
+          })
+            .then(() => {
+              comment.add({
+                data: {
+                  //时间
+                  time: d,
+
+                  questionId: app.globalData.questionId,
+                  body: _commentBody,
+                  commentNum: 0,
+                  nickname: app.globalData.nickName,
+                  image: app.globalData.avatarUrl,
+                  traceId: that.data.traceId,
+
+                  commenter: [],
+                  liker: [],
+                  likerNum: 0,
+                  image_upload: that.data.fileID,
+
+                  isAuthentic: app.globalData.isAuthentic
+                },
+              }).then(() => {
+                wx.hideLoading()
+                that.sendEnd()
+              })
+            })
+        }
+      })
+    }
+    else if (that.data.tapReplyButton) {
+      question.doc(app.globalData.questionId).update({
+        data: {
+          commentNum: _.inc(1),
+        }
+      }).then(() => {
+        console.log(that.data._commentId)
+        comment.doc(that.data._commentId).update({
+          data: {
+            commentNum: _.inc(1),
+            commenter: _.push({
+              avatarUrl: app.globalData.avatarUrl,
+              newNickName: app.globalData.nickName,
+              postNickName: that.data.postNickName,
+              newOpenId: app.globalData.openId,
+              postOpenId: that.data._postOpenId,
+              commentAgainBody: _commentBody,
+
+              image_upload: that.data.fileID,
+              traceId: that.data.traceId,
+            })
+          }
+        })
+      }).then(() => {
+        commentAgain.add({
+          data: {
+            answerTime: d,
+
+            commentAgainBody: _commentBody,
+            newOpenId: app.globalData.openId,
+            postOpenId: that.data._postOpenId,
+            newNickName: app.globalData.nickName,
+            postNickName: that.data.postNickName,
+            questionId: app.globalData.questionId,
+            commentId: that.data._commentId,
+            isWatched: false,
+
+            image_upload: that.data.fileID,
+            traceId: that.data.traceId,
+          }
+        }).then(() => {
+          wx.hideToast()
+          that.sendEnd()
+        })
+      })
+    }
+    else {
+      question.doc(app.globalData.questionId).update({
+        data: {
+          commentNum: _.inc(1),
+        }
+      }).then(() => {
+        comment.doc(that.data._commentId).update({
+          data: {
+            commentNum: _.inc(1),
+            commenter: _.push({
+              avatarUrl: app.globalData.avatarUrl,
+              newOpenId: app.globalData.openId,
+              postOpenId: that.data._postOpenId,
+              newNickName: app.globalData.nickName,
+              postNickName: that.data.postNickName,
+              commentAgainBody: _commentBody,
+
+              image_upload: that.data.fileID,
+              traceId: that.data.traceId,
+            })
+          }
+        }).then(() => {
+          commentAgain.add({
+            data: {
+              answerTime: d,
+
+              commentAgainBody: _commentBody,
+              newOpenId: app.globalData.openId,
+              postOpenId: that.data._postOpenId,
+              newNickName: app.globalData.nickName,
+              postNickName: that.data.postNickName,
+              questionId: app.globalData.questionId,
+              commentId: that.data._commentId,
+              isWatched: false,
+
+              image_upload: that.data.fileID,
+              traceId: that.data.traceId,
+            }
+          }).then(() => {
+            wx.hideLoading()
+            that.sendEnd()
+          })
+        })
+      })
+    }
+  },
   /**
-   * 审核文字，发布审核通过后的评论
+   * 审核文字
    * @param {*} e 
    */
   sendComment: function (e) {
+    wx.showLoading({
+      title: '发送中...',
+      mask: true
+    })
     const { _commentBody } = this.data
     let that = this
     wx.cloud.callFunction({
       name: 'checkContent',
       data: {
-        txt: _commentBody
+        txt: _commentBody,
+        scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       },
       success(_res) {
         console.log(_res)
-        console.log(_res.result.msgR.errCode)
-        if (_res.result.msgR.errCode === 87014) {
-          wx.showToast({
-            title: '包含敏感信息',
-            icon: 'error'
-          })
+        if (_res.result.msgR) {
+          const { label } = _res.result.msgR.result
+          const { suggest } = _res.result.msgR.result
+          if (suggest === 'risky') {
+            wx.hideLoading()
+            wx.showToast({
+              title: '危险：包含' + matchLabel(label) + '信息！',
+              icon: 'none'
+            })
+          } else if (suggest === 'review') {
+            wx.hideLoading()
+            wx.showToast({
+              title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
+              icon: 'none'
+            })
+          } else {
+            that.sendContent(_commentBody)
+          }
         } else {
-          wx.showToast({
-            title: '发送中...',
-            icon: 'none'
-          })
-          var d = new Date().getTime();
-          if (that.data.tapAnswerButton) {
-            question.doc(app.globalData.questionId).get().then(res => {
-              if (res.data._openid != that.data.openId) {
-                question.doc(app.globalData.questionId).update({
-                  data: {
-                    answerTime: d,
-                    commentNum: _.inc(1),
-                    message: _.inc(1),
-
-                    commenter: _.push({
-                      each: [{ nickName: app.globalData.nickName, openId: app.globalData.openId }],
-                      position: 0,
-                    }) //头插法
-                  }
-                })
-                  .then(() => {
-                    comment.add({
-                      data: {
-                        //时间
-                        time: d,
-
-                        questionId: app.globalData.questionId,
-                        body: _commentBody,
-                        commentNum: 0,
-                        nickname: app.globalData.nickName,
-                        image: app.globalData.avatarUrl,
-                        commenter: [],
-                        liker: [],
-                        likerNum: 0,
-                        image_upload: that.data.fileID,
-
-                        isAuthentic: app.globalData.isAuthentic
-                      },
-                    }).then(() => {
-                      wx.hideToast()
-                      that.sendEnd()
-                    })
-                  })
-              }
-              else {
-                question.doc(app.globalData.questionId).update({
-                  data: {
-                    commentNum: _.inc(1),
-                  }
-                })
-                  .then(() => {
-                    comment.add({
-                      data: {
-                        //时间
-                        time: d,
-
-                        questionId: app.globalData.questionId,
-                        body: _commentBody,
-                        commentNum: 0,
-                        nickname: app.globalData.nickName,
-                        image: app.globalData.avatarUrl,
-
-                        commenter: [],
-                        liker: [],
-                        likerNum: 0,
-                        image_upload: that.data.fileID,
-
-                        isAuthentic: app.globalData.isAuthentic
-                      },
-                    }).then(() => {
-                      wx.hideToast()
-                      that.sendEnd()
-                    })
-                  })
-              }
-            })
-          }
-          else if (that.data.tapReplyButton) {
-            question.doc(app.globalData.questionId).update({
-              data: {
-                commentNum: _.inc(1),
-              }
-            }).then(() => {
-              console.log(that.data._commentId)
-              comment.doc(that.data._commentId).update({
-                data: {
-                  commentNum: _.inc(1),
-                  commenter: _.push({
-                    avatarUrl: app.globalData.avatarUrl,
-                    newNickName: app.globalData.nickName,
-                    postNickName: that.data.postNickName,
-                    newOpenId: app.globalData.openId,
-                    postOpenId: that.data._postOpenId,
-                    commentAgainBody: _commentBody,
-
-                    image_upload: that.data.fileID,
-                  })
-                }
-              })
-            }).then(() => {
-              commentAgain.add({
-                data: {
-                  answerTime: d,
-
-                  commentAgainBody: _commentBody,
-                  newOpenId: app.globalData.openId,
-                  postOpenId: that.data._postOpenId,
-                  newNickName: app.globalData.nickName,
-                  postNickName: that.data.postNickName,
-                  questionId: app.globalData.questionId,
-                  commentId: that.data._commentId,
-                  isWatched: false,
-
-                  image_upload: that.data.fileID,
-                }
-              }).then(() => {
-                wx.hideToast()
-                that.sendEnd()
-              })
-            })
-          }
-          else {
-            question.doc(app.globalData.questionId).update({
-              data: {
-                commentNum: _.inc(1),
-              }
-            }).then(() => {
-              comment.doc(that.data._commentId).update({
-                data: {
-                  commentNum: _.inc(1),
-                  commenter: _.push({
-                    avatarUrl: app.globalData.avatarUrl,
-                    newOpenId: app.globalData.openId,
-                    postOpenId: that.data._postOpenId,
-                    newNickName: app.globalData.nickName,
-                    postNickName: that.data.postNickName,
-                    commentAgainBody: _commentBody,
-
-                    image_upload: that.data.fileID,
-                  })
-                }
-              }).then(() => {
-                commentAgain.add({
-                  data: {
-                    answerTime: d,
-
-                    commentAgainBody: _commentBody,
-                    newOpenId: app.globalData.openId,
-                    postOpenId: that.data._postOpenId,
-                    newNickName: app.globalData.nickName,
-                    postNickName: that.data.postNickName,
-                    questionId: app.globalData.questionId,
-                    commentId: that.data._commentId,
-                    isWatched: false,
-
-                    image_upload: that.data.fileID,
-                  }
-                }).then(() => {
-                  wx.hideToast()
-                  that.sendEnd()
-                })
-              })
-            })
-          }
+          that.sendContent(_commentBody)
         }
+
+
       },
       fail(_res) {
         console.log('checkContent云函数调用失败', _res)

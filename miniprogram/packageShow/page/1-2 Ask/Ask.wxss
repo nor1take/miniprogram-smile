@@ -62,8 +62,8 @@ page {
 }
 
 .upload {
-  width: 215rpx;
-  height: 200rpx;
+  width: 214rpx;
+  height: 214rpx;
 
   margin-right: 32rpx;
   margin-left: 32rpx;
@@ -73,7 +73,6 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 15rpx;
 
   font-size: 150rpx;
   font-weight: lighter;

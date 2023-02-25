@@ -5,7 +5,12 @@
   </button>
   <form catchsubmit="login">
     <input type="nickname" bindnicknamereview="onNickNameReview" confirm-type="done" placeholder="请输入昵称" name='nickName' value="{{nickName}}" />
-    <button form-type='submit'>提交</button>
+    <view class="rules">
+      <radio checked="{{isChecked}}" bindtap="radioTap"></radio>
+      <view class="radioContent">
+        <view style="margin: 16rpx;">我已阅读并同意 <text bindtap="rule1" style="color: #10aeff; font-weight: bold;">《微校Smile小程序协议》</text></view>
+      </view>
+    </view>
+    <button form-type='submit' disabled="{{!isChecked}}">提交</button>
   </form>
-
 </view>

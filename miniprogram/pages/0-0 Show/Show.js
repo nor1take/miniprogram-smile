@@ -297,7 +297,7 @@ Page({
         app.globalData.isLogin = false,
           wx.showToast({
             icon: 'none',
-            title: '游客模式。登录后体验 ‘发帖’ ‘评论’ 功能',
+            title: '游客模式。左上角登录后体验 ‘发帖’ ‘评论’ 功能',
             duration: 3500,
           })
       })
