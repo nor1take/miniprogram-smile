@@ -4,6 +4,7 @@ const _ = db.command
 const question = db.collection('question')
 const comment = db.collection('comment')
 const commentAgain = db.collection('commentAgain')
+const traceId = db.collection('traceId')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -41,7 +42,7 @@ function matchLabel(labelNum) {
 }
 
 /**
- * 上传需要审核图片。审核不通过通过云函数getMediaCheckResult对图片进行删除
+ * 触发图片审核
  * @param {*待审核图片列表} tempFiles 
  * @param {*page = this} page 
  */
@@ -54,6 +55,9 @@ function checkAndUploadManyImages(tempFiles, page) {
 
   for (var i = 0; i < tempFiles.length; i++) {
     const { tempFilePath } = tempFiles[i]
+    /**
+     * 1、触发审核，获取traceId
+     */
     wx.cloud.callFunction({
       name: 'checkContent',
       data: {
@@ -66,9 +70,11 @@ function checkAndUploadManyImages(tempFiles, page) {
       success: json => {
         console.log(json)
         const { traceId } = json.result.imageR
-
+        /**
+         * 2、将traceId作为图片的云存储路径
+         */
         wx.cloud.uploadFile({
-          cloudPath: app.globalData.openId + '/' + traceId, // 上传至云端的路径
+          cloudPath: traceId, // 上传至云端的路径
           filePath: tempFilePath, // 小程序临时文件路径
           success: res => {
             const { fileID } = res
@@ -99,6 +105,69 @@ function checkAndUploadManyImages(tempFiles, page) {
     })
 
   }
+}
+
+/**
+ * 删除已上传图片列表中的违规图片，并移除traceId对象
+ * @param {已上传图片列表} fileIds 
+ * @param {*违规图片集合} cloudFileIds 
+ */
+async function deleteInvalidImages(fileIds, cloudFileIds) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const promises = [];
+      for (var i = 0; i < cloudFileIds.length; i++) {
+        const { fileId } = cloudFileIds[i]
+        console.log(fileId)
+        if (fileIds.includes(fileId)) {
+          promises.push(new Promise((resolve, reject) => {
+            /**
+             * 删除云存储中的违规图片
+             */
+            wx.cloud.deleteFile({
+              fileList: [fileId],
+              success: res => {
+                console.log(res)
+                resolve();
+              },
+              fail: err => {
+                console.log(err)
+                reject(err);
+              }
+            })
+
+            /**
+             * 移除traceId对象
+             */
+            traceId.where({
+              fileId: fileId
+            }).remove({
+              success: res => {
+                console.log(res)
+                resolve();
+              },
+              fail: err => {
+                console.log(err)
+                reject(err);
+              }
+            })
+
+            /**
+             * 删除已上传图片列表中的违规图片
+             */
+            let index = fileIds.findIndex(element => element === fileId);
+            if (index != -1) {
+              fileIds.splice(index, 1);
+            }
+          }));
+        }
+      }
+      await Promise.all(promises);
+      resolve(fileIds);
+    } catch (error) {
+      reject(error);
+    }
+  })
 }
 
 function deleteCommentCloudImage(list) {
@@ -968,6 +1037,10 @@ Page({
     })
   },
 
+  /**
+   * （文字审核已通过）图片审核：处理异步检测结果推送
+   * @param {} _commentBody 
+   */
   sendContent: function (_commentBody) {
     let that = this
     var d = new Date().getTime();
@@ -986,162 +1059,246 @@ Page({
               }) //头插法
             }
           })
-            .then(() => {
-              comment.add({
-                data: {
-                  //时间
-                  time: d,
+          comment.add({
+            data: {
+              //时间
+              time: d,
 
-                  questionId: app.globalData.questionId,
-                  body: _commentBody,
-                  commentNum: 0,
-                  nickname: app.globalData.nickName,
-                  image: app.globalData.avatarUrl,
-                  commenter: [],
-                  liker: [],
-                  likerNum: 0,
-                  image_upload: that.data.fileID,
+              questionId: app.globalData.questionId,
+              body: _commentBody,
+              commentNum: 0,
+              nickname: app.globalData.nickName,
+              image: app.globalData.avatarUrl,
+              commenter: [],
+              liker: [],
+              likerNum: 0,
+              image_upload: that.data.fileID,
 
-                  isAuthentic: app.globalData.isAuthentic
-                },
-              }).then(() => {
-                wx.hideLoading()
-                that.sendEnd()
+              isAuthentic: app.globalData.isAuthentic
+            },
+          }).then((res) => {
+            /**
+            * 二、图片审核：处理异步检测结果推送
+            */
+
+            /**
+             * 1、拿到全部的traceId集合（违规图片集合）
+             */
+            const { _id } = res
+            traceId.orderBy('CreateTime', 'desc').get()
+              .then((res) => {
+                /**
+                 * 2、删除上传图片列表中违规图片
+                 */
+                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                  /**
+                   * 3、更新图片列表
+                   */
+                  comment.doc(_id).update({
+                    data: {
+                      image_upload: res
+                    }
+                  }).then(() => {
+                    wx.hideLoading()
+                    that.sendEnd()
+                  })
+                })
               })
-            })
+          })
         }
         else {
-          question.doc(app.globalData.questionId).update({
+          question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
+          comment.add({
             data: {
-              commentNum: _.inc(1),
-            }
-          })
-            .then(() => {
-              comment.add({
-                data: {
-                  //时间
-                  time: d,
+              //时间
+              time: d,
 
-                  questionId: app.globalData.questionId,
-                  body: _commentBody,
-                  commentNum: 0,
-                  nickname: app.globalData.nickName,
-                  image: app.globalData.avatarUrl,
+              questionId: app.globalData.questionId,
+              body: _commentBody,
+              commentNum: 0,
+              nickname: app.globalData.nickName,
+              image: app.globalData.avatarUrl,
 
-                  commenter: [],
-                  liker: [],
-                  likerNum: 0,
-                  image_upload: that.data.fileID,
+              commenter: [],
+              liker: [],
+              likerNum: 0,
+              image_upload: that.data.fileID,
 
-                  isAuthentic: app.globalData.isAuthentic
-                },
-              }).then(() => {
-                wx.hideLoading()
-                that.sendEnd()
+              isAuthentic: app.globalData.isAuthentic
+            },
+          }).then((res) => {
+            /**
+            * 二、图片审核：处理异步检测结果推送
+            */
+
+            /**
+             * 1、拿到全部的traceId集合（违规图片集合）
+             */
+            const { _id } = res
+            traceId.orderBy('CreateTime', 'desc').get()
+              .then((res) => {
+                /**
+                 * 2、删除上传图片列表中违规图片
+                 */
+                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                  /**
+                   * 3、更新图片列表
+                   */
+                  comment.doc(_id).update({
+                    data: {
+                      image_upload: res
+                    }
+                  }).then(() => {
+                    wx.hideLoading()
+                    that.sendEnd()
+                  })
+                })
               })
-            })
+          })
         }
       })
     }
     else if (that.data.tapReplyButton) {
-      question.doc(app.globalData.questionId).update({
+      question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
+
+      commentAgain.add({
         data: {
-          commentNum: _.inc(1),
+          answerTime: d,
+
+          commentAgainBody: _commentBody,
+          newOpenId: app.globalData.openId,
+          postOpenId: that.data._postOpenId,
+          newNickName: app.globalData.nickName,
+          postNickName: that.data.postNickName,
+          questionId: app.globalData.questionId,
+          commentId: that.data._commentId,
+          isWatched: false,
+
+          image_upload: that.data.fileID,
         }
-      }).then(() => {
-        console.log(that.data._commentId)
-        comment.doc(that.data._commentId).update({
-          data: {
-            commentNum: _.inc(1),
-            commenter: _.push({
-              avatarUrl: app.globalData.avatarUrl,
-              newNickName: app.globalData.nickName,
-              postNickName: that.data.postNickName,
-              newOpenId: app.globalData.openId,
-              postOpenId: that.data._postOpenId,
-              commentAgainBody: _commentBody,
+      }).then((res) => {
+        /**
+        * 二、图片审核：处理异步检测结果推送
+        */
 
-              image_upload: that.data.fileID,
+        /**
+         * 1、拿到全部的traceId集合（违规图片集合）
+         */
+        const { _id } = res
+        traceId.orderBy('CreateTime', 'desc').get()
+          .then((res) => {
+            /**
+             * 2、删除上传图片列表中违规图片
+             */
+            deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+              /**
+               * 3、更新图片列表
+               */
+              comment.doc(that.data._commentId).update({
+                data: {
+                  commentNum: _.inc(1),
+                  commenter: _.push({
+                    avatarUrl: app.globalData.avatarUrl,
+                    newNickName: app.globalData.nickName,
+                    postNickName: that.data.postNickName,
+                    newOpenId: app.globalData.openId,
+                    postOpenId: that.data._postOpenId,
+                    commentAgainBody: _commentBody,
+
+                    image_upload: res,
+                  })
+                }
+              })
+              commentAgain.doc(_id).update({
+                data: {
+                  image_upload: res
+                }
+              }).then(() => {
+                wx.hideLoading()
+                that.sendEnd()
+              })
             })
-          }
-        })
-      }).then(() => {
-        commentAgain.add({
-          data: {
-            answerTime: d,
 
-            commentAgainBody: _commentBody,
-            newOpenId: app.globalData.openId,
-            postOpenId: that.data._postOpenId,
-            newNickName: app.globalData.nickName,
-            postNickName: that.data.postNickName,
-            questionId: app.globalData.questionId,
-            commentId: that.data._commentId,
-            isWatched: false,
-
-            image_upload: that.data.fileID,
-          }
-        }).then(() => {
-          wx.hideToast()
-          that.sendEnd()
-        })
+          })
       })
     }
     else {
-      question.doc(app.globalData.questionId).update({
+      question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
+      commentAgain.add({
         data: {
-          commentNum: _.inc(1),
+          answerTime: d,
+
+          commentAgainBody: _commentBody,
+          newOpenId: app.globalData.openId,
+          postOpenId: that.data._postOpenId,
+          newNickName: app.globalData.nickName,
+          postNickName: that.data.postNickName,
+          questionId: app.globalData.questionId,
+          commentId: that.data._commentId,
+          isWatched: false,
+
+          image_upload: that.data.fileID,
         }
-      }).then(() => {
-        comment.doc(that.data._commentId).update({
-          data: {
-            commentNum: _.inc(1),
-            commenter: _.push({
-              avatarUrl: app.globalData.avatarUrl,
-              newOpenId: app.globalData.openId,
-              postOpenId: that.data._postOpenId,
-              newNickName: app.globalData.nickName,
-              postNickName: that.data.postNickName,
-              commentAgainBody: _commentBody,
+      }).then((res) => {
+        /**
+        * 二、图片审核：处理异步检测结果推送
+        */
 
-              image_upload: that.data.fileID,
+        /**
+         * 1、拿到全部的traceId集合（违规图片集合）
+         */
+        const { _id } = res
+        traceId.orderBy('CreateTime', 'desc').get()
+          .then((res) => {
+            /**
+             * 2、删除上传图片列表中违规图片
+             */
+            deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+              /**
+               * 3、更新图片列表
+               */
+              comment.doc(that.data._commentId).update({
+                data: {
+                  commentNum: _.inc(1),
+                  commenter: _.push({
+                    avatarUrl: app.globalData.avatarUrl,
+                    newOpenId: app.globalData.openId,
+                    postOpenId: that.data._postOpenId,
+                    newNickName: app.globalData.nickName,
+                    postNickName: that.data.postNickName,
+                    commentAgainBody: _commentBody,
+
+                    image_upload: res,
+                  })
+                }
+              })
+              commentAgain.doc(_id).update({
+                data: {
+                  image_upload: res
+                }
+              }).then(() => {
+                wx.hideLoading()
+                that.sendEnd()
+              })
             })
-          }
-        }).then(() => {
-          commentAgain.add({
-            data: {
-              answerTime: d,
-
-              commentAgainBody: _commentBody,
-              newOpenId: app.globalData.openId,
-              postOpenId: that.data._postOpenId,
-              newNickName: app.globalData.nickName,
-              postNickName: that.data.postNickName,
-              questionId: app.globalData.questionId,
-              commentId: that.data._commentId,
-              isWatched: false,
-
-              image_upload: that.data.fileID,
-            }
-          }).then(() => {
-            wx.hideLoading()
-            that.sendEnd()
           })
-        })
       })
     }
   },
   /**
-   * 审核文字
+   * 点击发送按钮
    * @param {*} e 
    */
   sendComment: function (e) {
     wx.showLoading({
-      title: '发送中...',
+      title: '审核中',
       mask: true
     })
     const { _commentBody } = this.data
     let that = this
+    /**
+     * 一、文字审核
+     */
     wx.cloud.callFunction({
       name: 'checkContent',
       data: {
@@ -1171,8 +1328,6 @@ Page({
         } else {
           that.sendContent(_commentBody)
         }
-
-
       },
       fail(_res) {
         console.log('checkContent云函数调用失败', _res)

@@ -1,6 +1,6 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="修改头像和昵称"></return>
 <view class="wholePage">
-  <button class="avatar-wrapper" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+  <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
     <image class="avatar" src="{{avatarUrl}}"></image>
   </button>
   <form catchsubmit="login">

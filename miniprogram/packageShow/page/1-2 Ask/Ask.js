@@ -1,25 +1,7 @@
 const app = getApp()
 const db = wx.cloud.database()
 const question = db.collection('question')
-
-let a = {
-  "event":
-  {
-    "CreateTime": 1677316324,
-    "Event": "wxa_media_check",
-    "FromUserName": "oJ-6m5aJ3V8l-fq_MgUnOv81AYaQ",
-    "MsgType": "event",
-    "ToUserName": "gh_ebf8df85caf6",
-    "appid": "wxe948b891c10e8a38",
-    "detail": [{ "errcode": 0, "label": 100, "prob": 90, "strategy": "content_model", "suggest": "pass" }], "errcode": 0,
-    "errmsg": "ok",
-    "result": { "label": 100, "suggest": "pass" },
-    "trace_id": "63f9d0e1-3696b72c-2e0abae0",
-    "userInfo": { "appId": "wxe948b891c10e8a38", "openId": "oJ-6m5aJ3V8l-fq_MgUnOv81AYaQ" },
-    "version": 2
-  }
-};
-
+const traceId = db.collection('traceId')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -55,8 +37,9 @@ function matchLabel(labelNum) {
       break;
   }
 }
+
 /**
- * 上传需要审核图片。审核不通过通过云函数getMediaCheckResult对图片进行删除
+ * 触发图片审核
  * @param {*待审核图片列表} tempFiles 
  * @param {*page = this} page 
  */
@@ -69,6 +52,9 @@ function checkAndUploadManyImages(tempFiles, page) {
 
   for (var i = 0; i < tempFiles.length; i++) {
     const { tempFilePath } = tempFiles[i]
+    /**
+     * 1、触发审核，获取traceId
+     */
     wx.cloud.callFunction({
       name: 'checkContent',
       data: {
@@ -81,9 +67,11 @@ function checkAndUploadManyImages(tempFiles, page) {
       success: json => {
         console.log(json)
         const { traceId } = json.result.imageR
-
+        /**
+         * 2、将traceId作为图片的云存储路径
+         */
         wx.cloud.uploadFile({
-          cloudPath: app.globalData.openId + '/' + traceId, // 上传至云端的路径
+          cloudPath: traceId, // 上传至云端的路径
           filePath: tempFilePath, // 小程序临时文件路径
           success: res => {
             const { fileID } = res
@@ -115,6 +103,70 @@ function checkAndUploadManyImages(tempFiles, page) {
 
   }
 }
+
+/**
+ * 删除已上传图片列表中的违规图片，并移除traceId对象
+ * @param {已上传图片列表} fileIds 
+ * @param {*违规图片集合} cloudFileIds 
+ */
+async function deleteInvalidImages(fileIds, cloudFileIds) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const promises = [];
+      for (var i = 0; i < cloudFileIds.length; i++) {
+        const { fileId } = cloudFileIds[i]
+        console.log(fileId)
+        if (fileIds.includes(fileId)) {
+          promises.push(new Promise((resolve, reject) => {
+            /**
+             * 删除云存储中的违规图片
+             */
+            wx.cloud.deleteFile({
+              fileList: [fileId],
+              success: res => {
+                console.log(res)
+                resolve();
+              },
+              fail: err => {
+                console.log(err)
+                reject(err);
+              }
+            })
+
+            /**
+             * 移除traceId对象
+             */
+            traceId.where({
+              fileId: fileId
+            }).remove({
+              success: res => {
+                console.log(res)
+                resolve();
+              },
+              fail: err => {
+                console.log(err)
+                reject(err);
+              }
+            })
+
+            /**
+             * 删除已上传图片列表中的违规图片
+             */
+            let index = fileIds.findIndex(element => element === fileId);
+            if (index != -1) {
+              fileIds.splice(index, 1);
+            }
+          }));
+        }
+      }
+      await Promise.all(promises);
+      resolve(fileIds);
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
 
 Page({
   options: {
@@ -195,10 +247,6 @@ Page({
       sourceType: ['album', 'camera'],
       camera: 'back',
       success: res => {
-        wx.showLoading({
-          title: '上传中',
-          mask: true
-        })
         checkAndUploadManyImages(res.tempFiles, this)
       },
       fail: err => {
@@ -214,7 +262,7 @@ Page({
     })
   },
   /**
-   * 审核文字，发布审核通过后的帖子
+   * 点击发布按钮
    * @param {*传入的表单} e 
    */
   formSubmit(e) {
@@ -227,7 +275,9 @@ Page({
     const { tag } = this.data;
 
     let that = this
-
+    /**
+     * 一、文字审核
+     */
     wx.cloud.callFunction({
       name: 'checkContent',
       data: {
@@ -290,16 +340,42 @@ Page({
             isAuthentic: app.globalData.isAuthentic,
           },
         }).then((res) => {
-          console.log(res)
-          wx.hideLoading()
-          wx.showToast({
-            title: '发布成功',
-          })
-          setTimeout(function () { wx.navigateBack(); }, 1500);
+          /**
+           * 二、图片审核：处理异步检测结果推送
+           */
+
+          /**
+           * 1、拿到全部的traceId集合（违规图片集合）
+           */
+          const { _id } = res
+          traceId.orderBy('CreateTime', 'desc').get()
+            .then((res) => {
+              /**
+               * 2、删除上传图片列表中违规图片
+               */
+              deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                console.log('deleteInvalidImages', res)
+              /**
+               * 3、更新图片列表
+               */
+                question.doc(_id).update({
+                  data: {
+                    image: res
+                  }
+                }).then(() => {
+                  wx.hideLoading()
+                  wx.showToast({
+                    title: '发布成功',
+                  })
+                  setTimeout(function () { wx.navigateBack(); }, 1500);
+                }).catch((err) => {
+                  console.log(err)
+                })
+              })
+            })
         })
       }
     })
-
   },
 
   //点击图片删除

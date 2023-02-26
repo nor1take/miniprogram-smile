@@ -281,9 +281,9 @@ Page({
         app.globalData.isLogin = true,
           app.globalData.isManager = res.data[0].isManager,
           app.globalData.isAuthentic = res.data[0].isAuthentic,
-          app.globalData.modifyNum =  res.data[0].modifyNum
-          
-          app.globalData.nickName = res.data[0].nickName,
+          app.globalData.modifyNum = res.data[0].modifyNum
+
+        app.globalData.nickName = res.data[0].nickName,
           app.globalData.avatarUrl = res.data[0].avatarUrl,
           console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
       })
@@ -311,20 +311,35 @@ Page({
    */
   onLoad: function (options) {
     console.log('options.id', options.id)
-    if (options.id != undefined) {
-      app.globalData.questionId = options.id
-      setTimeout(function () {
-        wx.navigateTo({
-          url: '../../packageShow/page/1-1 Detail/Detail',
-        })
-      }, 1000)
-      this.getData()
-      this.getOtherData()
-      question.doc(app.globalData.questionId).update({
-        data: {
-          watched: _.inc(1)
-        }
-      }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+    const { id } = options
+    if (id != undefined) {
+      if (id === 'rule') {
+        setTimeout(function () {
+          wx.navigateTo({
+            url: '../../packageLogin/pages/0-2 Rule/Rule',
+          })
+        }, 1000)
+      } else if (id === 'community') {
+        setTimeout(function () {
+          wx.navigateTo({
+            url: '../../packageLogin/pages/0-3 Community/Community',
+          })
+        }, 1000)
+      } else {
+        app.globalData.questionId = id
+        setTimeout(function () {
+          wx.navigateTo({
+            url: '../../packageShow/page/1-1 Detail/Detail',
+          })
+        }, 1000)
+        this.getData()
+        this.getOtherData()
+        question.doc(app.globalData.questionId).update({
+          data: {
+            watched: _.inc(1)
+          }
+        }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+      }
     } else {
       this.getData()
       this.getOtherData()
