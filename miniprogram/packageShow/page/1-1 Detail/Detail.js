@@ -634,22 +634,25 @@ Page({
             confirmText: "提交举报",
             confirmColor: "#FA5151",
             success: res => {
-              comment.doc(e.currentTarget.id).update({
-                data: {
-                  warnerDetail: _.addToSet({
-                    isSelf: false,
-                    nickName: app.globalData.nickName,
-                    _openid: app.globalData.openId,
-                    reason: '该评论下的第 ' + idx + ' 条评论' + res.content
-                  }),
-                  warner: _.addToSet(app.globalData.openId)
-                }
-              })
-              wx.showToast({
-                title: '感谢举报！管理员会尽快处理',
-                icon: 'none',
-                duration: 1500
-              })
+              if (res.confirm) {
+                comment.doc(e.currentTarget.id).update({
+                  data: {
+                    warnerDetail: _.addToSet({
+                      isSelf: false,
+                      nickName: app.globalData.nickName,
+                      _openid: app.globalData.openId,
+                      reason: '该评论下的第 ' + (idx + 1) + ' 条评论：“' + e.currentTarget.dataset.commentagainbody + '”（来自：' + e.currentTarget.dataset.newnickname + ' - ' + e.currentTarget.dataset.openid + '）' + res.content
+                    }),
+                    warner: _.addToSet(app.globalData.openId)
+                  }
+                }).then(() => {
+                  wx.showToast({
+                    title: '感谢举报！管理员会尽快处理',
+                    icon: 'none',
+                    duration: 1500
+                  })
+                })
+              }
             },
             fail: err => {
               console.log(err)
@@ -810,21 +813,24 @@ Page({
             confirmText: "提交举报",
             confirmColor: "#FA5151",
             success: res => {
-              question.doc(app.globalData.questionId).update({
-                data: {
-                  warnerDetail: _.addToSet({
-                    nickName: app.globalData.nickName,
-                    _openid: app.globalData.openId,
-                    reason: res.content
-                  }),
-                  warner: _.addToSet(app.globalData.openId)
-                }
-              })
-              wx.showToast({
-                title: '感谢举报！管理员会尽快处理',
-                icon: 'none',
-                duration: 1500
-              })
+              if (res.confirm) {
+                question.doc(app.globalData.questionId).update({
+                  data: {
+                    warnerDetail: _.addToSet({
+                      nickName: app.globalData.nickName,
+                      _openid: app.globalData.openId,
+                      reason: res.content
+                    }),
+                    warner: _.addToSet(app.globalData.openId)
+                  }
+                }).then(() => {
+                  wx.showToast({
+                    title: '感谢举报！管理员会尽快处理',
+                    icon: 'none',
+                    duration: 1500
+                  })
+                })
+              }
             },
             fail: err => {
               console.log(err)
@@ -933,22 +939,26 @@ Page({
               confirmText: "提交举报",
               confirmColor: "#FA5151",
               success: res => {
-                comment.doc(e.currentTarget.id).update({
-                  data: {
-                    warnerDetail: _.addToSet({
-                      isSelf: true,
-                      nickName: app.globalData.nickName,
-                      _openid: app.globalData.openId,
-                      reason: res.content
-                    }),
-                    warner: _.addToSet(app.globalData.openId)
-                  }
-                })
-                wx.showToast({
-                  title: '感谢举报！管理员会尽快处理',
-                  icon: 'none',
-                  duration: 1500
-                })
+                console.log(res)
+                if (res.confirm) {
+                  comment.doc(e.currentTarget.id).update({
+                    data: {
+                      warnerDetail: _.addToSet({
+                        isSelf: true,
+                        nickName: app.globalData.nickName,
+                        _openid: app.globalData.openId,
+                        reason: res.content
+                      }),
+                      warner: _.addToSet(app.globalData.openId)
+                    }
+                  }).then(() => {
+                    wx.showToast({
+                      title: '感谢举报！管理员会尽快处理',
+                      icon: 'none',
+                      duration: 1500
+                    })
+                  })
+                }
               },
               fail: err => {
                 console.log(err)

@@ -55,7 +55,7 @@ Page({
   },
   tabsTap: function (e) {
     const { index } = e.detail
-    this.loadData(index)
+    this.loadData(index, false)
     this.setData({
       activeTab: index,
       reachBottom: false,
@@ -64,8 +64,8 @@ Page({
   },
   swiperChange: function (e) {
     const { index } = e.detail
-    this.loadData(index)
-    this.loadData(index + 1)
+    this.loadData(index, false)
+    this.loadData(index + 1, false)
     this.setData({
       activeTab: index,
       reachBottom: false,
@@ -89,13 +89,14 @@ Page({
     })
   },
 
-  loadData: function (index) {
+  loadData: function (index, isRefresh) {
     if (index >= this.data.tabs.length) return;
-    if (this.data.tabs[index].questionList.length === 0) {
+    if (this.data.tabs[index].questionList.length === 0 || isRefresh) {
       if (index === 0) {
         question.where({
           tagId: 0
         }).orderBy('time', 'desc').get().then(res => {
+          console.log(res)
           this.setData({
             'tabs[0].questionList': res.data
           })
@@ -156,8 +157,8 @@ Page({
   },
 
   onLoad: function () {
-    this.loadData(0)
-    this.loadData(1)
+    this.loadData(0, false)
+    this.loadData(1, false)
     this.getData()
   },
 
@@ -261,9 +262,10 @@ Page({
     this.setData({ refresherTriggered: false })
   },
   refresh: function () {
+    console.log('refresh', this.data.activeTab)
     setTimeout(this.stoploading, 1000)
     this.getData()
-    this.loadData(this.data.activeTab + 1)
+    this.loadData(this.data.activeTab, true)
   },
   /**
    * 页面上拉触底事件的处理函数

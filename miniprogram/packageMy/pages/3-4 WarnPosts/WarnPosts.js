@@ -49,6 +49,48 @@ Page({
     })
   },
 
+  clearWarnersPost: function (e) {
+    const { id } = e.currentTarget
+    wx.showActionSheet({
+      itemList: ['清空Warners'],
+      itemColor: '#FA5151'
+    })
+      .then(() => {
+        question.doc(id).update({
+          data: {
+            warner: [],
+            warnerDetail: [],
+          }
+        }).then((res) =>{
+          console.log(res)
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
+
+  clearWarnersComment: function (e) {
+    const {commentid} = e.currentTarget.dataset
+    wx.showActionSheet({
+      itemList: ['清空Warners'],
+      itemColor: '#FA5151'
+    })
+      .then(() => {
+        comment.doc(commentid).update({
+          data: {
+            warner: [],
+            warnerDetail: [],
+          }
+        }).then((res) =>{
+          console.log(res)
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
+
   tabsTap: function (e) {
     const index = e.detail.index
     this.setData({
@@ -180,7 +222,7 @@ Page({
     this.getData()
   },
 
-  onPullDownRefresh: function () {},
+  onPullDownRefresh: function () { },
 
   /**
    * 页面上拉触底事件的处理函数

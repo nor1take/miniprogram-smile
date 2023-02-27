@@ -7,17 +7,17 @@
   <view slot="tab-content-0">
     <view style="height: {{top+32+32}}px; width: 100%;"></view>
 
-    <view class="background" hover-class="hoverClass" wx:for="{{tabs[0].questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="gotoDetail">
+    <view class="background" hover-class="hoverClass" wx:for="{{tabs[0].questionList}}" wx:key="_id" id="{{item._id}}" bindtap="gotoDetail">
       <view style="display: flex; justify-content: space-between; align-items:center">
         <view class="word" style="align-items: stretch; height:fit-content">
-          <view class="last">_id/questionId：{{item._id}}</view>
-          <view class="last">_openid/发布者：<text class="nickName">{{item.nickName}} - {{item._openid}}</text></view>
+          <view class="last">_id/questionId：<text class="nickName" user-select="true">{{item._id}}</text></view>
+          <view class="last">_openid/发布者：<text class="nickName" user-select="true">{{item.nickName}} - {{item._openid}}</text></view>
           <view class="title">{{item.title}}</view>
           <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
           <view class="last">
-            <text class="watched">{{item.warner.length}} 举报</text>
-            <block wx:for="{{item.warnerDetail}}">
-              <view class="watched">{{index}} - <text class="nickName">{{item.nickName}} - {{item._openid}}</text>：{{item.reason}}</view>
+            <text class="watched">举报人数：{{item.warner.length}}</text>
+            <block wx:for="{{item.warnerDetail}}" wx:key="id">
+              <view class="watched">举报者{{index+1}}：<text class="nickName" user-select="true">{{item.nickName}} - {{item._openid}}</text>：“<text user-select="true">{{item.reason}}</text>”</view>
             </block>
           </view>
         </view>
@@ -25,6 +25,7 @@
           <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
         </view>
       </view>
+      <view class="title" style="padding: 32rpx;" id="{{item._id}}" bindlongtap="clearWarnersPost">Clear Warners</view>
     </view>
     <view class="bottom" wx:if="{{ activeTab===index && !isBottom && reachBottom}}">加载中...</view>
     <view class="bottom" wx:if="{{ activeTab===index && isBottom}}">已经触底了~</view>
@@ -38,16 +39,16 @@
           _id/commentId：<text class="nickName" user-select='true'>{{item._id}}</text>
         </view>
         <view class="last">_openid/发布者：<text class="nickName" user-select='true'>{{item.nickname}} - {{item._openid}}</text></view>
-        <view wx:if='{{!item.isSelf}}' class="last" style="color: #fa5151;">该评论下方评论有问题</view>
+        <view wx:if='{{item.isSelf}}' class="last" style="color: #fa5151;">该评论下方评论有问题</view>
         <view class="title" style="font-weight: 500;">{{item.body}} <text wx:if="{{item.image_upload.length>0}}">[图片评论]</text></view>
         <view class="last">
           <text class="watched">举报人数：{{item.warner.length}}</text>
           <block wx:for="{{item.warnerDetail}}" wx:key="id">
-            <view class="watched">{{index}} - <text class="nickName">{{item.nickName}} - {{item._openid}}</text>：{{item.reason}}</view>
+            <view class="watched">举报者{{index+1}}：<text class="nickName" user-select="true">{{item.nickName}} - {{item._openid}}</text>：“<text user-select="true">{{item.reason}}</text>”</view>
           </block>
         </view>
+        <view class="title" style="padding: 32rpx;" data-commentid="{{item._id}}" bindlongtap="clearWarnersComment">Clear Warners</view>
       </view>
-
     </block>
     <view class="bottom" wx:if="{{ activeTab===1 && !isBottom && reachBottom}}">加载中...</view>
     <view class="bottom" wx:if="{{ activeTab===1 && isBottom}}">已经触底了~</view>
