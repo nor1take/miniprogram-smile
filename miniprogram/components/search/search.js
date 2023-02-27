@@ -104,6 +104,11 @@ Component({
       wx.navigateTo({
         url: '../../packageMy/pages/3-4 WarnPosts/WarnPosts',
       })
+    },
+    systemMsg:function(){
+      wx.navigateTo({
+        url: '../../packageMy/pages/3-5 SystemMsg/SystemMsg',
+      })
     }
   }
 })

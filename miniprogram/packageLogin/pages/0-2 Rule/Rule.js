@@ -1,6 +1,3 @@
-const db = wx.cloud.database()
-const _ = db.command
-const systemContent = db.collection('systemContent')
 Page({
 
   /**
@@ -24,15 +21,6 @@ Page({
     })
   },
 
-  onLoad() {
-    systemContent.where({
-      name: 'rule'
-    }).get().then((res) => {
-      this.setData({
-        
-      })
-    })
-  },
 
   /**
    * 用户点击右上角分享

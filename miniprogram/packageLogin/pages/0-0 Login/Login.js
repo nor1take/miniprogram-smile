@@ -71,7 +71,8 @@ Page({
                 isManager: false,
                 isForbidden: false,
                 isAuthentic: false,
-                modifyNum: 2
+                modifyNum: 2,
+                isCheckSystemMsg: false
               }
             }).then(() => {
               wx.hideLoading()
@@ -95,6 +96,7 @@ Page({
                 title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
                 icon: 'none'
               })
+              app.globalData.isModify = true
               setTimeout(function () {
                 wx.switchTab({
                   url: '../../../pages/0-0 Show/Show'
@@ -116,7 +118,8 @@ Page({
                     isManager: false,
                     isForbidden: false,
                     isAuthentic: false,
-                    modifyNum: 3
+                    modifyNum: 2,
+                    isCheckSystemMsg: false
                   }
                 }).then(() => {
                   wx.hideLoading()
@@ -141,6 +144,7 @@ Page({
                     title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
                     icon: 'none'
                   })
+                  app.globalData.isModify = true
                   setTimeout(function () {
                     wx.switchTab({
                       url: '../../../pages/0-0 Show/Show'

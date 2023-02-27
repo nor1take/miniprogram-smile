@@ -1,0 +1,16 @@
+<wxs src="../../../util/filter.wxs" module="filter" />
+<return top="{{top}}" bottom="{{bottom}}" topWord="通知 · Note"></return>
+
+<view class="background" wx:for="{{systemMsg}}" wx:key="_id" >
+  <view style="display: flex; justify-content: space-between; align-items:center;">
+    <view class="word">
+      <view class="title">{{item.title}}</view>
+      <view class="body">{{item.body}}</view>
+      <view class="last">{{filter.timeString(item.time)}}</view>
+    </view>
+    <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 10rpx;"></image>
+    </view>
+  </view>
+</view>
+<view class="bottom"></view>

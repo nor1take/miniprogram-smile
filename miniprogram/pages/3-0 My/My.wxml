@@ -1,7 +1,7 @@
 <wxs src="../../util/filter.wxs" module="filter" />
 <view class="topBlock" style="height: {{top+32+32}}px; width: 100%; position: fixed;z-index: 1;"></view>
 <view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2;">
-  消息
+消息
 </view>
 <tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
   <view slot="tab-content-0">

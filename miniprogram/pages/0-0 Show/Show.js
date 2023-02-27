@@ -218,6 +218,7 @@ Page({
       })
     })
   },
+  
   getCurrentMessageNum: function () {
     Promise.all([
       this.getCommentMessage(),
@@ -281,8 +282,21 @@ Page({
         app.globalData.isLogin = true,
           app.globalData.isManager = res.data[0].isManager,
           app.globalData.isAuthentic = res.data[0].isAuthentic,
-          app.globalData.modifyNum = res.data[0].modifyNum
-
+          app.globalData.modifyNum = res.data[0].modifyNum,
+          app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+        console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
+        if (!app.globalData.isCheckSystemMsg) {
+          wx.setTabBarBadge({
+            index: 0,
+            text: 'Note'
+          })
+        } else {
+          wx.removeTabBarBadge({
+            index: 0,
+          }).catch(err => {
+            console.log(err)
+          })
+        }
         app.globalData.nickName = res.data[0].nickName,
           app.globalData.avatarUrl = res.data[0].avatarUrl,
           console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
@@ -304,12 +318,15 @@ Page({
   },
   getOtherData: function () {
     this.getCurrentMessageNum_withOpenid()
-    this.getNicknameandImage()
+    //this.getNicknameandImage()
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.onError(function(error) {
+      console.log('页面错误:', error);
+    });
     console.log('options.id', options.id)
     const { id } = options
     if (id != undefined) {
@@ -359,11 +376,11 @@ Page({
     // console.log(app.globalData)
     this.getCurrentMessageNum()
     this.getNicknameandImage()
+
     const { questionList } = this.data
     const { questionIndex } = app.globalData
     if (app.globalData.isClick) {
       if (app.globalData.questionDelete) {
-        // console.log('执行这里')
         questionList.splice(questionIndex, 1)
         this.setData({
           questionList

@@ -35,6 +35,7 @@ var timeString = function (time) {
     return Y + M + D + h + m + s;
   }
 }
+
 module.exports = {
   abbreviation: abbreviation,
   timeString: timeString,

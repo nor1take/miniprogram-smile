@@ -12,7 +12,7 @@ const traceId = db.collection('traceId')
 const head = 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/'
 
 function deleteImage(fileId) {
-  wx.cloud.deleteFile({
+  cloud.deleteFile({
     fileList: [fileId],
     success: res => {
       return res

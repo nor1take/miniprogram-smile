@@ -89,7 +89,7 @@
   }
 
   .messageBackground{
-    border-bottom: 1rpx solid #7b7b7b; 
+    background-color: #3d3d3d;
   }
   
   .red-point{ 
@@ -99,7 +99,7 @@
   .background{
     border: 1rpx solid transparent;
     box-shadow:0 0 0rpx transparent;
-    background-color: #7b7b7b;
+    background-color: #3d3d3d;
     color: #D2D2D2;
   }
   .title{

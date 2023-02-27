@@ -36,9 +36,10 @@
       <view class="messageBackground" bindtap="gotoDetail" id="{{item.questionId}}">
         <view class="last">_id/commentId：{{item._id}}</view>
         <view class="last">_openid/发布者：<text class="nickName">{{item.nickname}} - {{item._openid}}</text></view>
+        <view class="last">是否是评论本身：{{item.isSelf}}</view>
         <view class="title" style="font-weight: 500;">{{item.body}} <text wx:if="{{item.image_upload.length>0}}">[图片评论]</text></view>
         <view class="last">
-          <text class="watched">{{item.warner.length}} 举报</text>
+          <text class="watched">举报人数：{{item.warner.length}}</text>
           <block wx:for="{{item.warnerDetail}}">
             <view class="watched">{{index}} - <text class="nickName">{{item.nickName}} - {{item._openid}}</text>：{{item.reason}}</view>
           </block>

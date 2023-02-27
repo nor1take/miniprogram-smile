@@ -1,7 +1,3 @@
-const db = wx.cloud.database()
-const _ = db.command
-const systemContent = db.collection('systemContent')
-
 Page({
 
   /**
@@ -14,10 +10,6 @@ Page({
     bottom: 80,
 
     title: '微校Smile小程序社区规范'
-  },
-
-  onLoad() {
-
   },
 
   /**

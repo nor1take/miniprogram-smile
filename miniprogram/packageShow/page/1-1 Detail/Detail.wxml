@@ -146,8 +146,8 @@
       </view>
     </view>
     <!-- 评论的评论/评论的评论的评论 -->
-    <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:key="_id">
-      <view class="commentAgainBackground" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" bindtap="commentAgainAgain">
+    <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:for-index="idx" wx:key="_id">
+      <view class="commentAgainBackground" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
         <view class="first">
           <image src="{{commentAgain.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
           <text class="commentAgainnickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>回复<text class="commentAgainnickName" style="margin-left: 8rpx;">@{{commentAgain.postNickName}}</text>

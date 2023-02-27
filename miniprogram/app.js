@@ -23,7 +23,9 @@ App({
     isManager: false,
     isLogin: false,
     isAuthentic: false,
-    modifyNum: 0
+    modifyNum: 0,
+    isCheckSystemMsg: false,
+    isModify: false
   },
   onLaunch: function () {
     if (!wx.cloud) {

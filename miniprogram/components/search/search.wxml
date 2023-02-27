@@ -35,6 +35,11 @@
       <image src="../../icon/error-warning-line.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
       处理举报
     </view>
+
+    <view wx:if="{{true}}" class="button"  hover-class="hoverClass" bindtap="systemMsg" style="color: #FA5151;">
+      <image src="../../icon/ic_public_ring.png" style="width: 50rpx; height: 50rpx; margin-right: 32rpx;"></image>
+      通知 · Note
+    </view>
   </view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>

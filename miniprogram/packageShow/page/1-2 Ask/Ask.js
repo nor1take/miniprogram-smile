@@ -1,7 +1,11 @@
 const app = getApp()
 const db = wx.cloud.database()
+const _ = db.command
 const question = db.collection('question')
 const traceId = db.collection('traceId')
+const systemMsg = db.collection('systemMsg')
+
+var systemMsgNum = 0
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -113,54 +117,51 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
   return new Promise(async function (resolve, reject) {
     try {
       const promises = [];
-      for (var i = 0; i < cloudFileIds.length; i++) {
-        const { fileId } = cloudFileIds[i]
-        console.log(fileId)
-        if (fileIds.includes(fileId)) {
-          promises.push(new Promise((resolve, reject) => {
-            /**
-             * 删除云存储中的违规图片
-             */
-            wx.cloud.deleteFile({
-              fileList: [fileId],
-              success: res => {
-                console.log(res)
-                resolve();
-              },
-              fail: err => {
-                console.log(err)
-                reject(err);
-              }
-            })
+      let fileIdsWithoutCommon = [];
+      promises.push(new Promise((resolve, reject) => {
+        // 找到数组 fileIds 和数组 cloudFileIds 共有的元素
+        const common = fileIds.filter((elementA) =>
+          cloudFileIds.some((elementB) => elementA === elementB.fileId)
+        );
 
-            /**
-             * 移除traceId对象
-             */
-            traceId.where({
-              fileId: fileId
-            }).remove({
-              success: res => {
-                console.log(res)
-                resolve();
-              },
-              fail: err => {
-                console.log(err)
-                reject(err);
-              }
-            })
+        // 删除数组 fileIds 中的共有元素
+        fileIdsWithoutCommon = fileIds.filter((elementA) =>
+          !cloudFileIds.some((elementB) => elementA === elementB.fileId)
+        );
+        /**
+         * 删除云存储中的违规图片
+         */
+        wx.cloud.deleteFile({
+          fileList: common,
+          success: res => {
+            console.log(res)
+            resolve();
+          },
+          fail: err => {
+            console.log(err)
+            reject(err);
+          }
+        })
 
-            /**
-             * 删除已上传图片列表中的违规图片
-             */
-            let index = fileIds.findIndex(element => element === fileId);
-            if (index != -1) {
-              fileIds.splice(index, 1);
-            }
-          }));
-        }
-      }
+        /**
+         * 移除traceId对象
+         */
+        traceId.where({
+          fileId: _.in(common)
+        }).remove({
+          success: res => {
+            console.log(res)
+            resolve();
+          },
+          fail: err => {
+            console.log(err)
+            reject(err);
+          }
+        })
+      }));
+
       await Promise.all(promises);
-      resolve(fileIds);
+      resolve(fileIdsWithoutCommon);
     } catch (error) {
       reject(error);
     }
@@ -255,6 +256,14 @@ Page({
     })
   },
   switchChange: function (e) {
+    if (systemMsgNum > 10) {
+      wx.showToast({
+        title: '请不要频繁操作',
+        icon: 'error'
+      })
+    } else {
+      systemMsgNum++;
+    }
     console.log(e.detail.value)
     const { value } = e.detail
     this.setData({
@@ -303,77 +312,125 @@ Page({
       } else {
         app.globalData.isAsk = true
         var d = new Date().getTime();
-        question.add({
-          data: {
-            //时间
-            answerTime: 0,
+        if (systemMsgNum > 10 && app.globalData.isAuthentic && app.globalData.isManager) {
+          systemMsg.add({
+            data: {
+              time: d,
+              image: that.data.fileID,
+              title: title,
+              body: body,
+            }
+          }).then((res) => {
+            /**
+             * 二、图片审核：处理异步检测结果推送
+             */
 
-            time: d,
-
-            image: that.data.fileID,
-
-            unknown: that.data._unknown,
-            nickName: app.globalData.nickName,
-            avatarUrl: app.globalData.avatarUrl,
-
-            title: title,
-            body: body,
-
-            tagId: that.data.tagId,
-            tag: tag,
-
-            watched: 1,
-
-            commentNum: 0,
-            commenter: [],
-
-            message: 0,
-
-            collector: [],
-            collectNum: 0,
-
-            warner: [],
-            warnerDetail: [],
-
-            solved: false,
-
-            isAuthentic: app.globalData.isAuthentic,
-          },
-        }).then((res) => {
-          /**
-           * 二、图片审核：处理异步检测结果推送
-           */
-
-          /**
-           * 1、拿到全部的traceId集合（违规图片集合）
-           */
-          const { _id } = res
-          traceId.orderBy('CreateTime', 'desc').get()
-            .then((res) => {
-              /**
-               * 2、删除上传图片列表中违规图片
-               */
-              deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                console.log('deleteInvalidImages', res)
-              /**
-               * 3、更新图片列表
-               */
-                question.doc(_id).update({
-                  data: {
-                    image: res
-                  }
-                }).then(() => {
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '发布成功',
+            /**
+             * 1、拿到全部的traceId集合（违规图片集合）
+             */
+            const { _id } = res
+            traceId.orderBy('CreateTime', 'desc').get()
+              .then((res) => {
+                console.log(res)
+                /**
+                 * 2、删除上传图片列表中违规图片
+                 */
+                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                  console.log('deleteInvalidImages', res)
+                  /**
+                   * 3、更新图片列表
+                   */
+                  systemMsg.doc(_id).update({
+                    data: {
+                      image: res
+                    }
+                  }).then(() => {
+                    wx.hideLoading()
+                    wx.showToast({
+                      title: '发布成功',
+                    })
+                    setTimeout(function () { wx.navigateBack(); }, 1500);
+                  }).catch((err) => {
+                    console.log(err)
                   })
-                  setTimeout(function () { wx.navigateBack(); }, 1500);
-                }).catch((err) => {
-                  console.log(err)
                 })
               })
-            })
-        })
+          })
+        } else {
+          question.add({
+            data: {
+              //时间
+              answerTime: 0,
+
+              time: d,
+
+              image: that.data.fileID,
+
+              unknown: that.data._unknown,
+              nickName: app.globalData.nickName,
+              avatarUrl: app.globalData.avatarUrl,
+
+              title: title,
+              body: body,
+
+              tagId: that.data.tagId,
+              tag: tag,
+
+              watched: 1,
+
+              commentNum: 0,
+              commenter: [],
+
+              message: 0,
+
+              collector: [],
+              collectNum: 0,
+
+              warner: [],
+              warnerDetail: [],
+
+              solved: false,
+
+              isAuthentic: app.globalData.isAuthentic,
+            },
+          }).then((res) => {
+            /**
+             * 二、图片审核：处理异步检测结果推送
+             */
+
+            /**
+             * 1、拿到全部的traceId集合（违规图片集合）
+             */
+            const { _id } = res
+            traceId.orderBy('CreateTime', 'desc').get()
+              .then((res) => {
+                console.log(res)
+                /**
+                 * 2、删除上传图片列表中违规图片
+                 */
+                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                  console.log('deleteInvalidImages', res)
+                  /**
+                   * 3、更新图片列表
+                   */
+                  question.doc(_id).update({
+                    data: {
+                      image: res
+                    }
+                  }).then(() => {
+                    wx.hideLoading()
+                    wx.showToast({
+                      title: '发布成功',
+                    })
+                    setTimeout(function () { wx.navigateBack(); }, 1500);
+                  }).catch((err) => {
+                    console.log(err)
+                  })
+                })
+              })
+          })
+        }
+
       }
     })
   },
@@ -413,6 +470,7 @@ Page({
   },
 
   onLoad: function (options) {
+    systemMsgNum = 0;
     this.getRightTop()
   },
 
@@ -425,4 +483,8 @@ Page({
   onReady: function () {
     setTimeout(this.focus, 250)
   },
+  onUnload:function(){
+    console.log('onUnload')
+    wx.clearStorageSync()
+  }
 })

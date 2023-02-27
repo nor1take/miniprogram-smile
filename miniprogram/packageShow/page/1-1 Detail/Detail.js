@@ -116,54 +116,51 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
   return new Promise(async function (resolve, reject) {
     try {
       const promises = [];
-      for (var i = 0; i < cloudFileIds.length; i++) {
-        const { fileId } = cloudFileIds[i]
-        console.log(fileId)
-        if (fileIds.includes(fileId)) {
-          promises.push(new Promise((resolve, reject) => {
-            /**
-             * 删除云存储中的违规图片
-             */
-            wx.cloud.deleteFile({
-              fileList: [fileId],
-              success: res => {
-                console.log(res)
-                resolve();
-              },
-              fail: err => {
-                console.log(err)
-                reject(err);
-              }
-            })
+      let fileIdsWithoutCommon = [];
+      promises.push(new Promise((resolve, reject) => {
+        // 找到数组 fileIds 和数组 cloudFileIds 共有的元素
+        const common = fileIds.filter((elementA) =>
+          cloudFileIds.some((elementB) => elementA === elementB.fileId)
+        );
 
-            /**
-             * 移除traceId对象
-             */
-            traceId.where({
-              fileId: fileId
-            }).remove({
-              success: res => {
-                console.log(res)
-                resolve();
-              },
-              fail: err => {
-                console.log(err)
-                reject(err);
-              }
-            })
+        // 删除数组 fileIds 中的共有元素
+        fileIdsWithoutCommon = fileIds.filter((elementA) =>
+          !cloudFileIds.some((elementB) => elementA === elementB.fileId)
+        );
+        /**
+         * 删除云存储中的违规图片
+         */
+        wx.cloud.deleteFile({
+          fileList: common,
+          success: res => {
+            console.log(res)
+            resolve();
+          },
+          fail: err => {
+            console.log(err)
+            reject(err);
+          }
+        })
 
-            /**
-             * 删除已上传图片列表中的违规图片
-             */
-            let index = fileIds.findIndex(element => element === fileId);
-            if (index != -1) {
-              fileIds.splice(index, 1);
-            }
-          }));
-        }
-      }
+        /**
+         * 移除traceId对象
+         */
+        traceId.where({
+          fileId: _.in(common)
+        }).remove({
+          success: res => {
+            console.log(res)
+            resolve();
+          },
+          fail: err => {
+            console.log(err)
+            reject(err);
+          }
+        })
+      }));
+
       await Promise.all(promises);
-      resolve(fileIds);
+      resolve(fileIdsWithoutCommon);
     } catch (error) {
       reject(error);
     }
@@ -171,34 +168,28 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
 }
 
 function deleteCommentCloudImage(list) {
-  for (var i = 0; i < list.length; i++) {
-    for (var j = 0; j < list[i].image_upload.length; j++) {
-      let id = list[i].image_upload[j]
-      wx.cloud.deleteFile({
-        fileList: [id],
-        success: res => {
-          console.log('成功删除', res)
-        },
-        fail: err => {
-          console.error(err)
-        }
-      })
+  const arr = [].concat(...list.map(item => item.image_upload));
+  wx.cloud.deleteFile({
+    fileList: arr,
+    success: res => {
+      console.log('成功删除', res)
+    },
+    fail: err => {
+      console.error(err)
     }
-  }
+  })
 }
 function deleteQuestionCloudImage(list) {
-  for (var i = 0; i < list[0].image.length; i++) {
-    let id = list[0].image[i]
-    wx.cloud.deleteFile({
-      fileList: [id],
-      success: res => {
-        console.log('成功删除', res)
-      },
-      fail: err => {
-        console.error(err)
-      }
-    })
-  }
+  wx.cloud.deleteFile({
+    fileList: list[0].image,
+    success: res => {
+      console.log('成功删除', res)
+    },
+    fail: err => {
+      console.error(err)
+    }
+  })
+
 }
 
 Page({
@@ -548,29 +539,8 @@ Page({
     this.getQuestionandCollectData()
     this.getCommentandLikeData()
   },
-  // goodAnimation: function () {
-  //   var animation = wx.createAnimation({
-  //     duration: 200,
-  //     timingFunction: 'ease',
-  //   })
-  //   this.animation = animation
-  //   this.animation.scale(0.3, 0.3).step({duration: 100}),
-  //   this.animation.scale(1.1, 1.1).step(),
-  //     this.setData({
-  //       animationData1: this.animation.export(),
-  //     })
-  //     setTimeout(()=>{
-  //       this.animation.scale(1, 1).step({duration: 100}),
-  //       this.setData({
-  //         animationData1: this.animation.export(),
-  //       })
-  //     }, 300)
-  // },
-
-
 
   //0-4-1 评论的评论
-
   commentAgain: function (e) {
     // console.log(e.currentTarget.dataset.openid)
     // console.log(e.currentTarget.dataset.nickname)
@@ -583,9 +553,21 @@ Page({
       _postOpenId: e.currentTarget.dataset.openid,
     })
   },
+
+  commentSShortTap: function (e) {
+    this.setData({
+      tapAnswerButton: false,
+      tapReplyButton: false,
+      tapAgainButton: true,
+      postNickName: e.currentTarget.dataset.newnickname,
+      _commentId: e.currentTarget.id,
+      _postOpenId: e.currentTarget.dataset.openid,
+    })
+  },
   //0-4-2 评论的评论的评论
-  commentAgainAgain: function (e) {
-    if (app.globalData.openId == e.currentTarget.dataset.openid) {
+  commentSLongTap: function (e) {
+    const { idx } = e.currentTarget.dataset
+    if (app.globalData.openId == e.currentTarget.dataset.openid || app.globalData.isManager) {
       wx.showActionSheet({
         itemList: ['删除'],
         itemColor: '#FA5151'
@@ -595,57 +577,84 @@ Page({
           title: '删除中...',
           icon: 'none',
         })
-        // console.log(this.data.commentList[0].commenter)
-        const { commenter } = this.data.commentList[0]
+        console.log('this.data.commentList', this.data.commentList)
         const { index } = e.currentTarget.dataset
-        commenter.splice(index, 1);
-        comment.doc(e.currentTarget.id).update({
-          data: {
-            commenter,
-            commentNum: _.inc(-1)
-          }
-        }).then(() => {
+        const { commenter } = this.data.commentList[index]
+        console.log(index, idx)
+        commenter.splice(idx, 1);
+        Promise.all([
+          comment.doc(e.currentTarget.id).update({
+            data: {
+              commenter,
+              commentNum: _.inc(-1)
+            }
+          }),
           question.doc(app.globalData.questionId).update({
             data: {
               commentNum: _.inc(-1)
             }
-          }).then(() => {
-            commentAgain.where({
-              commentId: e.currentTarget.id,
-              _openid: app.globalData.openId,
-              postOpenId: e.currentTarget.dataset.newopenid,
-              commentAgainBody: e.currentTarget.dataset.commentagainbody,
-            }).remove().then(() => {
-              this.getData()
-              wx.hideToast({
-                success: (res) => {
-                  wx.showToast({
-                    title: '删除成功',
-                    icon: 'none',
-                    duration: 1000
-                  })
-                },
+          }),
+          commentAgain.where({
+            commentId: e.currentTarget.id,
+            _openid: app.globalData.openId,
+            postOpenId: e.currentTarget.dataset.newopenid,
+            commentAgainBody: e.currentTarget.dataset.commentagainbody,
+          }).remove()
+        ]).then(() => {
+          this.deleteCommentEnd()
+          wx.hideToast({
+            success: () => {
+              wx.showToast({
+                title: '删除成功',
+                icon: 'none',
+                duration: 1000
               })
-            })
-
+            },
           })
         })
       }).catch(() => {
-        console.log('点击取消')
+        console.log('取消删除')
       })
     }
     else {
-      this.setData({
-        tapAnswerButton: false,
-        tapReplyButton: false,
-        tapAgainButton: true,
-        postNickName: e.currentTarget.dataset.newnickname,
-        _commentId: e.currentTarget.id,
-        _postOpenId: e.currentTarget.dataset.openid,
+      wx.showActionSheet({
+        itemList: ['举报'],
+        itemColor: '#FA5151'
       })
+        .then(() => {
+          wx.showModal({
+            title: "举报理由",
+            content: "该评论 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
+            editable: true,
+            confirmText: "提交举报",
+            confirmColor: "#FA5151",
+            success: res => {
+              comment.doc(e.currentTarget.id).update({
+                data: {
+                  warnerDetail: _.addToSet({
+                    isSelf: false,
+                    nickName: app.globalData.nickName,
+                    _openid: app.globalData.openId,
+                    reason: '该评论下的第 ' + idx + ' 条评论' + res.content
+                  }),
+                  warner: _.addToSet(app.globalData.openId)
+                }
+              })
+              wx.showToast({
+                title: '感谢举报！管理员会尽快处理',
+                icon: 'none',
+                duration: 1500
+              })
+            },
+            fail: err => {
+              console.log(err)
+            }
+          })
+        })
+        .catch(() => {
+          console.log('取消举报')
+        })
     }
-    // console.log()
-    // console.log(this.data.postNickName)
   },
   // 0-4-3 回复评论的输入框失去焦点
   loseFocus: function (e) {
@@ -845,65 +854,64 @@ Page({
           itemList: ['删除'],
           itemColor: '#FA5151',
         }).then(() => {
-          {
-            wx.showModal({
-              title: '提醒',
-              content: '删除后将无法恢复，相关评论也将被删除，确定删除吗？',
-              cancelText: '取消',
-              confirmText: '删除',
-              cancelColor: '#576B95',
-              confirmColor: '#FA5151',
-            }).then((res) => {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                wx.showLoading({
-                  title: '删除中',
+          wx.showModal({
+            title: '提醒',
+            content: '删除后将无法恢复，相关评论也将被删除，确定删除吗？',
+            cancelText: '取消',
+            confirmText: '删除',
+            cancelColor: '#576B95',
+            confirmColor: '#FA5151',
+          }).then((res) => {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              wx.showLoading({
+                title: '删除中',
+              })
+              let { commenter } = this.data.questionList[0]
+              let index = commenter.findIndex((value) => value.openId == this.data.openId);
+              commenter.splice(index, 1)
+              Promise.all([
+                comment.doc(e.currentTarget.id).get().then(res => {
+                  console.log(res.data)
+                  deleteCommentCloudImage(res.data)
+                }),
+                commentAgain.where({
+                  commentId: e.currentTarget.id
+                }).get().then(res => {
+                  console.log(res.data)
+                  deleteCommentCloudImage(res.data)
+                }),
+                comment.doc(e.currentTarget.id).get().then((res) => {
+                  console.log(res.data.commenter.length)
+                  question.doc(app.globalData.questionId).update({
+                    data: {
+                      commentNum: _.inc(-(res.data.commenter.length + 1)),
+                      commenter
+                    }
+                  })
                 })
-                let { commenter } = this.data.questionList[0]
-                let index = commenter.findIndex((value) => value.openId == this.data.openId);
-                commenter.splice(index, 1)
+              ]).then(() => {
                 Promise.all([
-                  comment.doc(e.currentTarget.id).get().then(res => {
-                    console.log(res.data)
-                    deleteCommentCloudImage(res.data)
-                  }),
+                  comment.doc(e.currentTarget.id).remove(),
                   commentAgain.where({
                     commentId: e.currentTarget.id
-                  }).get().then(res => {
-                    console.log(res.data)
-                    deleteCommentCloudImage(res.data)
-                  }),
-                  comment.doc(e.currentTarget.id).get().then((res) => {
-                    console.log(res.data.commenter.length)
-                    question.doc(app.globalData.questionId).update({
-                      data: {
-                        commentNum: _.inc(-(res.data.commenter.length + 1)),
-                        commenter
-                      }
-                    })
-                  })
+                  }).remove()
                 ]).then(() => {
-                  Promise.all([
-                    comment.doc(e.currentTarget.id).remove(),
-                    commentAgain.where({
-                      commentId: e.currentTarget.id
-                    }).remove()
-                  ]).then(() => {
-                    wx.hideLoading()
-                    wx.showToast({
-                      title: '删除成功',
-                      icon: 'success',
-                      duration: 1000
-                    })
-                    this.deleteCommentEnd();
+                  wx.hideLoading()
+                  wx.showToast({
+                    title: '删除成功',
+                    icon: 'success',
+                    duration: 1000
                   })
+                  this.deleteCommentEnd();
                 })
-              }
-              else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            })
-          }
+              })
+            }
+            else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          })
+
         }).catch(err => { console.log(err) })
       }
       //warn
@@ -915,7 +923,7 @@ Page({
             console.log(res.tapIndex)
             wx.showModal({
               title: "举报理由",
-              content: "该评论或评论的回复 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
+              content: "该评论 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
               editable: true,
               confirmText: "提交举报",
               confirmColor: "#FA5151",
@@ -923,6 +931,7 @@ Page({
                 comment.doc(e.currentTarget.id).update({
                   data: {
                     warnerDetail: _.addToSet({
+                      isSelf: true,
                       nickName: app.globalData.nickName,
                       _openid: app.globalData.openId,
                       reason: res.content
@@ -1157,72 +1166,7 @@ Page({
           })
         }
       })
-    }
-    else if (that.data.tapReplyButton) {
-      question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
-
-      commentAgain.add({
-        data: {
-          answerTime: d,
-
-          commentAgainBody: _commentBody,
-          newOpenId: app.globalData.openId,
-          postOpenId: that.data._postOpenId,
-          newNickName: app.globalData.nickName,
-          postNickName: that.data.postNickName,
-          questionId: app.globalData.questionId,
-          commentId: that.data._commentId,
-          isWatched: false,
-
-          image_upload: that.data.fileID,
-        }
-      }).then((res) => {
-        /**
-        * 二、图片审核：处理异步检测结果推送
-        */
-
-        /**
-         * 1、拿到全部的traceId集合（违规图片集合）
-         */
-        const { _id } = res
-        traceId.orderBy('CreateTime', 'desc').get()
-          .then((res) => {
-            /**
-             * 2、删除上传图片列表中违规图片
-             */
-            deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-              /**
-               * 3、更新图片列表
-               */
-              comment.doc(that.data._commentId).update({
-                data: {
-                  commentNum: _.inc(1),
-                  commenter: _.push({
-                    avatarUrl: app.globalData.avatarUrl,
-                    newNickName: app.globalData.nickName,
-                    postNickName: that.data.postNickName,
-                    newOpenId: app.globalData.openId,
-                    postOpenId: that.data._postOpenId,
-                    commentAgainBody: _commentBody,
-
-                    image_upload: res,
-                  })
-                }
-              })
-              commentAgain.doc(_id).update({
-                data: {
-                  image_upload: res
-                }
-              }).then(() => {
-                wx.hideLoading()
-                that.sendEnd()
-              })
-            })
-
-          })
-      })
-    }
-    else {
+    } else {
       question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
       commentAgain.add({
         data: {

@@ -56,7 +56,8 @@
         "pages/3-1 MyAsk/MyAsk",
         "pages/3-2 MyCollect/MyCollect",
         "pages/3-3 MyComment/MyComment",
-        "pages/3-4 WarnPosts/WarnPosts"
+        "pages/3-4 WarnPosts/WarnPosts",
+        "pages/3-5 SystemMsg/SystemMsg"
       ]
     },
     {
