@@ -324,9 +324,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    wx.onError(function(error) {
-      console.log('页面错误:', error);
-    });
     console.log('options.id', options.id)
     const { id } = options
     if (id != undefined) {

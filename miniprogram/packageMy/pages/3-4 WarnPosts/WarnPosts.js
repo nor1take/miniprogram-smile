@@ -42,24 +42,8 @@ Page({
   },
 
   gotoDetail: function (e) {
-    console.log(e.currentTarget.id)
-    app.globalData.questionId = e.currentTarget.id
-    question.doc(e.currentTarget.id).update({
-      data: {
-        watched: _.inc(1)
-      }
-    }).then(res => { console.log(res) }).catch(err => { console.log(err) })
-    wx.navigateTo({
-      url: '../../../packageShow/page/1-1 Detail/Detail',
-    })
-  },
-
-
-  beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
     app.globalData.questionIndex = e.currentTarget.dataset.index
-    app.globalData.isClick = true
-
     wx.navigateTo({
       url: '../../../packageShow/page/1-1 Detail/Detail',
     })
@@ -84,9 +68,7 @@ Page({
 
   /* 
   获取数据库数据 
-    return new Promise((resolve) => {}) 
   */
-
   getPostData: function () {
     return new Promise((resolve) => {
       question.where({
@@ -110,20 +92,13 @@ Page({
 
   },
   getData: function () {
-
-    this.setData({
-
-
-      top: app.globalData.top,
-      // height:app.globalData.height
-      // left: app.globalData.left,
-      // right: app.globalData.right,
-      bottom: app.globalData.bottom,
-    })
     Promise.all([this.getPostData(), this.getCommentData()]).then(() => {
       this.setData({
         'tabs[0].questionList': this.questionListPostData.questionListPost,
         'tabs[1].questionList': this.questionListCommentData.questionListComment,
+
+        top: app.globalData.top,
+        bottom: app.globalData.bottom,
       })
     })
   },
@@ -139,9 +114,6 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.setData({
-      loading: true
-    })
   },
 
   /**
@@ -149,7 +121,7 @@ Page({
    */
 
   updateQuestionListPost: function () {
-    const { questionList } = this.data.tabs[1]
+    const { questionList } = this.data.tabs[0]
     const { questionIndex } = app.globalData
     if (app.globalData.isClick) {
       if (app.globalData.questionDelete) {
@@ -159,20 +131,10 @@ Page({
           'tabs[0].questionList': questionList
         })
       }
-      else {
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[0].questionList': questionList
-        })
-        console.log(this.data.tabs[1].questionList[0])
-      }
     }
   },
   updateQuestionListComment: function () {
-    const { questionList } = this.data.tabs[2]
+    const { questionList } = this.data.tabs[1]
     const { questionIndex } = app.globalData
     if (app.globalData.isClick) {
       if (app.globalData.questionDelete) {
@@ -182,31 +144,10 @@ Page({
           'tabs[1].questionList': questionList
         })
       }
-      else {
-        questionList[questionIndex].collectNum = app.globalData.questionCollect
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          this.setData({
-            'tabs[1].questionList': questionList
-          })
-        console.log(this.data.tabs[2].questionList[0])
-      }
     }
   },
 
   onShow: function () {
-    console.log(app.globalData.isAsk)
-
-    if (app.globalData.isAsk) {
-      this.getData()
-      this.setData({
-        scrollTop: 0
-      })
-      app.globalData.isAsk = false
-    }
-
-
     if (this.data.activeTab === 0) {
       this.updateQuestionListPost()
     }
@@ -239,7 +180,7 @@ Page({
     this.getData()
   },
 
-  onPullDownRefresh: function () { },
+  onPullDownRefresh: function () {},
 
   /**
    * 页面上拉触底事件的处理函数
@@ -257,7 +198,7 @@ Page({
     if (this.data.activeTab === 0) {
       this.showNumData.showNum = questionListPost.length
       question.where({
-        warner: _.neq(0),
+        warner: _.neq([]),
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
@@ -265,7 +206,7 @@ Page({
           })
 
           question.where({
-            warner: _.neq(0),
+            warner: _.neq([]),
           }).orderBy('warner', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionListPost
@@ -284,14 +225,14 @@ Page({
     else {
       this.showNumData.showNum = questionListComment.length
       comment.where({
-        warner: _.neq(0),
+        warner: _.neq([]),
       }).count().then((res) => {
         if (this.showNumData.showNum < res.total) {
           this.setData({
             isBottom: false
           })
           comment.where({
-            warner: _.neq(0),
+            warner: _.neq([]),
           }).orderBy('warner', 'desc').skip(this.showNumData.showNum).get().then(res => {
             let new_data = res.data
             let old_data = questionListComment

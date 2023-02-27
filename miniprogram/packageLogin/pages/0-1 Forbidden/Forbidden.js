@@ -1,4 +1,4 @@
-// packageLogin/pages/0-1 Forbidden/Forbidden.js
+const app = getApp()
 Page({
 
   /**
@@ -12,7 +12,15 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    wx.cloud.callFunction({
+      name: 'getOpenId',
+    }).then(res => {
+      console.log('成功获取OpenID：', res.result.OPENID)
+      this.setData({
+        openid: res.result.OPENID
+      })
+    })
+    
   },
 
   /**

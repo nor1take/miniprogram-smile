@@ -23,8 +23,10 @@ Page({
     isChecked: false
   },
 
-  radioTap: function (e) {
-    console.log(e)
+  /**
+   * 单选组件 触发事件：已同意并阅读《协议》
+   */
+  radioTap: function () {
     if (this.data.isChecked) {
       this.setData({
         isChecked: false
@@ -36,12 +38,19 @@ Page({
     }
   },
 
-  rule1: function (e) {
+  /**
+   * 页面跳转：到《协议》页面
+   */
+  rule1: function () {
     wx.navigateTo({
       url: '../0-2 Rule/Rule',
     })
   },
 
+  /**
+   * 提交按钮 触发事件
+   * @param {*} e 
+   */
   login: function (e) {
     console.log("login")
     if (app.globalData.modifyNum <= 0) {
@@ -167,6 +176,10 @@ Page({
     }
   },
 
+  /**
+   * 头像审核通过 触发事件
+   * @param {*} e 
+   */
   onChooseAvatar(e) {
     console.log('onChooseAvatar', e)
     const { avatarUrl } = e.detail
@@ -175,6 +188,10 @@ Page({
     })
   },
 
+  /**
+   * 昵称审核通过触发事件
+   * @param {*} e 
+   */
   onNickNameReview(e) {
     console.log('onNickNameReview', e)
     const { pass } = e.detail
@@ -186,8 +203,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    // console.log('options', options)
+  onLoad: function () {
     userInfo.where({
       _openid: '{openid}'
     }).get()

@@ -168,17 +168,20 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
 }
 
 function deleteCommentCloudImage(list) {
-  const arr = [].concat(...list.map(item => item.image_upload));
-  wx.cloud.deleteFile({
-    fileList: arr,
-    success: res => {
-      console.log('成功删除', res)
-    },
-    fail: err => {
-      console.error(err)
-    }
-  })
+  if (list.length > 0) {
+    const arr = [].concat(...list.map(item => item.image_upload));
+    wx.cloud.deleteFile({
+      fileList: arr,
+      success: res => {
+        console.log('成功删除', res)
+      },
+      fail: err => {
+        console.error(err)
+      }
+    })
+  }
 }
+
 function deleteQuestionCloudImage(list) {
   wx.cloud.deleteFile({
     fileList: list[0].image,
@@ -555,6 +558,7 @@ Page({
   },
 
   commentSShortTap: function (e) {
+    console.log(e.currentTarget)
     this.setData({
       tapAnswerButton: false,
       tapReplyButton: false,
@@ -567,6 +571,7 @@ Page({
   //0-4-2 评论的评论的评论
   commentSLongTap: function (e) {
     const { idx } = e.currentTarget.dataset
+    console.log('e.currentTarget.dataset.openid', e.currentTarget.dataset.openid)
     if (app.globalData.openId == e.currentTarget.dataset.openid || app.globalData.isManager) {
       wx.showActionSheet({
         itemList: ['删除'],
@@ -1083,7 +1088,10 @@ Page({
               likerNum: 0,
               image_upload: that.data.fileID,
 
-              isAuthentic: app.globalData.isAuthentic
+              isAuthentic: app.globalData.isAuthentic,
+
+              warner: [],
+              warnerDetail: [],
             },
           }).then((res) => {
             /**
@@ -1133,7 +1141,10 @@ Page({
               likerNum: 0,
               image_upload: that.data.fileID,
 
-              isAuthentic: app.globalData.isAuthentic
+              isAuthentic: app.globalData.isAuthentic,
+
+              warner: [],
+              warnerDetail: [],
             },
           }).then((res) => {
             /**

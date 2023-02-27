@@ -1,6 +1,5 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="{{title}}"></return>
 <view class="ruleContainer">
-
   <text user-select='true'>
     欢迎您来到微校Smile小程序。
 

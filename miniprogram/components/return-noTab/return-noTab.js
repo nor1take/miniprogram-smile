@@ -4,18 +4,9 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    top:{
-      type:Number,
-      value:0,
-    },
-    bottom:{
-      type:Number,
-      value:0
-    },
-    topWord:{
-      type:String,
-      value:''
-    },
+    top: { type: Number, value: 0, },
+    bottom: { type: Number, value: 0 },
+    topWord: { type: String, value: '' },
   },
 
   /**
@@ -29,8 +20,7 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    return: function (e) {
-      console.log('返回')
+    return: function () {
       wx.navigateBack()
     },
   }

@@ -1,20 +1,16 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="使用帮助"></return>
 
 <view class="title_help" bindtap="help" data-id="新版">
-  * 主要介绍
+  * 用户须知
   <image wx:if="{{currentId===0}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===0}}" class="body_help">
-  <view class="item">0、点击首页左上方按钮，在滑出的菜单中点击头像进行登录或修改。</view>
-  <view class="item">1、支持跟随系统的夜间模式。</view>
-  <view class="item">2、评论可以带图。</view>
-  <view class="item">3、带有上方标签的页面(如“分类”)可以通过左滑右滑实现不同页面的切换！</view>
-  <view class="item">4、底部第3个改为“消息”。原先的“我的”收纳到首页的左侧菜单中。</view>
-  <view class="item">5、可以在“消息”中查看自己评论收到的点赞。</view>
-  <view class="item">6、首页通过右上角按钮对帖子按“发帖时间”或者按“回应时间”进行排序。</view>
-  <view class="item">7、增加“我的回应”，便于管理自己回应过的帖子。</view>
-  <view class="item">8、增加轮播条。点击轮播条即可跳转到相应页面。目前有“置顶”和“热门”。</view>
+  <view class="item">1、请仔细阅读《微校Smile小程序协议》（左侧菜单中点击头像）；</view>
+  <view class="item">2、系统通知：在左侧菜单中<text style="color: #FA5151;">“通知 · Note”</text>里发布；</view>
+  <view class="item">3、举报/删除：帖子或一级评论点击右上角[…]进行举报，二级评论长按进行举报，注意填写举报理由。删除功能同理；</view>
+  <view class="item">4、意见反馈：点击左侧菜单中“意见反馈”-“向开发者反馈”；</view>
+  <view class="item">5、搜索框下区域为上下轮播条，可手动上下调整，目前有“置顶”和“热门”。</view>
 </view>
 
 <view class="title_help" bindtap="help" data-id="发帖">
@@ -23,9 +19,9 @@
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===3}}" class="body_help">
-  <view class="item">点击首页右下角的“+”悬浮按钮即可进入发帖页面。</view>
+  <view class="item">点击首页右下角的“+”悬浮按钮（可自由移动）即可进入发帖页面。</view>
   <view class="item">①填写标题(必填)、补充(非必填)。</view>
-  <view class="item">②上传图片(可选)。每次只能上传 1 张图片。如有多张图片，请分多次上传。如需删除图片，轻轻点击图片，然后根据提示即可删除。</view>
+  <view class="item">②上传图片(可选)。如需删除图片，轻轻点击图片，然后根据提示即可删除。</view>
   <view class="item">③选择标签。自定义的标签将收纳在“分类”中的“自定义”标签中。</view>
   <view class="item">④选择匿名发帖(可选)。</view>
 </view>
@@ -43,31 +39,18 @@
   <view class="item">* 发帖人可在帖子的详情页点击左上角圆点，根据提示调整帖子的状态。</view>
 </view>
 
-<view class="title_help" bindtap="help" data-id="菜单">
-  菜单
+<view class="title_help" bindtap="help" data-id="其他主要功能">
+  * 其他主要功能
   <image wx:if="{{currentId===1}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===1}}" class="body_help">
-  <view class="item">点击左上角按钮呼出菜单，点击右侧灰黑色区域菜单收回。</view>
-</view>
-
-<view class="title_help" bindtap="help" data-id="搜索">
-  搜索
-  <image wx:if="{{currentId===2}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
-</view>
-<view wx:if="{{currentId===2}}" class="body_help">
-  <view class="item">支持搜索“标签/标题/正文”的关键字、词。</view>
-</view>
-
-<view class="title_help" bindtap="help" data-id="消息">
-  消息
-  <image wx:if="{{currentId===4}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
-</view>
-<view wx:if="{{currentId===4}}" class="body_help">
-  <view class="item">当你有消息未读时，“消息”右上角会显示红点和未读消息数。</view>
+  <view class="item">1、点击首页左上方按钮，在滑出的菜单中点击头像进行登录或修改；</view>
+  <view class="item">2、首页通过右上角按钮对帖子按“发帖时间”或者按“回应时间”进行排序；</view>
+  <view class="item">3、白天/黑夜模式：跟随系统；</view>
+  <view class="item">4、评论：支持图片评论；</view>
+  <view class="item">5、消息：当有消息未读时，“消息”右上角会显示红点和未读消息数；</view>
+  <view class="item">6、搜索：支持搜索“标签/标题/正文”的关键字、词。</view>
 </view>
 
 <view style="width: 100%; height: 30%; position: absolute; "></view>

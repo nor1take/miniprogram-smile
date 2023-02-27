@@ -28,7 +28,7 @@ Page({
         })
       }
     }
-    else if (id === '菜单') {
+    else if (id === '其他主要功能') {
       if (currentId === 1) {
         this.setData({
           currentId: -1
