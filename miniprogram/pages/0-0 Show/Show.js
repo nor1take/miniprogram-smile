@@ -48,6 +48,15 @@ Page({
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
 
+  goToTop: function () {
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 1000
+    }).then((res) => {
+      console.log(res)
+    })
+  },
+
   alwaysTop: function () {
     console.log('置顶')
     wx.navigateTo({
@@ -218,7 +227,7 @@ Page({
       })
     })
   },
-  
+
   getCurrentMessageNum: function () {
     Promise.all([
       this.getCommentMessage(),

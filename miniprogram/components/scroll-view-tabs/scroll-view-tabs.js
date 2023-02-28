@@ -13,7 +13,6 @@ Component({
     bottom: { type: Number, value: 0, },
 
     tabs: { type: Array, value: [] },
-    scrollTop: { type: Number, value: 0 },
     activeTab: { type: Number, value: 0 },
     refresherTriggered: { type: Boolean, value: false }
   },

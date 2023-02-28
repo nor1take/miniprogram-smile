@@ -8,7 +8,8 @@
 
 <swiper style="width: 100%; height: 100%; position: absolute;" current="{{activeTab}}" bindchange="swiperChange">
   <swiper-item wx:for="{{tabs}}" wx:key="id">
-    <scroll-view scroll-y style="width: 100%; height: 100%;" refresher-enabled scroll-top='{{scrollTop}}' refresher-triggered="{{refresherTriggered}}" bindscrolltolower="reachBottom" bindrefresherrefresh="refresh">
+    <scroll-view scroll-y style="width: 100%; height: 100%;" refresher-enabled 
+    refresher-triggered="{{refresherTriggered}}" bindscrolltolower="reachBottom" bindrefresherrefresh="refresh">
       <slot name="tab-content-{{index}}"></slot>
     </scroll-view>
   </swiper-item>

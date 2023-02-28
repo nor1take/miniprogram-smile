@@ -1,5 +1,5 @@
 <wxs src="../../util/filter.wxs" module="filter" />
-<tabs top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' tabs='{{tabs}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+<tabs top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
   <block wx:for="{{tabs}}" wx:key="id">
     <view slot="tab-content-{{index}}">
       <view style="width:100%; height: {{bottom}}px;"></view>

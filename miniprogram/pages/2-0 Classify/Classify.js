@@ -10,18 +10,17 @@ Page({
    */
   data: {
     activeTab: 0,
-    scrollTop: 0,
     tabs: [
-      { id: 0, name: '自定义', questionList: [] },
-      { id: 1, name: '我捡到…', questionList: [] },
-      { id: 2, name: '我丢了…', questionList: [] },
-      { id: 3, name: '求(组队/资料…)', questionList: [] },
-      { id: 4, name: '学习', questionList: [] },
-      { id: 5, name: '生活', questionList: [] },
-      { id: 6, name: '影视', questionList: [] },
-      { id: 7, name: '读书', questionList: [] },
-      { id: 8, name: '游戏', questionList: [] },
-      { id: 9, name: '音乐', questionList: [] },
+      { id: 0, name: '自定义', questionList: [], isScrollTop: false },
+      { id: 1, name: '我捡到…', questionList: [], isScrollTop: false },
+      { id: 2, name: '我丢了…', questionList: [], isScrollTop: false },
+      { id: 3, name: '求(组队/资料…)', questionList: [], isScrollTop: false },
+      { id: 4, name: '学习', questionList: [], isScrollTop: false },
+      { id: 5, name: '生活', questionList: [], isScrollTop: false },
+      { id: 6, name: '影视', questionList: [], isScrollTop: false },
+      { id: 7, name: '读书', questionList: [], isScrollTop: false },
+      { id: 8, name: '游戏', questionList: [], isScrollTop: false },
+      { id: 9, name: '音乐', questionList: [], isScrollTop: false },
     ],
 
     colorGray: '#E7E7E7',
@@ -90,6 +89,7 @@ Page({
   },
 
   loadData: function (index, isRefresh) {
+    console.log(this.data.tabs[index].questionList.length)
     if (index >= this.data.tabs.length) return;
     if (this.data.tabs[index].questionList.length === 0 || isRefresh) {
       if (index === 0) {
@@ -106,51 +106,69 @@ Page({
         question.where({
           tag: name
         }).orderBy('time', 'desc').get().then(res => {
-          if (index === 1) {
-            this.setData({
-              'tabs[1].questionList': res.data
-            })
-          } else if (index === 2) {
-            this.setData({
-              'tabs[2].questionList': res.data
-            })
-          } else if (index === 3) {
-            this.setData({
-              'tabs[3].questionList': res.data
-            })
-          } else if (index === 4) {
-            this.setData({
-              'tabs[4].questionList': res.data
-            })
-          } else if (index === 5) {
-            this.setData({
-              'tabs[5].questionList': res.data
-            })
-          } else if (index === 6) {
-            this.setData({
-              'tabs[6].questionList': res.data
-            })
-          } else if (index === 7) {
-            this.setData({
-              'tabs[7].questionList': res.data
-            })
-          } else if (index === 8) {
-            this.setData({
-              'tabs[8].questionList': res.data
-            })
-          } else if (index === 9) {
-            this.setData({
-              'tabs[9].questionList': res.data
-            })
-          } else if (index === 10) {
-            this.setData({
-              'tabs[10].questionList': res.data
-            })
-          } else if (index === 11) {
-            this.setData({
-              'tabs[11].questionList': res.data
-            })
+          switch (index) {
+            case 1:
+              this.setData({
+                'tabs[1].questionList': res.data
+              })
+              break;
+            case 2:
+              this.setData({
+                'tabs[2].questionList': res.data
+              })
+              break;
+            case 3:
+              this.setData({
+                'tabs[3].questionList': res.data
+              })
+              break;
+            case 4:
+              this.setData({
+                'tabs[4].questionList': res.data
+              })
+              break;
+            case 5:
+              this.setData({
+                'tabs[5].questionList': res.data
+              })
+              break;
+            case 6:
+              this.setData({
+                'tabs[6].questionList': res.data
+              })
+              break;
+            case 7:
+              this.setData({
+                'tabs[7].questionList': res.data
+              })
+              break;
+            case 8:
+              this.setData({
+                'tabs[8].questionList': res.data
+              })
+              break;
+            case 9:
+              this.setData({
+                'tabs[9].questionList': res.data
+              })
+              break;
+            case 10:
+              this.setData({
+                'tabs[10].questionList': res.data
+              })
+              break;
+            case 11:
+              this.setData({
+                'tabs[11].questionList': res.data
+              })
+              break;
+            case 12:
+              this.setData({
+                'tabs[12].questionList': res.data
+              })
+              break;
           }
+
         })
       }
     }
@@ -182,54 +200,72 @@ Page({
           questionList[questionIndex].watched = app.globalData.questionView,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
       }
-      if (index === 0) {
-        this.setData({
-          'tabs[0].questionList': questionList
-        })
-      } else if (index === 1) {
-        this.setData({
-          'tabs[1].questionList': questionList
-        })
-      } else if (index === 2) {
-        this.setData({
-          'tabs[2].questionList': questionList
-        })
-      } else if (index === 3) {
-        this.setData({
-          'tabs[3].questionList': questionList
-        })
-      } else if (index === 4) {
-        this.setData({
-          'tabs[4].questionList': questionList
-        })
-      } else if (index === 5) {
-        this.setData({
-          'tabs[5].questionList': questionList
-        })
-      } else if (index === 6) {
-        this.setData({
-          'tabs[6].questionList': questionList
-        })
-      } else if (index === 7) {
-        this.setData({
-          'tabs[7].questionList': questionList
-        })
-      } else if (index === 8) {
-        this.setData({
-          'tabs[8].questionList': questionList
-        })
-      } else if (index === 9) {
-        this.setData({
-          'tabs[9].questionList': questionList
-        })
-      } else if (index === 10) {
-        this.setData({
-          'tabs[10].questionList': questionList
-        })
-      } else if (index === 11) {
-        this.setData({
-          'tabs[11].questionList': questionList
-        })
+      switch (index) {
+        case 0:
+          this.setData({
+            'tabs[0].questionList': questionList
+          })
+          break;
+        case 1:
+          this.setData({
+            'tabs[1].questionList': questionList
+          })
+          break;
+        case 2:
+          this.setData({
+            'tabs[2].questionList': questionList
+          })
+          break;
+        case 3:
+          this.setData({
+            'tabs[3].questionList': questionList
+          })
+          break;
+        case 4:
+          this.setData({
+            'tabs[4].questionList': questionList
+          })
+          break;
+        case 5:
+          this.setData({
+            'tabs[5].questionList': questionList
+          })
+          break;
+        case 6:
+          this.setData({
+            'tabs[6].questionList': questionList
+          })
+          break;
+        case 7:
+          this.setData({
+            'tabs[7].questionList': questionList
+          })
+          break;
+        case 8:
+          this.setData({
+            'tabs[8].questionList': questionList
+          })
+          break;
+        case 9:
+          this.setData({
+            'tabs[9].questionList': questionList
+          })
+          break;
+        case 10:
+          this.setData({
+            'tabs[10].questionList': questionList
+          })
+          break;
+        case 11:
+          this.setData({
+            'tabs[11].questionList': questionList
+          })
+          break;
+        case 12:
+          this.setData({
+            'tabs[12].questionList': questionList
+          })
+          break;
       }
     }
   },

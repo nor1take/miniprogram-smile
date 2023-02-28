@@ -11,6 +11,7 @@
   <view class="item">3、举报/删除：帖子或一级评论点击右上角[…]进行举报，二级评论长按进行举报，注意填写举报理由。删除功能同理；</view>
   <view class="item">4、意见反馈：点击左侧菜单中“意见反馈”-“向开发者反馈”；</view>
   <view class="item">5、搜索框下区域为上下轮播条，可手动上下调整，目前有“置顶”和“热门”。</view>
+  <view class="item">6、长按发帖按钮返回顶部；成功发帖自动回到顶部。</view>
 </view>
 
 <view class="title_help" bindtap="help" data-id="发帖">
