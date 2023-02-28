@@ -13,81 +13,26 @@ Page({
 
     currentId: 0,
   },
+
+  rule1: function () {
+    wx.navigateTo({
+      url: '../../../packageLogin/pages/0-2 Rule/Rule',
+    })
+  },
+
   help: function (e) {
     const { id } = e.currentTarget.dataset
     const { currentId } = this.data
-    if (id === '新版') {
-      if (currentId === 0) {
-        this.setData({
-          currentId: -1
-        })
-      }
-      else{
-        this.setData({
-          currentId: 0
-        })
-      }
+
+    if (currentId === parseInt(id) ) {
+      this.setData({
+        currentId: -1
+      })
+    } else {
+      this.setData({
+        currentId: parseInt(id)
+      })
     }
-    else if (id === '其他主要功能') {
-      if (currentId === 1) {
-        this.setData({
-          currentId: -1
-        })
-      }
-      else{
-        this.setData({
-          currentId: 1
-        })
-      }
-    }
-    else if (id === '搜索') { 
-      if (currentId === 2) {
-        this.setData({
-          currentId: -1
-        })
-      }
-      else{
-        this.setData({
-          currentId: 2
-        })
-      }
-    }
-    else if (id === '发帖') { 
-      if (currentId === 3) {
-        this.setData({
-          currentId: -1
-        })
-      }
-      else{
-        this.setData({
-          currentId: 3
-        })
-      }
-    }
-    else if (id === '消息') {
-      if (currentId === 4) {
-        this.setData({
-          currentId: -1
-        })
-      }
-      else{
-        this.setData({
-          currentId: 4
-        })
-      }
-     }
-     else if (id === '左上角圆点') {
-      if (currentId === 5) {
-        this.setData({
-          currentId: -1
-        })
-      }
-      else{
-        this.setData({
-          currentId: 5
-        })
-      }
-     }
   },
   return: function (e) {
     wx.navigateBack()
@@ -155,5 +100,5 @@ Page({
 
   },
 
-  
+
 })
