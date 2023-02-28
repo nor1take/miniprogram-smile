@@ -15,6 +15,15 @@ Page({
     bottom: 80,
   },
 
+  imageTap: function (e) {
+    console.log(e.currentTarget.dataset.imagelist)
+    let { imagelist } = e.currentTarget.dataset
+
+    wx.previewImage({
+      current: e.currentTarget.dataset.src,
+      urls: imagelist
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */

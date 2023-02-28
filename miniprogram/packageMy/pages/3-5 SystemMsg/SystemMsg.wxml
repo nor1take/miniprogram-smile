@@ -1,16 +1,18 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 <return top="{{top}}" bottom="{{bottom}}" topWord="通知 · Note"></return>
 
-<view class="background" wx:for="{{systemMsg}}" wx:key="_id" >
+<view class="background" wx:for="{{systemMsg}}" wx:key="_id">
   <view style="display: flex; justify-content: space-between; align-items:center;">
     <view class="word">
-      <view class="title">{{item.title}}</view>
-      <view class="body">{{item.body}}</view>
-      <view class="last">{{filter.timeString(item.time)}}</view>
-    </view>
-    <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
-      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 10rpx;"></image>
+      <view class="body">{{item.title}}</view>
+      <view class="title">{{item.body}}</view>
     </view>
   </view>
+  <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
+    <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="id">
+      <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+    </block>
+  </view>
+  <view class="last">{{filter.timeString(item.time)}}</view>
 </view>
 <view class="bottom"></view>
