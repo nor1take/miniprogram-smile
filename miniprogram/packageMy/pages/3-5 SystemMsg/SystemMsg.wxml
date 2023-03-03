@@ -1,5 +1,5 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
-<return top="{{top}}" bottom="{{bottom}}" topWord="通知 · Note"></return>
+<return top="{{top}}" bottom="{{bottom}}" topWord="系统通知 · Note"></return>
 
 <view class="background" wx:for="{{systemMsg}}" wx:key="_id">
   <view style="display: flex; justify-content: space-between; align-items:center;">

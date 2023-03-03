@@ -1298,6 +1298,11 @@ Page({
           /**
            * 一、文字审核
            */
+          question.doc(app.globalData.questionId).update({
+            data: {
+              watched: _.inc(1)
+            }
+          }).then(res => { console.log(res) }).catch(err => { console.log(err) })
           wx.cloud.callFunction({
             name: 'checkContent',
             data: {
@@ -1346,13 +1351,71 @@ Page({
     })
   },
 
+
   /**
    * 生命周期函数--监听页面加载
    */
+  getNicknameandImage: function () {
+    userInfo.where({
+      _openid: '{openid}'
+    }).get()
+      .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.navigateTo({
+            url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
+          })
+        } else {
+          this.setData({
+            nickName: res.data[0].nickName,
+            avatarUrl: res.data[0].avatarUrl,
+            isLogin: true,
+            isManager: res.data[0].isManager
+          })
+          app.globalData.openId = res.data[0]._openid
+          app.globalData.isLogin = true,
+            app.globalData.isManager = res.data[0].isManager,
+            app.globalData.isAuthentic = res.data[0].isAuthentic,
+            app.globalData.modifyNum = res.data[0].modifyNum,
+            app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+          console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
+          if (!app.globalData.isCheckSystemMsg) {
+            wx.setTabBarBadge({
+              index: 0,
+              text: 'Note'
+            })
+          } else {
+            wx.removeTabBarBadge({
+              index: 0,
+            }).catch(err => {
+              console.log(err)
+            })
+          }
+          app.globalData.nickName = res.data[0].nickName,
+            app.globalData.avatarUrl = res.data[0].avatarUrl,
+            console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+        }
+      })
+      .catch(() => {
+        console.log('用户未登录')
+        this.setData({
+          nickName: '',
+          avatarUrl: '',
+          isLogin: false,
+        })
+        app.globalData.isLogin = false,
+          wx.showToast({
+            icon: 'none',
+            title: '游客模式。前往小程序进行登录',
+            duration: 3500,
+          })
+      })
+  },
   onLoad: function (options) {
+    console.log('onLoad')
     const { id } = options
     if (id != undefined) {
       app.globalData.questionId = id
+      this.getNicknameandImage()
     }
     this.getRightTop()
     this.getData()
@@ -1417,7 +1480,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: this.data.questionList[0].title,
-      path: 'pages/0-0 Show/Show?id=' + app.globalData.questionId
+      path: 'packageShow/page/1-1 Detail/Detail?id=' + app.globalData.questionId
     }
   },
 

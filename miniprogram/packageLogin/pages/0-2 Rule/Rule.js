@@ -28,7 +28,7 @@ Page({
   onShareAppMessage() {
     return {
       title: this.data.title,
-      path: 'pages/0-0 Show/Show?id=' + 'rule'
+      path: 'packageLogin/pages/0-2 Rule/Rule'
     }
   },
 

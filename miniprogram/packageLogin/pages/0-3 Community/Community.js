@@ -18,7 +18,7 @@ Page({
   onShareAppMessage() {
     return {
       title: this.data.title,
-      path: 'pages/0-0 Show/Show?id=' + 'community'
+      path: 'packageLogin/pages/0-3 Community/Community'
     }
   },
 

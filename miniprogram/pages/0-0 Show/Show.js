@@ -66,7 +66,7 @@ Page({
   hot: function () {
     console.log('热门')
     wx.navigateTo({
-      url: '../4-0 Hot/Hot',
+      url: '../../packageShow/page/1-4 Hot/Hot',
     })
   },
   getNewData: function () {
@@ -329,42 +329,11 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function () {
     this.getNicknameandImage()
-    console.log('options.id', options.id)
-    const { id } = options
-    if (id != undefined) {
-      if (id === 'rule') {
-        setTimeout(function () {
-          wx.navigateTo({
-            url: '../../packageLogin/pages/0-2 Rule/Rule',
-          })
-        }, 1000)
-      } else if (id === 'community') {
-        setTimeout(function () {
-          wx.navigateTo({
-            url: '../../packageLogin/pages/0-3 Community/Community',
-          })
-        }, 1000)
-      } else {
-        app.globalData.questionId = id
-        setTimeout(function () {
-          wx.navigateTo({
-            url: '../../packageShow/page/1-1 Detail/Detail',
-          })
-        }, 1000)
-        this.getData()
-        this.getOtherData()
-        question.doc(app.globalData.questionId).update({
-          data: {
-            watched: _.inc(1)
-          }
-        }).then(res => { console.log(res) }).catch(err => { console.log(err) })
-      }
-    } else {
-      this.getData()
-      this.getOtherData()
-    }
+    this.getData()
+    this.getOtherData()
+
   },
 
   /**
@@ -515,13 +484,13 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '实时',
+      title: '微校Smile - 实时',
       path: 'pages/0-0 Show/Show'
     }
   },
   onShareTimeline: function () {
     return {
-      title: '实时',
+      title: '微校Smile - 实时',
     }
   }
 })

@@ -1,4 +1,4 @@
-<wxs src="../../util/filter.wxs" module="filter" />
+<wxs src="../../../util/filter.wxs" module="filter" />
 <return top="{{top}}" bottom="{{bottom}}" topWord="热门"></return>
 <view class="background" hover-class="hoverClass" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
   <view wx:if="{{index+1 == 1}}" class="index" style="color: {{color1}};">{{index+1}}</view>

@@ -24,7 +24,7 @@ Page({
     const { id } = e.currentTarget.dataset
     const { currentId } = this.data
 
-    if (currentId === parseInt(id) ) {
+    if (currentId === parseInt(id)) {
       this.setData({
         currentId: -1
       })
@@ -100,5 +100,19 @@ Page({
 
   },
 
+  /**
+ * 用户点击右上角分享
+ */
+  onShareAppMessage: function () {
+    return {
+      title: '微校Smile - 使用帮助',
+      path: 'packageMy/pages/0-1 TopPost/TopPost'
+    }
+  },
 
+  onShareTimeline: function () {
+    return {
+      title: '微校Smile - 使用帮助',
+    }
+  }
 })

@@ -85,9 +85,18 @@ Page({
   },
 
   /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+ * 用户点击右上角分享
+ */
+onShareAppMessage: function () {
+  return {
+    title: '微校Smile - 系统通知·Note',
+    path: 'packageMy/pages/3-5 SystemMsg/SystemMsg'
   }
+},
+
+onShareTimeline: function () {
+  return {
+    title: '微校Smile - 系统通知·Note'
+  }
+}
 })
