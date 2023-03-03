@@ -1,7 +1,7 @@
 // app.js
 App({
   globalData: {
-    questionId:'',
+    questionId: '',
     questionIndex: 0,
     isClick: false,
 
@@ -14,18 +14,18 @@ App({
     isAsk: false,
 
     openId: '',
-    title:'',
-    nickName:'',
-    avatarUrl:'',
-    
+    title: '',
+    nickName: '',
+    avatarUrl: '',
+
     messageNum: 0,
-    
+
     isManager: false,
     isLogin: false,
     isAuthentic: false,
     modifyNum: 0,
     isCheckSystemMsg: false,
-    isModify: false
+    isModify: false,
   },
   onLaunch: function () {
     if (!wx.cloud) {
@@ -40,15 +40,14 @@ App({
         traceUser: true,
       });
     }
-    const windowInfo = wx.getWindowInfo()
+
     const res = wx.getMenuButtonBoundingClientRect()
     this.globalData = {
       top: res.top,
       left: res.left,
       right: res.right,
       bottom: res.bottom,
-
-      height:windowInfo.screenHeight
+      stayTime: 0
     };
   },
 });

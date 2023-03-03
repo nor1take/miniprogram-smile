@@ -84,7 +84,7 @@
   <!--1-2-3 关注/回应按钮 -->
   <view class="FollowReplybutton-area">
     <button wx:if="{{WXS.isInArray(openId, item.collector)}}" class="FollowReplybutton" style="color: #acacac;" size="mini" bindtap="collectCancel">已关注</button>
-    <button wx:else class="FollowReplybutton" size="mini" bindtap="collectAdd">关注问题</button>
+    <button wx:else class="FollowReplybutton" size="mini" bindtap="collectAdd">关注帖子</button>
     <!-- <button class="FollowReplybutton" size="mini" type="primary" bindtap="answer">回应</button> -->
   </view>
   <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">

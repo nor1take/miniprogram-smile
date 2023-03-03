@@ -30,5 +30,11 @@ Page({
       title: this.data.title,
       path: 'pages/0-0 Show/Show?id=' + 'rule'
     }
+  },
+
+  onShareTimeline: function () {
+    return {
+      title: this.data.title,
+    }
   }
 })

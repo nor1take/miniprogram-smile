@@ -4,6 +4,7 @@ const _ = db.command
 const question = db.collection('question')
 const traceId = db.collection('traceId')
 const systemMsg = db.collection('systemMsg')
+const userInfo = db.collection('userInfo')
 
 var systemMsgNum = 0
 
@@ -284,155 +285,168 @@ Page({
     const { tag } = this.data;
 
     let that = this
-    /**
-     * 一、文字审核
-     */
-    wx.cloud.callFunction({
-      name: 'checkContent',
-      data: {
-        txt: title + body + tag,
-        scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-      }
-    }).then((res) => {
-      console.log(res)
-      const { label } = res.result.msgR.result
-      const { suggest } = res.result.msgR.result
-      if (suggest === 'risky') {
-        wx.hideLoading()
-        wx.showToast({
-          title: '危险：包含' + matchLabel(label) + '信息！',
-          icon: 'none'
-        })
-      } else if (suggest === 'review') {
-        wx.hideLoading()
-        wx.showToast({
-          title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
-          icon: 'none'
-        })
-      } else {
-        app.globalData.isAsk = true
-        var d = new Date().getTime();
-        if (systemMsgNum > 10 && app.globalData.isAuthentic && app.globalData.isManager) {
-          systemMsg.add({
-            data: {
-              time: d,
-              image: that.data.fileID,
-              title: title,
-              body: body,
-            }
-          }).then((res) => {
-            /**
-             * 二、图片审核：处理异步检测结果推送
-             */
-
-            /**
-             * 1、拿到全部的traceId集合（违规图片集合）
-             */
-            const { _id } = res
-            traceId.orderBy('CreateTime', 'desc').get()
-              .then((res) => {
-                console.log(res)
-                /**
-                 * 2、删除上传图片列表中违规图片
-                 */
-                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                  console.log('deleteInvalidImages', res)
-                  /**
-                   * 3、更新图片列表
-                   */
-                  systemMsg.doc(_id).update({
-                    data: {
-                      image: res
-                    }
-                  }).then(() => {
-                    wx.hideLoading()
-                    wx.showToast({
-                      title: '发布成功',
-                    })
-                    setTimeout(function () { wx.navigateBack(); }, 1500);
-                  }).catch((err) => {
-                    console.log(err)
-                  })
-                })
-              })
+    userInfo.where({
+      _openid: '{openid}'
+    }).get()
+      .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.hideLoading()
+          wx.navigateTo({
+            url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
           })
         } else {
-          question.add({
+          /**
+           * 一、文字审核
+           */
+          wx.cloud.callFunction({
+            name: 'checkContent',
             data: {
-              //时间
-              answerTime: 0,
-
-              time: d,
-
-              image: that.data.fileID,
-
-              unknown: that.data._unknown,
-              nickName: app.globalData.nickName,
-              avatarUrl: app.globalData.avatarUrl,
-
-              title: title,
-              body: body,
-
-              tagId: that.data.tagId,
-              tag: tag,
-
-              watched: 1,
-
-              commentNum: 0,
-              commenter: [],
-
-              message: 0,
-
-              collector: [],
-              collectNum: 0,
-
-              warner: [],
-              warnerDetail: [],
-
-              solved: false,
-
-              isAuthentic: app.globalData.isAuthentic,
-            },
+              txt: title + body + tag,
+              scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+            }
           }).then((res) => {
-            /**
-             * 二、图片审核：处理异步检测结果推送
-             */
-
-            /**
-             * 1、拿到全部的traceId集合（违规图片集合）
-             */
-            const { _id } = res
-            traceId.orderBy('CreateTime', 'desc').get()
-              .then((res) => {
-                console.log(res)
-                /**
-                 * 2、删除上传图片列表中违规图片
-                 */
-                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                  console.log('deleteInvalidImages', res)
-                  /**
-                   * 3、更新图片列表
-                   */
-                  question.doc(_id).update({
-                    data: {
-                      image: res
-                    }
-                  }).then(() => {
-                    wx.hideLoading()
-                    wx.showToast({
-                      title: '发布成功',
-                    })
-                    setTimeout(function () { wx.navigateBack(); }, 1500);
-                  }).catch((err) => {
-                    console.log(err)
-                  })
-                })
+            console.log(res)
+            const { label } = res.result.msgR.result
+            const { suggest } = res.result.msgR.result
+            if (suggest === 'risky') {
+              wx.hideLoading()
+              wx.showToast({
+                title: '危险：包含' + matchLabel(label) + '信息！',
+                icon: 'none'
               })
+            } else if (suggest === 'review') {
+              wx.hideLoading()
+              wx.showToast({
+                title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
+                icon: 'none'
+              })
+            } else {
+              app.globalData.isAsk = true
+              var d = new Date().getTime();
+              if (systemMsgNum > 10 && app.globalData.isAuthentic && app.globalData.isManager) {
+                systemMsg.add({
+                  data: {
+                    time: d,
+                    image: that.data.fileID,
+                    title: title,
+                    body: body,
+                  }
+                }).then((res) => {
+                  /**
+                   * 二、图片审核：处理异步检测结果推送
+                   */
+
+                  /**
+                   * 1、拿到全部的traceId集合（违规图片集合）
+                   */
+                  const { _id } = res
+                  traceId.orderBy('CreateTime', 'desc').get()
+                    .then((res) => {
+                      console.log(res)
+                      /**
+                       * 2、删除上传图片列表中违规图片
+                       */
+                      deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                        console.log('deleteInvalidImages', res)
+                        /**
+                         * 3、更新图片列表
+                         */
+                        systemMsg.doc(_id).update({
+                          data: {
+                            image: res
+                          }
+                        }).then(() => {
+                          wx.hideLoading()
+                          wx.showToast({
+                            title: '发布成功',
+                          })
+                          setTimeout(function () { wx.navigateBack(); }, 1500);
+                        }).catch((err) => {
+                          console.log(err)
+                        })
+                      })
+                    })
+                })
+              } else {
+                question.add({
+                  data: {
+                    //时间
+                    answerTime: 0,
+
+                    time: d,
+
+                    image: that.data.fileID,
+
+                    unknown: that.data._unknown,
+                    nickName: app.globalData.nickName,
+                    avatarUrl: app.globalData.avatarUrl,
+
+                    title: title,
+                    body: body,
+
+                    tagId: that.data.tagId,
+                    tag: tag,
+
+                    watched: 1,
+
+                    commentNum: 0,
+                    commenter: [],
+
+                    message: 0,
+
+                    collector: [],
+                    collectNum: 0,
+
+                    warner: [],
+                    warnerDetail: [],
+
+                    solved: false,
+
+                    isAuthentic: app.globalData.isAuthentic,
+                  },
+                }).then((res) => {
+                  /**
+                   * 二、图片审核：处理异步检测结果推送
+                   */
+
+                  /**
+                   * 1、拿到全部的traceId集合（违规图片集合）
+                   */
+                  const { _id } = res
+                  traceId.orderBy('CreateTime', 'desc').get()
+                    .then((res) => {
+                      console.log(res)
+                      /**
+                       * 2、删除上传图片列表中违规图片
+                       */
+                      deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                        console.log('deleteInvalidImages', res)
+                        /**
+                         * 3、更新图片列表
+                         */
+                        question.doc(_id).update({
+                          data: {
+                            image: res
+                          }
+                        }).then(() => {
+                          wx.hideLoading()
+                          wx.showToast({
+                            title: '发布成功',
+                          })
+                          setTimeout(function () { wx.navigateBack(); }, 1500);
+                        }).catch((err) => {
+                          console.log(err)
+                        })
+                      })
+                    })
+                })
+              }
+
+            }
           })
         }
+      })
 
-      }
-    })
   },
 
   //点击图片删除
@@ -483,7 +497,7 @@ Page({
   onReady: function () {
     setTimeout(this.focus, 250)
   },
-  onUnload:function(){
+  onUnload: function () {
     console.log('onUnload')
     wx.clearStorageSync()
   }

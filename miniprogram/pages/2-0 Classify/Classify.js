@@ -89,7 +89,6 @@ Page({
   },
 
   loadData: function (index, isRefresh) {
-    console.log(this.data.tabs[index].questionList.length)
     if (index >= this.data.tabs.length) return;
     if (this.data.tabs[index].questionList.length === 0 || isRefresh) {
       if (index === 0) {

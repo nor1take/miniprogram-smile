@@ -65,10 +65,6 @@ Page({
   },
   hot: function () {
     console.log('热门')
-    // wx.showToast({
-    //   title: '功能尚未开放 敬请期待！',
-    //   icon: 'none'
-    // })
     wx.navigateTo({
       url: '../4-0 Hot/Hot',
     })
@@ -281,34 +277,35 @@ Page({
           wx.navigateTo({
             url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
           })
-        }
-        this.setData({
-          nickName: res.data[0].nickName,
-          avatarUrl: res.data[0].avatarUrl,
-          isLogin: true,
-          isManager: res.data[0].isManager
-        })
-        app.globalData.isLogin = true,
-          app.globalData.isManager = res.data[0].isManager,
-          app.globalData.isAuthentic = res.data[0].isAuthentic,
-          app.globalData.modifyNum = res.data[0].modifyNum,
-          app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
-        console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
-        if (!app.globalData.isCheckSystemMsg) {
-          wx.setTabBarBadge({
-            index: 0,
-            text: 'Note'
-          })
         } else {
-          wx.removeTabBarBadge({
-            index: 0,
-          }).catch(err => {
-            console.log(err)
+          this.setData({
+            nickName: res.data[0].nickName,
+            avatarUrl: res.data[0].avatarUrl,
+            isLogin: true,
+            isManager: res.data[0].isManager
           })
+          app.globalData.isLogin = true,
+            app.globalData.isManager = res.data[0].isManager,
+            app.globalData.isAuthentic = res.data[0].isAuthentic,
+            app.globalData.modifyNum = res.data[0].modifyNum,
+            app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+          console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
+          if (!app.globalData.isCheckSystemMsg) {
+            wx.setTabBarBadge({
+              index: 0,
+              text: 'Note'
+            })
+          } else {
+            wx.removeTabBarBadge({
+              index: 0,
+            }).catch(err => {
+              console.log(err)
+            })
+          }
+          app.globalData.nickName = res.data[0].nickName,
+            app.globalData.avatarUrl = res.data[0].avatarUrl,
+            console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
         }
-        app.globalData.nickName = res.data[0].nickName,
-          app.globalData.avatarUrl = res.data[0].avatarUrl,
-          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
       })
       .catch(() => {
         console.log('用户未登录')
@@ -333,6 +330,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.getNicknameandImage()
     console.log('options.id', options.id)
     const { id } = options
     if (id != undefined) {
@@ -379,9 +377,23 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    // console.log(app.globalData)
-    this.getCurrentMessageNum()
-    this.getNicknameandImage()
+    console.log(app.globalData)
+    var d = new Date().getTime()
+    this.setData({
+      startTime: d
+    })
+
+    console.log(app.globalData.stayTime / 1000 / 60)
+
+    if (app.globalData.stayTime / 1000 / 60 > 1) {
+      app.globalData.stayTime = 0
+      this.getCurrentMessageNum()
+    }
+    console.log()
+    if (app.globalData.isModify) {
+      this.getNicknameandImage()
+      app.globalData.isModify = false
+    }
 
     const { questionList } = this.data
     const { questionIndex } = app.globalData
@@ -418,6 +430,8 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+    var stayTime = new Date().getTime() - this.data.startTime
+    app.globalData.stayTime += stayTime
     app.globalData.isClick = false
   },
 
@@ -503,6 +517,11 @@ Page({
     return {
       title: '实时',
       path: 'pages/0-0 Show/Show'
+    }
+  },
+  onShareTimeline: function () {
+    return {
+      title: '实时',
     }
   }
 })

@@ -119,9 +119,6 @@ Page({
 
 
       top: app.globalData.top,
-      // height:app.globalData.height
-      // left: app.globalData.left,
-      // right: app.globalData.right,
       bottom: app.globalData.bottom,
     })
     Promise.all([this.getAllData(), this.getNoData(), this.getYesData()]).then(() => {

@@ -21,6 +21,11 @@ Component({
   methods: {
     return: function () {
       wx.navigateBack()
+        .catch(() => {
+          wx.switchTab({
+            url: '../../../pages/0-0 Show/Show'
+          })
+        })
     },
   }
 })

@@ -85,6 +85,7 @@ Page({
               }
             }).then(() => {
               wx.hideLoading()
+              app.globalData.isModify = true
               wx.switchTab({
                 url: '../../../pages/0-0 Show/Show'
               })
@@ -132,6 +133,7 @@ Page({
                   }
                 }).then(() => {
                   wx.hideLoading()
+                  app.globalData.isModify = true
                   wx.switchTab({
                     url: '../../../pages/0-0 Show/Show'
                   })

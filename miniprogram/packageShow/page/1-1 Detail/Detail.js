@@ -5,6 +5,7 @@ const question = db.collection('question')
 const comment = db.collection('comment')
 const commentAgain = db.collection('commentAgain')
 const traceId = db.collection('traceId')
+const userInfo = db.collection('userInfo')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -435,25 +436,33 @@ Page({
     })
   },
   collectAdd: function () {
-    wx.showToast({
-      title: '关注成功',
-      icon: 'none'
-    })
-    const { questionList } = this.data
-    let { collectNum } = this.data
-    console.log('关注 add', questionList[0].collector)
-    questionList[0].collector.push(app.globalData.openId)
-    collectNum++;
-    this.setData({
-      questionList,
-      collectNum
-    })
-    question.doc(app.globalData.questionId).update({
-      data: {
-        collector: _.addToSet(app.globalData.openId),
-        collectNum: collectNum
-      }
-    })
+    console.log(app.globalData.openId)
+    if (app.globalData.openId == undefined) {
+      wx.showToast({
+        title: '请前往小程序再操作',
+        icon: 'none'
+      })
+    } else {
+      wx.showToast({
+        title: '关注成功',
+        icon: 'none'
+      })
+      const { questionList } = this.data
+      let { collectNum } = this.data
+      console.log('关注 add', questionList[0].collector, app.globalData.questionId)
+      questionList[0].collector.push(app.globalData.openId)
+      collectNum++;
+      this.setData({
+        questionList,
+        collectNum
+      })
+      question.doc(app.globalData.questionId).update({
+        data: {
+          collector: _.addToSet(app.globalData.openId),
+          collectNum: collectNum
+        }
+      })
+    }
   },
   collectCancel: function () {
     wx.showToast({
@@ -730,200 +739,80 @@ Page({
   },
   //问题右上角三个点
   threePointTap: function () {
-    const { questionList } = this.data
-    if (app.globalData.openId == questionList[0]._openid || app.globalData.isManager) {
-      wx.showActionSheet({
-        itemList: ['删除'],
-        itemColor: '#FA5151',
-        success: res => {
-          wx.showModal({
-            title: '提醒',
-            content: '删除后将无法恢复，相关评论也将被删除，确定删除吗？',
-            cancelText: '取消',
-            confirmText: '删除',
-            cancelColor: '#576B95',
-            confirmColor: '#FA5151',
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                app.globalData.questionDelete = true
-                wx.showLoading({
-                  title: '删除中',
-                })
-                Promise.all([
-                  question.where({
-                    _id: app.globalData.questionId
-                  }).get().then(res => {
-                    console.log(res.data)
-                    deleteQuestionCloudImage(res.data)
-                  }),
-                  comment.where({
-                    questionId: app.globalData.questionId
-                  }).get().then(res => {
-                    deleteCommentCloudImage(res.data)
-                  }),
-                  commentAgain.where({
-                    questionId: app.globalData.questionId
-                  }).get().then(res => {
-                    deleteCommentCloudImage(res.data)
-                  })
-                ]).then(() => {
-                  Promise.all([
-                    question.where({
-                      _id: app.globalData.questionId
-                    }).remove(),
-                    comment.where({
-                      questionId: app.globalData.questionId
-                    }).remove(),
-                    commentAgain.where({
-                      questionId: app.globalData.questionId
-                    }).remove()
-                  ]).then(() => {
-                    wx.hideLoading()
-                    wx.showToast({
-                      title: '删除成功',
-                      icon: 'success',
-                      duration: 1500
-                    })
-                    setTimeout(function () { wx.navigateBack(); }, 1500);
-                  })
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        },
-        fail(res) {
-          console.log(res.errMsg)
-        }
+    if (app.globalData.openId == undefined) {
+      wx.showToast({
+        title: '请前往小程序再操作',
+        icon: 'none'
       })
-    }
-    //warn
-    else {
-      wx.showActionSheet({
-        itemList: ['举报'],
-        itemColor: '#FA5151',
-        success: res => {
-          console.log(res.tapIndex)
-          wx.showModal({
-            title: "举报理由",
-            content: "该帖 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
-            editable: true,
-            confirmText: "提交举报",
-            confirmColor: "#FA5151",
-            success: res => {
-              if (res.confirm) {
-                question.doc(app.globalData.questionId).update({
-                  data: {
-                    warnerDetail: _.addToSet({
-                      nickName: app.globalData.nickName,
-                      _openid: app.globalData.openId,
-                      reason: res.content
-                    }),
-                    warner: _.addToSet(app.globalData.openId)
-                  }
-                }).then(() => {
-                  wx.showToast({
-                    title: '感谢举报！管理员会尽快处理',
-                    icon: 'none',
-                    duration: 1500
-                  })
-                })
-              }
-            },
-            fail: err => {
-              console.log(err)
-            }
-          })
-        },
-        fail(res) {
-          console.log(res.errMsg)
-        }
-      })
-    }
-  },
-
-  deleteCommentEnd: function () {
-    const { sortWord } = this.data
-    this.getQuestionandCollectData()
-    if (sortWord == "按最新") this.NewCommentFirst()
-    else if (sortWord == "按最早") this.OldCommentFirst()
-    else this.LikemostCommentFisrt()
-  },
-  //评论右上角三个点
-  threePointTap2: function (e) {
-    console.log(e.currentTarget.dataset.index)
-    console.log(this.data.questionList[0].commenter)
-
-    var commentList = [];
-    comment.doc(e.currentTarget.id).get().then((res) => {
-      commentList = res.data
-      console.log(res.data._openid)
-      if (app.globalData.openId == commentList._openid || app.globalData.isManager) {
+    } else {
+      const { questionList } = this.data
+      if (app.globalData.openId == questionList[0]._openid || app.globalData.isManager) {
         wx.showActionSheet({
           itemList: ['删除'],
           itemColor: '#FA5151',
-        }).then(() => {
-          wx.showModal({
-            title: '提醒',
-            content: '删除后将无法恢复，相关评论也将被删除，确定删除吗？',
-            cancelText: '取消',
-            confirmText: '删除',
-            cancelColor: '#576B95',
-            confirmColor: '#FA5151',
-          }).then((res) => {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              wx.showLoading({
-                title: '删除中',
-              })
-              let { commenter } = this.data.questionList[0]
-              let index = commenter.findIndex((value) => value.openId == this.data.openId);
-              commenter.splice(index, 1)
-              Promise.all([
-                comment.doc(e.currentTarget.id).get().then(res => {
-                  console.log(res.data)
-                  deleteCommentCloudImage(res.data)
-                }),
-                commentAgain.where({
-                  commentId: e.currentTarget.id
-                }).get().then(res => {
-                  console.log(res.data)
-                  deleteCommentCloudImage(res.data)
-                }),
-                comment.doc(e.currentTarget.id).get().then((res) => {
-                  console.log(res.data.commenter.length)
-                  question.doc(app.globalData.questionId).update({
-                    data: {
-                      commentNum: _.inc(-(res.data.commenter.length + 1)),
-                      commenter
-                    }
+          success: res => {
+            wx.showModal({
+              title: '提醒',
+              content: '删除后将无法恢复，相关评论也将被删除，确定删除吗？',
+              cancelText: '取消',
+              confirmText: '删除',
+              cancelColor: '#576B95',
+              confirmColor: '#FA5151',
+              success(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  app.globalData.questionDelete = true
+                  wx.showLoading({
+                    title: '删除中',
                   })
-                })
-              ]).then(() => {
-                Promise.all([
-                  comment.doc(e.currentTarget.id).remove(),
-                  commentAgain.where({
-                    commentId: e.currentTarget.id
-                  }).remove()
-                ]).then(() => {
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '删除成功',
-                    icon: 'success',
-                    duration: 1000
+                  Promise.all([
+                    question.where({
+                      _id: app.globalData.questionId
+                    }).get().then(res => {
+                      console.log(res.data)
+                      deleteQuestionCloudImage(res.data)
+                    }),
+                    comment.where({
+                      questionId: app.globalData.questionId
+                    }).get().then(res => {
+                      deleteCommentCloudImage(res.data)
+                    }),
+                    commentAgain.where({
+                      questionId: app.globalData.questionId
+                    }).get().then(res => {
+                      deleteCommentCloudImage(res.data)
+                    })
+                  ]).then(() => {
+                    Promise.all([
+                      question.where({
+                        _id: app.globalData.questionId
+                      }).remove(),
+                      comment.where({
+                        questionId: app.globalData.questionId
+                      }).remove(),
+                      commentAgain.where({
+                        questionId: app.globalData.questionId
+                      }).remove()
+                    ]).then(() => {
+                      wx.hideLoading()
+                      wx.showToast({
+                        title: '删除成功',
+                        icon: 'success',
+                        duration: 1500
+                      })
+                      setTimeout(function () { wx.navigateBack(); }, 1500);
+                    })
                   })
-                  this.deleteCommentEnd();
-                })
-              })
-            }
-            else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          })
-
-        }).catch(err => { console.log(err) })
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          },
+          fail(res) {
+            console.log(res.errMsg)
+          }
+        })
       }
       //warn
       else {
@@ -934,17 +823,15 @@ Page({
             console.log(res.tapIndex)
             wx.showModal({
               title: "举报理由",
-              content: "该评论 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
+              content: "该帖 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
               editable: true,
               confirmText: "提交举报",
               confirmColor: "#FA5151",
               success: res => {
-                console.log(res)
                 if (res.confirm) {
-                  comment.doc(e.currentTarget.id).update({
+                  question.doc(app.globalData.questionId).update({
                     data: {
                       warnerDetail: _.addToSet({
-                        isSelf: true,
                         nickName: app.globalData.nickName,
                         _openid: app.globalData.openId,
                         reason: res.content
@@ -970,7 +857,143 @@ Page({
           }
         })
       }
-    })
+    }
+  },
+
+  deleteCommentEnd: function () {
+    const { sortWord } = this.data
+    this.getQuestionandCollectData()
+    if (sortWord == "按最新") this.NewCommentFirst()
+    else if (sortWord == "按最早") this.OldCommentFirst()
+    else this.LikemostCommentFisrt()
+  },
+  //评论右上角三个点
+  threePointTap2: function (e) {
+    if (app.globalData.openId == undefined) {
+      wx.showToast({
+        title: '请前往小程序再操作',
+        icon: 'none'
+      })
+    } else {
+      console.log(e.currentTarget.dataset.index)
+      console.log(this.data.questionList[0].commenter)
+
+      var commentList = [];
+      comment.doc(e.currentTarget.id).get().then((res) => {
+        commentList = res.data
+        console.log(res.data._openid)
+        if (app.globalData.openId == commentList._openid || app.globalData.isManager) {
+          wx.showActionSheet({
+            itemList: ['删除'],
+            itemColor: '#FA5151',
+          }).then(() => {
+            wx.showModal({
+              title: '提醒',
+              content: '删除后将无法恢复，相关评论也将被删除，确定删除吗？',
+              cancelText: '取消',
+              confirmText: '删除',
+              cancelColor: '#576B95',
+              confirmColor: '#FA5151',
+            }).then((res) => {
+              if (res.confirm) {
+                console.log('用户点击确定')
+                wx.showLoading({
+                  title: '删除中',
+                })
+                let { commenter } = this.data.questionList[0]
+                let index = commenter.findIndex((value) => value.openId == this.data.openId);
+                commenter.splice(index, 1)
+                Promise.all([
+                  comment.doc(e.currentTarget.id).get().then(res => {
+                    console.log(res.data)
+                    deleteCommentCloudImage(res.data)
+                  }),
+                  commentAgain.where({
+                    commentId: e.currentTarget.id
+                  }).get().then(res => {
+                    console.log(res.data)
+                    deleteCommentCloudImage(res.data)
+                  }),
+                  comment.doc(e.currentTarget.id).get().then((res) => {
+                    console.log(res.data.commenter.length)
+                    question.doc(app.globalData.questionId).update({
+                      data: {
+                        commentNum: _.inc(-(res.data.commenter.length + 1)),
+                        commenter
+                      }
+                    })
+                  })
+                ]).then(() => {
+                  Promise.all([
+                    comment.doc(e.currentTarget.id).remove(),
+                    commentAgain.where({
+                      commentId: e.currentTarget.id
+                    }).remove()
+                  ]).then(() => {
+                    wx.hideLoading()
+                    wx.showToast({
+                      title: '删除成功',
+                      icon: 'success',
+                      duration: 1000
+                    })
+                    this.deleteCommentEnd();
+                  })
+                })
+              }
+              else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            })
+
+          }).catch(err => { console.log(err) })
+        }
+        //warn
+        else {
+          wx.showActionSheet({
+            itemList: ['举报'],
+            itemColor: '#FA5151',
+            success: res => {
+              console.log(res.tapIndex)
+              wx.showModal({
+                title: "举报理由",
+                content: "该评论 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
+                editable: true,
+                confirmText: "提交举报",
+                confirmColor: "#FA5151",
+                success: res => {
+                  console.log(res)
+                  if (res.confirm) {
+                    comment.doc(e.currentTarget.id).update({
+                      data: {
+                        warnerDetail: _.addToSet({
+                          isSelf: true,
+                          nickName: app.globalData.nickName,
+                          _openid: app.globalData.openId,
+                          reason: res.content
+                        }),
+                        warner: _.addToSet(app.globalData.openId)
+                      }
+                    }).then(() => {
+                      wx.showToast({
+                        title: '感谢举报！管理员会尽快处理',
+                        icon: 'none',
+                        duration: 1500
+                      })
+                    })
+                  }
+                },
+                fail: err => {
+                  console.log(err)
+                }
+              })
+            },
+            fail(res) {
+              console.log(res.errMsg)
+            }
+          })
+        }
+      })
+    }
   },
 
   //0-5 点击[回应]按钮，更新参数answer → 让底部评论框激活focus（弹起）
@@ -1261,43 +1284,58 @@ Page({
     })
     const { _commentBody } = this.data
     let that = this
-    /**
-     * 一、文字审核
-     */
-    wx.cloud.callFunction({
-      name: 'checkContent',
-      data: {
-        txt: _commentBody,
-        scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-      },
-      success(_res) {
-        console.log(_res)
-        if (_res.result.msgR) {
-          const { label } = _res.result.msgR.result
-          const { suggest } = _res.result.msgR.result
-          if (suggest === 'risky') {
-            wx.hideLoading()
-            wx.showToast({
-              title: '危险：包含' + matchLabel(label) + '信息！',
-              icon: 'none'
-            })
-          } else if (suggest === 'review') {
-            wx.hideLoading()
-            wx.showToast({
-              title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
-              icon: 'none'
-            })
-          } else {
-            that.sendContent(_commentBody)
-          }
+
+    userInfo.where({
+      _openid: '{openid}'
+    }).get()
+      .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.hideLoading()
+          wx.navigateTo({
+            url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
+          })
         } else {
-          that.sendContent(_commentBody)
+          /**
+           * 一、文字审核
+           */
+          wx.cloud.callFunction({
+            name: 'checkContent',
+            data: {
+              txt: _commentBody,
+              scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+            },
+            success(_res) {
+              console.log(_res)
+              if (_res.result.msgR) {
+                const { label } = _res.result.msgR.result
+                const { suggest } = _res.result.msgR.result
+                if (suggest === 'risky') {
+                  wx.hideLoading()
+                  wx.showToast({
+                    title: '危险：包含' + matchLabel(label) + '信息！',
+                    icon: 'none'
+                  })
+                } else if (suggest === 'review') {
+                  wx.hideLoading()
+                  wx.showToast({
+                    title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    icon: 'none'
+                  })
+                } else {
+                  that.sendContent(_commentBody)
+                }
+              } else {
+                that.sendContent(_commentBody)
+              }
+            },
+            fail(_res) {
+              console.log('checkContent云函数调用失败', _res)
+            }
+          })
         }
-      },
-      fail(_res) {
-        console.log('checkContent云函数调用失败', _res)
-      }
-    })
+      })
+
+
   },
 
   //0-2 获取键盘高度
@@ -1311,7 +1349,11 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function () {
+  onLoad: function (options) {
+    const { id } = options
+    if (id != undefined) {
+      app.globalData.questionId = id
+    }
     this.getRightTop()
     this.getData()
   },
@@ -1376,6 +1418,13 @@ Page({
     return {
       title: this.data.questionList[0].title,
       path: 'pages/0-0 Show/Show?id=' + app.globalData.questionId
+    }
+  },
+
+  onShareTimeline: function () {
+    return {
+      title: this.data.questionList[0].title,
+      query: 'id=' + app.globalData.questionId
     }
   }
 })
