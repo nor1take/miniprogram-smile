@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    scrollTop : 0,
+    scrollTop: 0,
     tabs: [
       {
         id: 0,
@@ -38,10 +38,7 @@ Page({
     right: 367,
     bottom: 80,
 
-    loading:false
-  },
-  showNumData: {
-    showNum: 0,
+    loading: false
   },
 
   beWatched: function (e) {
@@ -59,12 +56,12 @@ Page({
     })
   },
 
-  tabsTap:function(e){
+  tabsTap: function (e) {
     const index = e.detail.index
     this.setData({
       activeTab: index,
       reachBottom: false,
-      isBottom:false
+      isBottom: false
     })
   },
   swiperChange: function (e) {
@@ -72,7 +69,7 @@ Page({
     this.setData({
       activeTab: index,
       reachBottom: false,
-      isBottom:false
+      isBottom: false
     })
   },
 
@@ -116,8 +113,6 @@ Page({
   },
   getData: function () {
     this.setData({
-
-
       top: app.globalData.top,
       bottom: app.globalData.bottom,
     })
@@ -212,9 +207,9 @@ Page({
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
           questionList[questionIndex].watched = app.globalData.questionView,
-        this.setData({
-          'tabs[2].questionList': questionList
-        })
+          this.setData({
+            'tabs[2].questionList': questionList
+          })
         console.log(this.data.tabs[2].questionList[0])
       }
     }
@@ -232,10 +227,11 @@ Page({
       app.globalData.isAsk = false
     }
 
-    if (this.data.activeTab === 0) {
+    const { activeTab } = this.data
+    if (activeTab === 0) {
       this.updateQuestionListAll()
     }
-    else if (this.data.activeTab === 1) {
+    else if (activeTab === 1) {
       this.updateQuestionListNo()
     }
     else {
@@ -267,7 +263,7 @@ Page({
     this.getData()
   },
 
-  onPullDownRefresh: function () {},
+  onPullDownRefresh: function () { },
 
   /**
    * 页面上拉触底事件的处理函数
@@ -277,24 +273,22 @@ Page({
       reachBottom: true
     })
     console.log('触底')
-    console.log(this.showNumData.showNum)
-    const questionListAll = this.data.tabs[0].questionList
-    const questionListNo = this.data.tabs[1].questionList
-    const questionListYes = this.data.tabs[2].questionList
-    if (this.data.activeTab === 0) {
-      this.showNumData.showNum = questionListAll.length
+    const { activeTab } = this.data
+    const { questionList } = this.data.tabs[activeTab]
+    const showNum = questionList.length
+    if (activeTab === 0) {
       question.where({
         collector: '{openid}'
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false,
           })
           question.where({
             collector: '{openid}'
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('time', 'desc').skip(showNum).get().then(res => {
             let new_data = res.data
-            let old_data = questionListAll
+            let old_data = questionList
             this.setData({
               'tabs[0].questionList': old_data.concat(new_data),
             })
@@ -307,22 +301,21 @@ Page({
         }
       })
     }
-    else if (this.data.activeTab === 1) {
-      this.showNumData.showNum = questionListNo.length
+    else if (activeTab === 1) {
       question.where({
         collector: '{openid}',
-        solved:false
+        solved: false
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false
           })
           question.where({
             collector: '{openid}',
-            solved:false
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+            solved: false
+          }).orderBy('time', 'desc').skip(showNum).get().then(res => {
             let new_data = res.data
-            let old_data = questionListNo
+            let old_data = questionList
             this.setData({
               'tabs[1].questionList': old_data.concat(new_data),
             })
@@ -336,21 +329,20 @@ Page({
       })
     }
     else {
-      this.showNumData.showNum = questionListYes.length
       question.where({
         collector: '{openid}',
         solved: true
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false
           })
           question.where({
             collector: '{openid}',
             solved: true
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('time', 'desc').skip(showNum).get().then(res => {
             let new_data = res.data
-            let old_data = questionListYes
+            let old_data = questionList
             this.setData({
               'tabs[2].questionList': old_data.concat(new_data),
             })

@@ -22,9 +22,6 @@ Page({
     right: 367,
     bottom: 80,
   },
-  showNumData: {
-    showNum: 0,
-  },
 
   //0-1 搜索框的输入状态，更新searchList数组数据
   input: function (e) {
@@ -118,7 +115,7 @@ Page({
    */
   onShow: function () {
     console.log(app.globalData)
-    const  {searchList}  = this.data
+    const { searchList } = this.data
     const { questionIndex } = app.globalData
     if (app.globalData.isClick) {
       if (app.globalData.questionDelete) {
@@ -171,56 +168,63 @@ Page({
       reachBottom: true
     })
     console.log('触底')
-    console.log(this.showNumData.showNum)
-    const questionListAll = this.data.searchList
+    const questionList = this.data.searchList
     const value = this.data.inputValue
-    this.showNumData.showNum = questionListAll.length
-    question.where(_.or([
-      {
-        title: db.RegExp({
-          regexp: value,
-          options: 'i',
-        })
-      },
-      {
-        body: db.RegExp({
-          regexp: value,
-          options: 'i',
-        }),
-      },
-      {
-        tag: db.RegExp({
-          regexp: value,
-          options: 'i',
-        }),
-      }
-    ])).count().then((res) => {
-      if (this.showNumData.showNum < res.total) {
+    const showNum = questionList.length
+    question.where(
+      _.or([
+        {
+          time: _.lte(questionList[0].time),
+          title: db.RegExp({
+            regexp: value,
+            options: 'i',
+          })
+        },
+        {
+          time: _.lte(questionList[0].time),
+          body: db.RegExp({
+            regexp: value,
+            options: 'i',
+          }),
+        },
+        {
+          time: _.lte(questionList[0].time),
+          tag: db.RegExp({
+            regexp: value,
+            options: 'i',
+          }),
+        }
+      ])
+    ).count().then((res) => {
+      if (showNum < res.total) {
         this.setData({
           isBottom: false,
         })
         question.where(_.or([
           {
+            time: _.lt(questionList[showNum - 1].time),
             title: db.RegExp({
               regexp: value,
               options: 'i',
             })
           },
           {
+            time: _.lt(questionList[showNum - 1].time),
             body: db.RegExp({
               regexp: value,
               options: 'i',
             }),
           },
           {
+            time: _.lt(questionList[showNum - 1].time),
             tag: db.RegExp({
               regexp: value,
               options: 'i',
             }),
           }
-        ])).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+        ])).orderBy('time', 'desc').get().then(res => {
           let new_data = res.data
-          let old_data = questionListAll
+          let old_data = questionList
           this.setData({
             searchList: old_data.concat(new_data),
           })

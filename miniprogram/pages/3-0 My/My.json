@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "tabs":"../../components/tabs/tabs",
-    "return":"../../components/return-withTab/return-withTab"
+    "tabs": "../../components/tabs/tabs",
+    "return": "../../components/return-withTab/return-withTab"
   }
 }

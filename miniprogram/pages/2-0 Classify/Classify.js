@@ -11,16 +11,16 @@ Page({
   data: {
     activeTab: 0,
     tabs: [
-      { id: 0, name: '自定义', questionList: [], isScrollTop: false },
-      { id: 1, name: '我捡到…', questionList: [], isScrollTop: false },
-      { id: 2, name: '我丢了…', questionList: [], isScrollTop: false },
-      { id: 3, name: '求(组队/资料…)', questionList: [], isScrollTop: false },
-      { id: 4, name: '学习', questionList: [], isScrollTop: false },
-      { id: 5, name: '生活', questionList: [], isScrollTop: false },
-      { id: 6, name: '影视', questionList: [], isScrollTop: false },
-      { id: 7, name: '读书', questionList: [], isScrollTop: false },
-      { id: 8, name: '游戏', questionList: [], isScrollTop: false },
-      { id: 9, name: '音乐', questionList: [], isScrollTop: false },
+      { id: 0, name: '自定义', questionList: [] },
+      { id: 4, name: '学习', questionList: [] },
+      { id: 5, name: '生活', questionList: [] },
+      { id: 6, name: '读书', questionList: [] },
+      { id: 7, name: '摄影', questionList: [] },
+      { id: 8, name: '音乐', questionList: [] },
+      { id: 9, name: '游戏', questionList: [] },
+      { id: 3, name: '求(组队/资料…)', questionList: [] },
+      { id: 1, name: '我捡到…', questionList: [] },
+      { id: 2, name: '我丢了…', questionList: [] },
     ],
 
     colorGray: '#E7E7E7',
@@ -33,9 +33,6 @@ Page({
     left: 281,
     right: 367,
     bottom: 80,
-  },
-  showNumData: {
-    showNum: 0,
   },
 
   beWatched: function (e) {
@@ -306,19 +303,21 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   loadmore: function (index) {
-    const questionList = this.data.tabs[index].questionList
-    this.showNumData.showNum = questionList.length
+    const {questionList} = this.data.tabs[index]
+    const showNum = questionList.length
     if (index === 0) {
       question.where({
+        time: _.lte(questionList[0].time),
         tagId: 0
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false,
           })
           question.where({
+            time: _.lt(questionList[showNum - 1].time),
             tagId: 0
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
             let old_data = questionList
             this.setData({
@@ -335,16 +334,18 @@ Page({
     } else {
       const { name } = this.data.tabs[index]
       question.where({
+        time: _.lte(questionList[0].time),
         tag: name
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false,
           })
           //question条件修改 2
           question.where({
+            time: _.lt(questionList[showNum - 1].time),
             tag: name
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
             let old_data = questionList
             if (index === 1) {

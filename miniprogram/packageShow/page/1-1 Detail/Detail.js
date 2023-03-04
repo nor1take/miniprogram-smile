@@ -205,7 +205,7 @@ Page({
   },
   data: {
     isLogin: false,
-    // animationData: {},
+
     isFold: true,
     sortWord: "按最新",
     fileID: [],
@@ -273,7 +273,7 @@ Page({
     comment.where({
       questionId: app.globalData.questionId
       /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
-    }).orderBy('likerNum', 'desc').orderBy('time', 'asc').
+    }).orderBy('likerNum', 'desc').orderBy('time', 'desc').
       get().then(res => {
         this.setData({
           commentList: res.data,
@@ -322,7 +322,7 @@ Page({
         }
       })
       .catch((err) => {
-        console.error(err)
+        console.log(err)
       })
   },
   sort: function () {
@@ -330,9 +330,27 @@ Page({
     let word1 = ['“最新回应”优先', '✓ “最早回应”优先', '“赞数最多”优先'];
     let word2 = ['“最新回应”优先', '“最早回应”优先', '✓ “赞数最多”优先'];
     const { sortWord } = this.data
-    if (sortWord == '按最新') this.showActionSheetChange(word0)
-    else if (sortWord == '按最早') this.showActionSheetChange(word1)
-    else this.showActionSheetChange(word2)
+    if (sortWord == '按最新') {
+      this.showActionSheetChange(word0)
+      this.setData({
+        reachBottom: false,
+        isBottom: false
+      })
+    }
+    else if (sortWord == '按最早') {
+      this.showActionSheetChange(word1)
+      this.setData({
+        reachBottom: false,
+        isBottom: false
+      })
+    }
+    else {
+      this.showActionSheetChange(word2)
+      this.setData({
+        reachBottom: false,
+        isBottom: false
+      })
+    }
   },
 
 
@@ -1466,12 +1484,105 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    this.setData({
+      reachBottom: true
+    })
+    console.log('触底')
+    const { sortWord } = this.data
+    const { commentList } = this.data
+    const showNum = commentList.length
+
+    if (sortWord == "按最新") {
+      comment.where({
+        time: _.lte(commentList[0].time),
+        questionId: app.globalData.questionId
+        /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+      }).orderBy('time', 'desc').count().then((res) => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false,
+          })
+          comment.where({
+            time: _.lt(commentList[showNum - 1].time),
+            questionId: app.globalData.questionId
+            /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+          }).orderBy('time', 'desc').get().then(res => {
+            let new_data = res.data
+            let old_data = commentList
+            this.setData({
+              commentList: old_data.concat(new_data),
+            })
+          })
+        } else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    }
+    else if (sortWord == "按最早") {
+      comment.where({
+        time: _.gte(commentList[0].time),
+        questionId: app.globalData.questionId
+        /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+      }).orderBy('time', 'asc').count().then(res => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false,
+          })
+          comment.where({
+            time: _.gt(commentList[showNum - 1].time),
+            questionId: app.globalData.questionId
+            /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+          }).orderBy('time', 'asc').get().then(res => {
+            let new_data = res.data
+            let old_data = commentList
+            this.setData({
+              commentList: old_data.concat(new_data),
+            })
+          })
+        } else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    } else {
+      comment.where({
+        time: _.lte(commentList[0].time),
+        questionId: app.globalData.questionId
+        /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+      }).orderBy('likerNum', 'desc').orderBy('time', 'desc').count().then(res => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false,
+          })
+          comment.where({
+            time: _.lt(commentList[showNum - 1].time),
+            questionId: app.globalData.questionId
+            /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+          }).orderBy('likerNum', 'desc').orderBy('time', 'desc').
+            get().then(res => {
+              let new_data = res.data
+              let old_data = commentList
+              this.setData({
+                commentList: old_data.concat(new_data),
+              })
+            })
+        } else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    }
   },
 
   /**

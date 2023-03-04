@@ -44,7 +44,6 @@ Page({
       { id: 5, title: '', body: '', commentNum: 0, watched: 0 },
     ]
   },
-  showNumData: { showNum: 0, },
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
 
@@ -428,18 +427,21 @@ Page({
       reachBottom: true
     })
     console.log('触底')
-    console.log(this.showNumData.showNum)
-    const questionListAll = this.data.questionList
-    this.showNumData.showNum = questionListAll.length
+    const questionList = this.data.questionList
+    const showNum = questionList.length
     if (this.data.sortWord == "最新发帖") {
-      question.count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+      question.where({
+        time: _.lte(questionList[0].time)
+      }).count().then((res) => {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false,
           })
-          question.orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          question.where({
+            time: _.lt(questionList[showNum - 1].time)
+          }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
-            let old_data = questionListAll
+            let old_data = questionList
             this.setData({
               questionList: old_data.concat(new_data),
             })
@@ -454,17 +456,19 @@ Page({
     }
     else {
       question.where({
+        answerTime: _.lte(questionList[0].answerTime),
         commenter: _.neq([])
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false,
           })
           question.where({
-            commenter: _.neq([])
-          }).orderBy('answerTime', 'desc').skip(this.showNumData.showNum).get().then(res => {
+            answerTime: _.lt(questionList[showNum - 1].answerTime),
+            commenter: _.neq([]),
+          }).orderBy('answerTime', 'desc').get().then(res => {
             let new_data = res.data
-            let old_data = questionListAll
+            let old_data = questionList
             this.setData({
               questionList: old_data.concat(new_data),
             })

@@ -21,7 +21,6 @@ Page({
 
     questionList: []
   },
-  showNumData: { showNum: 0, },
 
   beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
@@ -136,16 +135,15 @@ Page({
       reachBottom: true
     })
     console.log('触底')
-    console.log(this.showNumData.showNum)
-    const questionListAll = this.data.questionList
-    this.showNumData.showNum = questionListAll.length
+    const { questionList } = this.data
+    const showNum = questionList.length
 
     question.where({
       commenter: {
         openId: 'openid'
       }
     }).count().then((res) => {
-      if (this.showNumData.showNum < res.total) {
+      if (showNum < res.total) {
         this.setData({
           isBottom: false,
         })
@@ -153,9 +151,9 @@ Page({
           commenter: {
             openId: 'openid'
           }
-        }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+        }).orderBy('time', 'desc').skip(showNum).get().then(res => {
           let new_data = res.data
-          let old_data = questionListAll
+          let old_data = questionList
           this.setData({
             questionList: old_data.concat(new_data),
           })

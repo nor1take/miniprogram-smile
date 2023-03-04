@@ -40,9 +40,6 @@ Page({
 
     loading: false
   },
-  showNumData: {
-    showNum: 0,
-  },
 
   gotoDetail: function (e) {
     console.log(e.currentTarget.id)
@@ -255,26 +252,27 @@ Page({
       reachBottom: true
     })
     console.log('触底')
-    console.log(this.showNumData.showNum)
-    const questionListAll = this.data.tabs[0].questionList
-    const questionListNo = this.data.tabs[1].questionList
-    const questionListYes = this.data.tabs[2].questionList
-    if (this.data.activeTab === 0) {
-      this.showNumData.showNum = questionListAll.length
+    const { activeTab } = this.data
+    const { questionList } = this.data.tabs[activeTab]
+    const showNum = questionList.length
+
+    if (activeTab === 0) {
       question.where({
+        time: _.lte(questionList[0].time),
         _openid: app.globalData.openId,
         commenter: _.neq([])
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false,
           })
           question.where({
+            time: _.lt(questionList[showNum - 1].time),
             _openid: app.globalData.openId,
             commenter: _.neq([])
-          }).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
-            let old_data = questionListAll
+            let old_data = questionList
             this.setData({
               'tabs[0].questionList': old_data.concat(new_data),
             })
@@ -287,28 +285,23 @@ Page({
         }
       })
     }
-    else if (this.data.activeTab === 1) {
-      this.showNumData.showNum = questionListNo.length
-      commentAgain.where(_.and([{
-        postOpenId: app.globalData.openId
-      },
-      {
+    else if (activeTab === 1) {
+      commentAgain.where({
+        time: _.lte(questionList[0].time),
+        postOpenId: app.globalData.openId,
         newOpenId: _.neq(app.globalData.openId)
-      }
-      ])).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+      }).count().then((res) => {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false
           })
-          commentAgain.where(_.and([{
-            postOpenId: app.globalData.openId
-          },
-          {
+          commentAgain.where({
+            time: _.lt(questionList[showNum - 1].time),
+            postOpenId: app.globalData.openId,
             newOpenId: _.neq(app.globalData.openId)
-          }
-          ])).orderBy('time', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
-            let old_data = questionListNo
+            let old_data = questionList
             this.setData({
               'tabs[1].questionList': old_data.concat(new_data),
             })
@@ -321,22 +314,23 @@ Page({
         }
       })
     }
-    else{
-      this.showNumData.showNum = questionListYes.length
+    else {
       comment.where({
+        likeTime: _.lte(questionList[0].likeTime),
         _openid: app.globalData.openId,
         liker: _.neq([])
       }).count().then((res) => {
-        if (this.showNumData.showNum < res.total) {
+        if (showNum < res.total) {
           this.setData({
             isBottom: false
           })
           comment.where({
+            likeTime: _.lt(questionList[showNum - 1].likeTime),
             _openid: app.globalData.openId,
             liker: _.neq([])
-          }).orderBy('likeTime', 'desc').skip(this.showNumData.showNum).get().then(res => {
+          }).orderBy('likeTime', 'desc').get().then(res => {
             let new_data = res.data
-            let old_data = questionListYes
+            let old_data = questionList
             this.setData({
               'tabs[2].questionList': old_data.concat(new_data),
             })
