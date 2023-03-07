@@ -79,7 +79,7 @@
 }
 .buttonArea{
   margin-top: 16px;
-  height: 1000rpx;
+  height: fit-content;
   /* border: 1rpx solid black; */
 }
 .button{
@@ -122,6 +122,12 @@ button::after {
 .hoverClass{
   background-color: #dddddd;
 }
+.version{
+  font-weight: lighter;
+  font-size: smaller;
+  color: #acacac;
+  margin: 32rpx;
+}
 
 @media (prefers-color-scheme: dark){
   .topBlock{
@@ -148,5 +154,8 @@ button::after {
   }
   .hoverClass{
     background-color: black;
+  }
+  .version{
+    color: #7b7b7b;
   }
 }

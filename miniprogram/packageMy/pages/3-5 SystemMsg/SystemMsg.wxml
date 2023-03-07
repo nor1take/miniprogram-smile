@@ -2,15 +2,32 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord="系统通知 · Note"></return>
 
 <view class="background" wx:for="{{systemMsg}}" wx:key="_id">
-  <view style="display: flex; justify-content: space-between; align-items:center;">
-    <view class="word">
-      <view class="body">{{item.title}}</view>
-      <view class="title">{{item.body}}</view>
-    </view>
+
+  <view class="word">
+    <view class="body">{{item.title}}</view>
+    <view class="title">{{item.body}}</view>
   </view>
+
+  <block wx:if="{{item.postList[0].postId != ''}}">
+    <view wx:for="{{item.postList}}" wx:key="id" style="display: flex;">
+      <view bindtap="postTap" data-id="{{item.postId}}" class="postBackground">
+        <view class="postTitle">{{item.postTitle}}</view>
+      </view>
+    </view>
+  </block>
+
+
   <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
     <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="id">
-      <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+      <block wx:if="{{item.image.length>2}}">
+        <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 175rpx; height: 175rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
+      </block>
+      <block wx:elif="{{item.image.length == 2}}">
+        <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 265rpx; height: 265rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
+      </block>
+      <block wx:else="">
+        <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+      </block>
     </block>
   </view>
   <view class="last">{{filter.timeString(item.time)}}</view>

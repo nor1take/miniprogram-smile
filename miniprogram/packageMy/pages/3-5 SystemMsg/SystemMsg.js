@@ -3,6 +3,7 @@ const db = wx.cloud.database()
 const _ = db.command
 const systemMsg = db.collection('systemMsg')
 const userInfo = db.collection('userInfo')
+const question = db.collection('question')
 Page({
 
   /**
@@ -15,6 +16,19 @@ Page({
     bottom: 80,
   },
 
+  postTap: function (e) {
+    const {id} = e.currentTarget.dataset    
+    app.globalData.questionId = id
+
+    wx.navigateTo({
+      url: '../../../packageShow/page/1-1 Detail/Detail',
+    })
+    question.doc(id).update({
+      data: {
+        watched: _.inc(1)
+      }
+    })
+  },
   imageTap: function (e) {
     console.log(e.currentTarget.dataset.imagelist)
     let { imagelist } = e.currentTarget.dataset
@@ -87,16 +101,16 @@ Page({
   /**
  * 用户点击右上角分享
  */
-onShareAppMessage: function () {
-  return {
-    title: '微校Smile - 系统通知·Note',
-    path: 'packageMy/pages/3-5 SystemMsg/SystemMsg'
-  }
-},
+  onShareAppMessage: function () {
+    return {
+      title: '微校Smile - 系统通知·Note',
+      path: 'packageMy/pages/3-5 SystemMsg/SystemMsg'
+    }
+  },
 
-onShareTimeline: function () {
-  return {
-    title: '微校Smile - 系统通知·Note'
+  onShareTimeline: function () {
+    return {
+      title: '微校Smile - 系统通知·Note'
+    }
   }
-}
 })

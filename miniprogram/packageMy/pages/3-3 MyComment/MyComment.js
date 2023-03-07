@@ -2,6 +2,7 @@ const app = getApp()
 const db = wx.cloud.database()
 const _ = db.command
 const question = db.collection('question')
+const comment = db.collection('comment')
 
 Page({
   /**
@@ -36,10 +37,9 @@ Page({
     })
   },
   getNewData: function () {
-    question.where({
-      commenter: {
-        openId: app.globalData.openId
-      }
+    comment.where({
+      _openid: app.globalData.openId,
+      posterId :_.neq(app.globalData.openId)
     }).orderBy('time', 'desc').get().then(res => {
       console.log(res.data)
       this.setData({
@@ -74,35 +74,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const { questionList } = this.data
-    const { questionIndex } = app.globalData
-    if (app.globalData.isAsk) {
-      this.getData()
-      wx.pageScrollTo({
-        scrollTop: 0,
-        duration: 1000
-      })
-    }
-    else if (app.globalData.isClick) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
-        this.setData({
-          questionList
-        })
-      }
-      else {
-        console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          questionList
-        })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
   },
 
   /**
@@ -138,19 +109,17 @@ Page({
     const { questionList } = this.data
     const showNum = questionList.length
 
-    question.where({
-      commenter: {
-        openId: 'openid'
-      }
+    comment.where({
+      _openid: app.globalData.openId,
+      posterId :_.neq(app.globalData.openId)
     }).count().then((res) => {
       if (showNum < res.total) {
         this.setData({
           isBottom: false,
         })
-        question.where({
-          commenter: {
-            openId: 'openid'
-          }
+        comment.where({
+          _openid: app.globalData.openId,
+          posterId :_.neq(app.globalData.openId)
         }).orderBy('time', 'desc').skip(showNum).get().then(res => {
           let new_data = res.data
           let old_data = questionList

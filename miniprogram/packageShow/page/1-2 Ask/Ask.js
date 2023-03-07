@@ -330,6 +330,9 @@ Page({
                     image: that.data.fileID,
                     title: title,
                     body: body,
+                    postList: [
+                      { postId: '', postTitle: '' }
+                    ],
                   }
                 }).then((res) => {
                   /**

@@ -1130,6 +1130,9 @@ Page({
               time: d,
 
               questionId: app.globalData.questionId,
+              questionTitle: this.data.questionList[0].title,
+              posterId: this.data.questionList[0]._openid,
+
               body: _commentBody,
               commentNum: 0,
               nickname: app.globalData.nickName,
@@ -1182,6 +1185,9 @@ Page({
               time: d,
 
               questionId: app.globalData.questionId,
+              questionTitle: this.data.questionList[0].title,
+              posterId: this.data.questionList[0]._openid,
+
               body: _commentBody,
               commentNum: 0,
               nickname: app.globalData.nickName,
@@ -1302,7 +1308,6 @@ Page({
     })
     const { _commentBody } = this.data
     let that = this
-
     userInfo.where({
       _openid: '{openid}'
     }).get()
@@ -1316,11 +1321,6 @@ Page({
           /**
            * 一、文字审核
            */
-          question.doc(app.globalData.questionId).update({
-            data: {
-              watched: _.inc(1)
-            }
-          }).then(res => { console.log(res) }).catch(err => { console.log(err) })
           wx.cloud.callFunction({
             name: 'checkContent',
             data: {
@@ -1383,6 +1383,11 @@ Page({
             url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
           })
         } else {
+          question.doc(app.globalData.questionId).update({
+            data: {
+              watched: _.inc(1)
+            }
+          }).then(res => { console.log(res) }).catch(err => { console.log(err) })
           this.setData({
             nickName: res.data[0].nickName,
             avatarUrl: res.data[0].avatarUrl,

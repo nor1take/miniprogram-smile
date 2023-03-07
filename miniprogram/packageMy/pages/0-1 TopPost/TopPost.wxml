@@ -25,7 +25,7 @@
 
 <view class="title_help" bindtap="help" data-id='1'>
   发帖
-  <image wx:if="{{currentId===3}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
+  <image wx:if="{{currentId===1}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===1}}" class="body_help">
@@ -38,7 +38,7 @@
 
 <view class="title_help" bindtap="help" data-id='2'>
   帖子左上角颜色圆点说明
-  <image wx:if="{{currentId===5}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
+  <image wx:if="{{currentId===2}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===2}}" class="body_help">
@@ -51,7 +51,7 @@
 
 <view class="title_help" bindtap="help" data-id='3'>
   其他主要功能
-  <image wx:if="{{currentId===1}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
+  <image wx:if="{{currentId===3}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
   <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
 </view>
 <view wx:if="{{currentId===3}}" class="body_help">

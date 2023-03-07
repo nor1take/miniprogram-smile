@@ -2,35 +2,22 @@
 
 <return top="{{top}}" bottom="{{bottom}}" topWord="我的回应"></return>
 <block wx:if="{{questionList.length == 0}}">
-    <view class="bottom" style="margin-top: 40%;">你还没有回应过别人的帖子哦~</view>
+  <view class="bottom" style="margin-top: 40%;">你还没有回应过别人的帖子哦~</view>
 </block>
-<view class="background" hover-class="hoverClass" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
 
-  <view style="display: flex; justify-content: space-between; align-items:center;">
-    <view class="word" style="align-items: stretch; height:fit-content">
-      <view class="tag">
-        <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
-        <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
-        <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
-        {{item.tag}}
-      </view>
-      <view class="title">{{item.title}}</view>
-      <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
-      <view class="last">
-        <block wx:if="{{menuWord === '最新回应' && item.Ayear!='' }}">
-          <text>{{filter.timeString(item.answerTime)}}</text> 回应 ·
-        </block>
-        <block wx:else>
-          <text>{{filter.timeString(item.time)}}</text> ·
-        </block>
-        <text class="watched">{{item.watched}} 浏览</text> ·
-        <text class="watched">{{item.collectNum}} 关注</text>
-      </view>
-    </view>
-    <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
-      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
+
+<view class="commentBackground" hover-class="hoverClass" wx:for="{{questionList}}" wx:key="_id" id="{{item.questionId}}" data-index="{{index}}" bindtap="beWatched">
+  <view class="last">{{filter.timeString(item.time)}}，你的回应：</view>
+  <view class="title">{{filter.abbreviation(item.body)}}<text wx:if="{{item.image_upload[0]}}">[图片评论]</text></view>
+
+  <view style="display: flex;">
+    <view class="postBackground">
+      <view class="postTitle">{{item.questionTitle}}</view>
     </view>
   </view>
+
+
 </view>
+
 <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
 <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
