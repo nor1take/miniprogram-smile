@@ -351,9 +351,7 @@ Page({
       startTime: d
     })
 
-    console.log(app.globalData.stayTime / 1000 / 60)
-
-    if (app.globalData.stayTime / 1000 / 60 > 1) {
+    if (app.globalData.stayTime / 1000 / 10 > 1) {
       app.globalData.stayTime = 0
       this.getCurrentMessageNum()
     }

@@ -40,7 +40,7 @@
       <view class="nickName">{{item.nickName}}
         <block wx:if="{{item.isAuthentic}}">
           <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
-          <text style="color: #07C160;">[已认证]</text>
+          <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
         </block>
       </view>
     </view>
@@ -98,18 +98,24 @@
     <!-- 一、头像 昵称 右上角[...] -->
     <view class="commentTop" style="display: flex; justify-content: space-between; align-items: center;">
       <view class="userInfo">
-        <image src="{{item.image}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
-        <view class="nickName">{{item.nickname}}
-          <block wx:if="{{item.isAuthentic}}">
-            <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
-            <text style="color: #07C160;">[已认证]</text>
-          </block>
-        </view>
+        <block wx:if="{{item.isUnknown}}">
+          <image src="{{defaultAvatarUrl}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
+          <view class="nickName" style="color: #c87d2f;">[匿名发帖用户]</view>
+        </block>
+        <block wx:else="">
+          <image src="{{item.image}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
+          <view class="nickName">{{item.nickname}}
+            <block wx:if="{{item.isAuthentic}}">
+              <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
+              <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+            </block>
+          </view>
+        </block>
       </view>
       <image src="../../../icon/more-fill.png" style="height:20px; width: 20px; margin-right: 32rpx;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></image>
     </view>
 
-    <view class="commentBodyContainer" hover-class="hoverClass" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" bindtap="commentAgain">
+    <view class="commentBodyContainer" hover-class="hoverClass" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
       <!-- 二、评论文字和图片-->
       <text class="commentBody" user-select="true">{{item.body}}</text>
       <view wx:if="{{item.image_upload[0]}}">
@@ -138,7 +144,7 @@
           </view>
 
           <!-- 评论按钮 -->
-          <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" bindtap="commentAgain">
+          <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
             <image class="LikeCommentImage" src="../../../icon/comment.png" mode="widthFix"></image>
             {{item.commentNum}}
           </view>
@@ -147,10 +153,23 @@
     </view>
     <!-- 评论的评论/评论的评论的评论 -->
     <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:for-index="idx" wx:key="_id">
-      <view class="commentAgainBackground" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
+      <view class="commentAgainBackground" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
         <view class="first">
-          <image src="{{commentAgain.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
-          <text class="commentAgainnickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>回复<text class="commentAgainnickName" style="margin-left: 8rpx;">@{{commentAgain.postNickName}}</text>
+          <block wx:if="{{commentAgain.isUnknown}}">
+            <image src="{{defaultAvatarUrl}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
+            <view class="nickName" style="color: #c87d2f;">[匿名发帖用户]</view>
+          </block>
+          <block wx:else="">
+            <image src="{{commentAgain.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
+            <text class="commentAgainnickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
+            <block wx:if="{{commentAgain.isAuthentic}}">
+              <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
+              <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+            </block>
+          </block>
+          回复
+          <text wx:if="{{commentAgain.postUnknown}}" class="commentAgainnickName" style="margin-left: 8rpx；"> @<text style="color: #c87d2f;">[匿名发帖用户]</text></text>
+          <text wx:else="" class="commentAgainnickName" style="margin-left: 8rpx;">@{{commentAgain.postNickName}}</text>
         </view>
         <view class="second">
           <text class="commentAgainBody" user-select="true">{{commentAgain.commentAgainBody}}</text>

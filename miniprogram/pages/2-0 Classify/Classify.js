@@ -12,6 +12,7 @@ Page({
     activeTab: 0,
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
+      { id: 1, name: '#1 睡前记录3件好事', questionList: [] },
       { id: 4, name: '学习', questionList: [] },
       { id: 5, name: '生活', questionList: [] },
       { id: 1, name: '我捡到…', questionList: [] },
@@ -22,6 +23,10 @@ Page({
       { id: 8, name: '音乐', questionList: [] },
       { id: 9, name: '游戏', questionList: [] },
     ],
+
+    hasTheme: true,
+    themeTitle:'每天晚上睡觉之前写下3件好事',
+    themeBody:'根据塞利格曼的《持续的幸福》一书，每天晚上睡觉之前写下3件好事，仅持续一周，在之后的半年里就出现了幸福度增强、忧郁度减轻的结果。可以写具体一点，时间、地点、什么原因令你来开心。仔细回想每天令你开心幸福的事，越关注幸福，就会越感到幸福～',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',

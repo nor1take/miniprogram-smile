@@ -6,6 +6,7 @@ const comment = db.collection('comment')
 const commentAgain = db.collection('commentAgain')
 const traceId = db.collection('traceId')
 const userInfo = db.collection('userInfo')
+const deleteRecord = db.collection('deleteRecord')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -204,6 +205,7 @@ Page({
     pureDataPattern: /^_/
   },
   data: {
+    defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
     isLogin: false,
 
     isFold: true,
@@ -492,8 +494,11 @@ Page({
     console.log('关注 cancel', questionList[0].collector)
     // questionList[0].collector.push(app.globalData.openId)
     let collectorIndex = questionList[0].collector.indexOf(app.globalData.openId)
-    questionList[0].collector.splice(collectorIndex, 1)
-    collectNum--;
+    if (collectorIndex != -1) {
+      questionList[0].collector.splice(collectorIndex, 1)
+      collectNum--;
+    }
+
     this.setData({
       questionList,
       collectNum
@@ -525,7 +530,8 @@ Page({
     console.log(this.data.commentList)
     const { commentList } = this.data
     let likerIndex = commentList[commentIndex].liker.indexOf(app.globalData.openId)
-    commentList[commentIndex].liker.splice(likerIndex, 1)
+    if (likerIndex != -1)
+      commentList[commentIndex].liker.splice(likerIndex, 1)
     let likerNum = commentList[commentIndex].liker.length
     this.setData({
       commentList
@@ -581,6 +587,7 @@ Page({
       postNickName: e.currentTarget.dataset.nickname,
       _commentId: e.currentTarget.id,
       _postOpenId: e.currentTarget.dataset.openid,
+      postUnknown: e.currentTarget.dataset.unknown
     })
   },
 
@@ -593,6 +600,7 @@ Page({
       postNickName: e.currentTarget.dataset.newnickname,
       _commentId: e.currentTarget.id,
       _postOpenId: e.currentTarget.dataset.openid,
+      postUnknown: e.currentTarget.dataset.unknown
     })
   },
   //0-4-2 评论的评论的评论
@@ -613,11 +621,20 @@ Page({
         const { index } = e.currentTarget.dataset
         const { commenter } = this.data.commentList[index]
         console.log(index, idx)
-        commenter.splice(idx, 1);
+
+        if (index != -1) {
+          const deletedComment = commenter.splice(idx, 1);
+          deleteRecord.add({
+            data: {
+              AComment: true,
+              list: deletedComment
+            }
+          })
+        }
         Promise.all([
           comment.doc(e.currentTarget.id).update({
             data: {
-              commenter,
+              commenter: commenter,
               commentNum: _.inc(-1)
             }
           }),
@@ -628,7 +645,7 @@ Page({
           }),
           commentAgain.where({
             commentId: e.currentTarget.id,
-            _openid: app.globalData.openId,
+            newOpenId: app.globalData.openId,
             postOpenId: e.currentTarget.dataset.newopenid,
             commentAgainBody: e.currentTarget.dataset.commentagainbody,
           }).remove()
@@ -784,6 +801,12 @@ Page({
                     title: '删除中',
                   })
                   Promise.all([
+                    deleteRecord.add({
+                      data: {
+                        APost: true,
+                        list: questionList[0]
+                      }
+                    }),
                     question.where({
                       _id: app.globalData.questionId
                     }).get().then(res => {
@@ -920,11 +943,19 @@ Page({
                 })
                 let { commenter } = this.data.questionList[0]
                 let index = commenter.findIndex((value) => value.openId == this.data.openId);
-                commenter.splice(index, 1)
+                if (index != -1) {
+                  commenter.splice(index, 1)
+                }
                 Promise.all([
                   comment.doc(e.currentTarget.id).get().then(res => {
                     console.log(res.data)
-                    deleteCommentCloudImage(res.data)
+                    deleteRecord.add({
+                      data: {
+                        AComment: true,
+                        list: res.data
+                      }
+                    }),
+                      deleteCommentCloudImage(res.data)
                   }),
                   commentAgain.where({
                     commentId: e.currentTarget.id
@@ -937,7 +968,7 @@ Page({
                     question.doc(app.globalData.questionId).update({
                       data: {
                         commentNum: _.inc(-(res.data.commenter.length + 1)),
-                        commenter
+                        commenter: commenter
                       }
                     })
                   })
@@ -962,7 +993,6 @@ Page({
                 console.log('用户点击取消')
               }
             })
-
           }).catch(err => { console.log(err) })
         }
         //warn
@@ -1108,10 +1138,21 @@ Page({
    */
   sendContent: function (_commentBody) {
     let that = this
-    var d = new Date().getTime();
+    var d = new Date();
     if (that.data.tapAnswerButton) {
+      d = d.getTime()
       question.doc(app.globalData.questionId).get().then(res => {
         if (res.data._openid != that.data.openId) {
+          wx.cloud.callFunction({
+            name: 'sendMsg',
+            data: {
+              receiver: that.data.questionList[0]._openid,
+              questionId: app.globalData.questionId, 
+              sender: app.globalData.nickName, 
+              commentBody: _commentBody, 
+              postTitle: that.data.questionList[0].title
+            }
+          })
           question.doc(app.globalData.questionId).update({
             data: {
               answerTime: d,
@@ -1184,6 +1225,7 @@ Page({
               //时间
               time: d,
 
+              isUnknown: res.data.unknown,
               questionId: app.globalData.questionId,
               questionTitle: this.data.questionList[0].title,
               posterId: this.data.questionList[0]._openid,
@@ -1236,10 +1278,14 @@ Page({
       })
     } else {
       question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
+      let isUnknown = false;
+      if (app.globalData.openId == this.data.questionList[0]._openid) {
+        isUnknown = this.data.questionList[0].unknown
+      }
       commentAgain.add({
         data: {
           answerTime: d,
-
+          isUnknown,
           commentAgainBody: _commentBody,
           newOpenId: app.globalData.openId,
           postOpenId: that.data._postOpenId,
@@ -1269,21 +1315,26 @@ Page({
               /**
                * 3、更新图片列表
                */
+
               comment.doc(that.data._commentId).update({
                 data: {
                   commentNum: _.inc(1),
                   commenter: _.push({
+                    isUnknown,
                     avatarUrl: app.globalData.avatarUrl,
                     newOpenId: app.globalData.openId,
                     postOpenId: that.data._postOpenId,
                     newNickName: app.globalData.nickName,
                     postNickName: that.data.postNickName,
                     commentAgainBody: _commentBody,
+                    isAuthentic: app.globalData.isAuthentic,
+                    postUnknown: that.data.postUnknown,
 
                     image_upload: res,
                   })
                 }
               })
+
               commentAgain.doc(_id).update({
                 data: {
                   image_upload: res
@@ -1357,8 +1408,6 @@ Page({
           })
         }
       })
-
-
   },
 
   //0-2 获取键盘高度
@@ -1496,12 +1545,13 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    const { commentList } = this.data
+    if (commentList.length == 0) return;
     this.setData({
       reachBottom: true
     })
     console.log('触底')
     const { sortWord } = this.data
-    const { commentList } = this.data
     const showNum = commentList.length
 
     if (sortWord == "按最新") {

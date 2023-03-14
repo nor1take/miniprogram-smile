@@ -3,6 +3,13 @@
   <block wx:for="{{tabs}}" wx:key="id">
     <view slot="tab-content-{{index}}">
       <view style="width:100%; height: {{bottom}}px;"></view>
+
+      <block wx:if="{{index == 1 && hasTheme}}">
+        <view class="themeContainer">
+          <view class="themeTitle">{{themeTitle}}</view>
+          <view class="themeBody">{{themeBody}}</view>
+        </view>
+      </block>
       <block wx:if="{{item.questionList.length == 0}}">
         <view class="bottom" style="margin-top: 40%;">这里暂时还没有帖子哦~</view>
       </block>

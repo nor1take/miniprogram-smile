@@ -41,7 +41,7 @@
       系统通知 · Note
     </view>
   </view>
-  <view class="version">版本号：v1.0.7</view>
+  <view class="version">版本号：v1.1.1</view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>
 <view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>

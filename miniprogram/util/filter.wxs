@@ -1,6 +1,6 @@
 var abbreviation = function (value) {
-  if (value.length > 40) {
-    return value.slice(0, 40) + '...'
+  if (value.length > 75) {
+    return value.slice(0, 75) + '...'
   } else {
     return value
   }
