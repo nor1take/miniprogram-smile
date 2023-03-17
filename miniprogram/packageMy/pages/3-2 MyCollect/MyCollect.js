@@ -51,7 +51,8 @@ Page({
     })
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     })
   },
@@ -159,7 +160,7 @@ Page({
         console.log(app.globalData)
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionView,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
         this.setData({
           'tabs[0].questionList': questionList
@@ -182,7 +183,7 @@ Page({
       else {
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionView,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
         this.setData({
           'tabs[1].questionList': questionList
@@ -206,7 +207,7 @@ Page({
         questionList[questionIndex].collectNum = app.globalData.questionCollect
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionView,
           this.setData({
             'tabs[2].questionList': questionList
           })

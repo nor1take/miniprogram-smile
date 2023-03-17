@@ -25,7 +25,8 @@ Page({
     })
     question.doc(id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     })
   },
@@ -42,6 +43,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    app.globalData.isCheckSystemMsg = true
     userInfo.where({
       _openid: '{openid}'
     }).update({

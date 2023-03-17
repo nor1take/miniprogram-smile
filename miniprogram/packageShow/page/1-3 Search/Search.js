@@ -90,7 +90,8 @@ Page({
     })
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     })
   },

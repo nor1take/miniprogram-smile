@@ -7,15 +7,19 @@
         </textarea>
   </view>
   <view class="bodyContainer">
-    <textarea maxlength="-1" class="body" placeholder="补充说明你的帖子（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body"></textarea>
+    <textarea maxlength="2220" class="body" placeholder="补充说明你的帖子（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body"></textarea>
   </view>
 
   <view class="imageUpload-area">
-    <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="id">
+    <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="*this">
       <image src="{{item}}" mode="aspectFill" style="height: 214rpx; width: 214rpx;  margin-left: 16rpx; margin-top: 8rpx;" bindtap="imageTap" id="{{item}}" data-index="{{index}}">{{item}}</image>
     </block>
-    <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">    <image src="../../../icon/ic_public_add.png" mode='aspectFit' style="width: 80rpx; height: 80rpx;"></image></view>
-    <view class="upload" wx:else bindtap="upload">    <image src="../../../icon/ic_public_add.png" mode='aspectFit' style="width: 80rpx; height: 80rpx;"></image></view>
+    <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">
+      <image src="../../../icon/ic_public_add.png" mode='aspectFit' style="width: 80rpx; height: 80rpx;"></image>
+    </view>
+    <view class="upload" wx:else bindtap="upload">
+      <image src="../../../icon/ic_public_add.png" mode='aspectFit' style="width: 80rpx; height: 80rpx;"></image>
+    </view>
   </view>
   <view class="tip">* 每次最多能上传 9 张图片。</view>
   <view class="tagsArea">
@@ -25,7 +29,7 @@
 
   <view class="switch">
     <view class="switchContent">匿名发布</view>
-    <switch bindchange="switchChange"/>
+    <switch bindchange="switchChange" />
   </view>
 
   <view class="btn-area">

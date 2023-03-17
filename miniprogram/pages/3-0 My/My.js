@@ -46,7 +46,8 @@ Page({
     app.globalData.questionId = e.currentTarget.id
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     }).then(res => { console.log(res) }).catch(err => { console.log(err) })
     wx.navigateTo({
@@ -57,7 +58,8 @@ Page({
     console.log(e.currentTarget.dataset.commentid)
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     }).then(res => { console.log(res) }).catch(err => { console.log(err) })
     app.globalData.questionId = e.currentTarget.id
@@ -85,7 +87,8 @@ Page({
     app.globalData.questionId = e.currentTarget.id
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     }).then(res => { console.log(res) }).catch(err => { console.log(err) })
     wx.navigateTo({

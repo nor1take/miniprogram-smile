@@ -16,7 +16,7 @@
           <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
           <view class="last">
             <text class="watched">举报人数：{{item.warner.length}}</text>
-            <block wx:for="{{item.warnerDetail}}" wx:key="id">
+            <block wx:for="{{item.warnerDetail}}">
               <view class="watched">举报者{{index+1}}：<text class="nickName" user-select="true">{{item.nickName}} - {{item._openid}}</text>：“<text user-select="true">{{item.reason}}</text>”</view>
             </block>
           </view>
@@ -33,7 +33,7 @@
 
   <view slot="tab-content-1">
     <view style="height: {{top+32+32}}px; width: 100%;"></view>
-    <block wx:for="{{tabs[1].questionList}}" wx:key="id">
+    <block wx:for="{{tabs[1].questionList}}" wx:key="_id">
       <view class="messageBackground" bindtap="gotoDetail" id="{{item.questionId}}">
         <view class="last">
           _id/commentId：<text class="nickName" user-select='true'>{{item._id}}</text>
@@ -43,7 +43,7 @@
         <view class="title" style="font-weight: 500;">{{item.body}} <text wx:if="{{item.image_upload.length>0}}">[图片评论]</text></view>
         <view class="last">
           <text class="watched">举报人数：{{item.warner.length}}</text>
-          <block wx:for="{{item.warnerDetail}}" wx:key="id">
+          <block wx:for="{{item.warnerDetail}}">
             <view class="watched">举报者{{index+1}}：<text class="nickName" user-select="true">{{item.nickName}} - {{item._openid}}</text>：“<text user-select="true">{{item.reason}}</text>”</view>
           </block>
         </view>

@@ -180,7 +180,7 @@ Page({
     titleContent: false,
 
     tagId: 1,
-    tag: '学习',
+    tag: '#1 睡前记录3件好事',
     _unknown: false,
     focus: false,
 
@@ -279,7 +279,8 @@ Page({
     let that = this
     wx.requestSubscribeMessage({
       tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
-      complete() {
+      complete(res1) {
+        console.log(res1)
         wx.showLoading({
           title: '审核中',
           mask: true
@@ -320,7 +321,7 @@ Page({
                 } else if (suggest === 'review') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
                 } else {
@@ -394,6 +395,7 @@ Page({
                         tag: tag,
 
                         watched: 1,
+                        watcher: [],
 
                         commentNum: 0,
                         commenter: [],

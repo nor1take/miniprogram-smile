@@ -209,7 +209,7 @@ Page({
     isLogin: false,
 
     isFold: true,
-    sortWord: "按最新",
+    sortWord: "按赞数",
     fileID: [],
 
     height: 0,
@@ -275,7 +275,7 @@ Page({
     comment.where({
       questionId: app.globalData.questionId
       /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
-    }).orderBy('likerNum', 'desc').orderBy('time', 'desc').
+    }).orderBy('likerNum', 'desc').orderBy('time', 'asc').
       get().then(res => {
         this.setData({
           commentList: res.data,
@@ -511,17 +511,18 @@ Page({
     })
   },
   getCommentandLikeData: function () {
-    comment.where({
-      questionId: app.globalData.questionId
-      /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
-    }).orderBy('time', 'desc').
-      get().then(res => {
-        // console.log('成功获取 评论', res.data)
-        this.setData({
-          commentList: res.data,
-          openId: app.globalData.openId
-        })
-      })
+    this.LikemostCommentFisrt()
+    // comment.where({
+    //   questionId: app.globalData.questionId
+    //   /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
+    // }).orderBy('time', 'desc').
+    //   get().then(res => {
+    //     // console.log('成功获取 评论', res.data)
+    //     this.setData({
+    //       commentList: res.data,
+    //       openId: app.globalData.openId
+    //     })
+    //   })
   },
   likeCancel: function (e) {
     const commentId = e.target.id
@@ -580,28 +581,60 @@ Page({
   commentAgain: function (e) {
     // console.log(e.currentTarget.dataset.openid)
     // console.log(e.currentTarget.dataset.nickname)
-    this.setData({
-      tapReplyButton: true,
-      tapAnswerButton: false,
-      tapAgainButton: false,
-      postNickName: e.currentTarget.dataset.nickname,
-      _commentId: e.currentTarget.id,
-      _postOpenId: e.currentTarget.dataset.openid,
-      postUnknown: e.currentTarget.dataset.unknown
-    })
+    const postUnknown = e.currentTarget.dataset.unknown
+    if (postUnknown) {
+      this.setData({
+        tapReplyButton: true,
+        tapAnswerButton: false,
+        tapAgainButton: false,
+        postNickName: e.currentTarget.dataset.nickname,
+        _commentId: e.currentTarget.id,
+        _postOpenId: e.currentTarget.dataset.openid,
+        postUnknown,
+        postNickName2: '[匿名发帖用户]'
+      })
+    } else {
+      this.setData({
+        tapReplyButton: true,
+        tapAnswerButton: false,
+        tapAgainButton: false,
+        postNickName: e.currentTarget.dataset.nickname,
+        _commentId: e.currentTarget.id,
+        _postOpenId: e.currentTarget.dataset.openid,
+        postUnknown,
+        postNickName2: e.currentTarget.dataset.nickname
+      })
+    }
+
   },
 
   commentSShortTap: function (e) {
     console.log(e.currentTarget)
-    this.setData({
-      tapAnswerButton: false,
-      tapReplyButton: false,
-      tapAgainButton: true,
-      postNickName: e.currentTarget.dataset.newnickname,
-      _commentId: e.currentTarget.id,
-      _postOpenId: e.currentTarget.dataset.openid,
-      postUnknown: e.currentTarget.dataset.unknown
-    })
+    const postUnknown = e.currentTarget.dataset.unknown
+    if (postUnknown) {
+      this.setData({
+        tapAnswerButton: false,
+        tapReplyButton: false,
+        tapAgainButton: true,
+        postNickName: e.currentTarget.dataset.newnickname,
+        _commentId: e.currentTarget.id,
+        _postOpenId: e.currentTarget.dataset.openid,
+        postUnknown,
+        postNickName2: '[匿名发帖用户]',
+      })
+    } else {
+      this.setData({
+        tapAnswerButton: false,
+        tapReplyButton: false,
+        tapAgainButton: true,
+        postNickName: e.currentTarget.dataset.newnickname,
+        _commentId: e.currentTarget.id,
+        _postOpenId: e.currentTarget.dataset.openid,
+        postUnknown,
+        postNickName2: e.currentTarget.dataset.newnickname,
+      })
+    }
+
   },
   //0-4-2 评论的评论的评论
   commentSLongTap: function (e) {
@@ -1138,18 +1171,17 @@ Page({
    */
   sendContent: function (_commentBody) {
     let that = this
-    var d = new Date();
+    var d = new Date().getTime()
     if (that.data.tapAnswerButton) {
-      d = d.getTime()
       question.doc(app.globalData.questionId).get().then(res => {
         if (res.data._openid != that.data.openId) {
           wx.cloud.callFunction({
             name: 'sendMsg',
             data: {
               receiver: that.data.questionList[0]._openid,
-              questionId: app.globalData.questionId, 
-              sender: app.globalData.nickName, 
-              commentBody: _commentBody, 
+              questionId: app.globalData.questionId,
+              sender: app.globalData.nickName,
+              commentBody: _commentBody,
               postTitle: that.data.questionList[0].title
             }
           })
@@ -1392,7 +1424,7 @@ Page({
                 } else if (suggest === 'review') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
                 } else {
@@ -1434,7 +1466,8 @@ Page({
         } else {
           question.doc(app.globalData.questionId).update({
             data: {
-              watched: _.inc(1)
+              // watched: _.inc(1)
+              watcher: _.addToSet(app.globalData.openId)
             }
           }).then(res => { console.log(res) }).catch(err => { console.log(err) })
           this.setData({
@@ -1526,7 +1559,7 @@ Page({
     if (!app.globalData.questionDelete) {
       app.globalData.questionSolved = this.data.questionList[0].solved,
         app.globalData.questionCommentNum = this.data.questionList[0].commentNum,
-        app.globalData.questionView = this.data.questionList[0].watched,
+        app.globalData.questionView = this.data.questionList[0].watcher,
         app.globalData.questionCollect = this.data.collectNum
     }
     else {
@@ -1614,7 +1647,7 @@ Page({
         time: _.lte(commentList[0].time),
         questionId: app.globalData.questionId
         /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
-      }).orderBy('likerNum', 'desc').orderBy('time', 'desc').count().then(res => {
+      }).orderBy('likerNum', 'desc').orderBy('time', 'asc').count().then(res => {
         if (showNum < res.total) {
           this.setData({
             isBottom: false,
@@ -1623,7 +1656,7 @@ Page({
             time: _.lt(commentList[showNum - 1].time),
             questionId: app.globalData.questionId
             /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
-          }).orderBy('likerNum', 'desc').orderBy('time', 'desc').
+          }).orderBy('likerNum', 'desc').orderBy('time', 'asc').
             get().then(res => {
               let new_data = res.data
               let old_data = commentList

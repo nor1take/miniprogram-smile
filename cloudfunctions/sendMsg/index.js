@@ -25,6 +25,6 @@ exports.main = async (event, context) => {
     })
     return result
   } catch (err) {
-    return err
+    return err.errCode
   }
 }

@@ -31,7 +31,7 @@
           <view class="title" style="margin: 0; margin-bottom: 32rpx; font-weight: 500;">{{item.title}}</view>
           <view class="last" style="margin: 0;">
             <text class="watched">{{item.commentNum}} 回应</text> ·
-            <text class="watched">{{item.watched}} 浏览</text> ·
+            <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
             <text class="watched">{{item.collectNum}} 关注</text>
           </view>
         </view>

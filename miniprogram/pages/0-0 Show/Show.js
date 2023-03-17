@@ -157,7 +157,8 @@ Page({
     })
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1),
+        watcher: _.addToSet(app.globalData.openId)
       }
     })
   },
@@ -329,10 +330,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
+    // wx.cloud.callFunction({
+    //   name: 'update',
+    // })
     this.getNicknameandImage()
     this.getData()
     this.getOtherData()
-
   },
 
   /**
@@ -345,6 +348,18 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    if (!app.globalData.isCheckSystemMsg) {
+      wx.setTabBarBadge({
+        index: 0,
+        text: 'Note'
+      })
+    } else {
+      wx.removeTabBarBadge({
+        index: 0,
+      }).catch(err => {
+        console.log(err)
+      })
+    }
     console.log(app.globalData)
     var d = new Date().getTime()
     this.setData({
@@ -373,7 +388,7 @@ Page({
       else {
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionView,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
         this.setData({
           questionList

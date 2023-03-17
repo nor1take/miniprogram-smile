@@ -96,20 +96,18 @@
   display: flex;
   font-size: 30rpx;
   color: black;
-  word-break: break-all;
   padding-right: 16rpx;
 }
 
 .first {
-  display: flex;
-  align-items: center;
+  overflow-wrap: break-word;
   font-size: 28rpx;
 }
 
 .second {
   font-size: 28rpx;
   margin-left: 63rpx;
-  word-break: break-all;
+  margin-top: 16rpx;
   /* border: 1rpx solid black; */
 }
 
@@ -187,8 +185,6 @@
 }
 
 .commentAgainBody {
-  /* word-break: break-all; */
-  display: flex;
 }
 
 /* 5 底部评论输入 */

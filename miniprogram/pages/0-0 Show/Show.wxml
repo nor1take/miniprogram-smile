@@ -48,7 +48,7 @@
         <block wx:else>
           <text>{{filter.timeString(item.time)}}</text> ·
         </block>
-        <text class="watched">{{item.watched}} 浏览</text> ·
+        <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
         <text class="watched">{{item.collectNum}} 关注</text>
       </view>
     </view>

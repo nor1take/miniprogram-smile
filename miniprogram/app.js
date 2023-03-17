@@ -8,7 +8,7 @@ App({
     questionSolved: false,
     questionCommentNum: 0,
     questionDelete: false,
-    questionView: 0,
+    questionView: [],
     questionCollect: 0,
 
     isAsk: false,
@@ -24,7 +24,7 @@ App({
     isLogin: false,
     isAuthentic: false,
     modifyNum: 0,
-    isCheckSystemMsg: false,
+    isCheckSystemMsg: true,
     isModify: false,
   },
   onLaunch: function () {

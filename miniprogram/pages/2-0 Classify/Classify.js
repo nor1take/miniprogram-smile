@@ -12,12 +12,12 @@ Page({
     activeTab: 0,
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
-      { id: 1, name: '#1 睡前记录3件好事', questionList: [] },
-      { id: 4, name: '学习', questionList: [] },
-      { id: 5, name: '生活', questionList: [] },
-      { id: 1, name: '我捡到…', questionList: [] },
-      { id: 2, name: '我丢了…', questionList: [] },
-      { id: 3, name: '求(组队/资料…)', questionList: [] },
+      { id: 10, name: '#1 睡前记录3件好事', questionList: [] },
+      { id: 1, name: '学习', questionList: [] },
+      { id: 2, name: '生活', questionList: [] },
+      { id: 3, name: '我捡到…', questionList: [] },
+      { id: 4, name: '我丢了…', questionList: [] },
+      { id: 5, name: '求(组队/资料…)', questionList: [] },
       { id: 6, name: '读书', questionList: [] },
       { id: 7, name: '摄影', questionList: [] },
       { id: 8, name: '音乐', questionList: [] },
@@ -50,7 +50,8 @@ Page({
     })
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     })
   },
@@ -198,7 +199,7 @@ Page({
       else {
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watched = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionView,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
       }
       switch (index) {

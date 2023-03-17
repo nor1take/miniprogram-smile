@@ -29,7 +29,8 @@ Page({
     })
     question.doc(e.currentTarget.id).update({
       data: {
-        watched: _.inc(1)
+        // watched: _.inc(1)
+        watcher: _.addToSet(app.globalData.openId)
       }
     })
   },
@@ -46,9 +47,12 @@ Page({
         title: 1,
         image: 1,
         time: 1,
+
         totalScores: $.divide([
           $.sum([
-            $.multiply([$.log10('$watched'), 4]),
+            $.multiply([$.log10(
+              $.sum(['$watched', $.size('$watcher')])
+            ), 4]),
             '$collectNum',
             $.multiply(['$commentNum', 2])
           ]),

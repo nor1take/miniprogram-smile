@@ -27,7 +27,7 @@
             <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
             <view class="last">
               <text>{{filter.timeString(item.time)}}</text> ·
-              <text class="watched">{{item.watched}} 浏览</text> ·
+              <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
               <text class="watched">{{item.collectNum}} 关注</text>
             </view>
           </view>
