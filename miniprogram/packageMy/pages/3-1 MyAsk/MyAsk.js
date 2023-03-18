@@ -168,7 +168,8 @@ Page({
         console.log(app.globalData)
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionWatcher,
+          questionList[questionIndex].watched = app.globalData.questionWatched,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
         this.setData({
           'tabs[0].questionList': questionList
@@ -191,7 +192,8 @@ Page({
       else {
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionWatcher,
+          questionList[questionIndex].watched = app.globalData.questionWatched,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
         this.setData({
           'tabs[1].questionList': questionList
@@ -215,7 +217,8 @@ Page({
         questionList[questionIndex].collectNum = app.globalData.questionCollect
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionWatcher,
+          questionList[questionIndex].watched = app.globalData.questionWatched,
           this.setData({
             'tabs[2].questionList': questionList
           })

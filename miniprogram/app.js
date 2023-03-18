@@ -8,7 +8,6 @@ App({
     questionSolved: false,
     questionCommentNum: 0,
     questionDelete: false,
-    questionView: [],
     questionCollect: 0,
 
     isAsk: false,
@@ -47,7 +46,9 @@ App({
       left: res.left,
       right: res.right,
       bottom: res.bottom,
-      stayTime: 0
+      stayTime: 0,
+      questionWatcher: [],
+      questionWatched: 0,
     };
   },
 });

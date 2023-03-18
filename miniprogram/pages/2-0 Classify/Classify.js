@@ -199,7 +199,8 @@ Page({
       else {
         questionList[questionIndex].solved = app.globalData.questionSolved,
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionView,
+          questionList[questionIndex].watcher = app.globalData.questionWatcher,
+          questionList[questionIndex].watched = app.globalData.questionWatched,
           questionList[questionIndex].collectNum = app.globalData.questionCollect
       }
       switch (index) {

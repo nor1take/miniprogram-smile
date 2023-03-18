@@ -129,7 +129,8 @@ Page({
       else {
         searchList[questionIndex].solved = app.globalData.questionSolved,
           searchList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          searchList[questionIndex].watched = app.globalData.questionView,
+          searchList[questionIndex].watcher = app.globalData.questionWatcher,
+          searchList[questionIndex].watched = app.globalData.questionWatched,
           searchList[questionIndex].collectNum = app.globalData.questionCollect
         this.setData({
           searchList

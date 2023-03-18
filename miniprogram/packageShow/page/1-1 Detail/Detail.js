@@ -440,6 +440,21 @@ Page({
       })
       console.log('成功获取 问题', res.data[0]._openid)
 
+      let length = res.data[0].watcher.length;
+      
+      console.log('watcher[] = ', length)
+      console.log('watched = ', res.data[0].watched)
+      if (length >= 2) {
+        res.data[0].watched += length
+        res.data[0].watcher = []
+        question.doc(app.globalData.questionId).update({
+          data: {
+            watched: res.data[0].watched,
+            watcher: []
+          }
+        })
+      }
+
       /** 如果发帖人是当前人，app.globalData.messageNum、question的message */
       const { _openid } = res.data[0]
       if (_openid == app.globalData.openId) {
@@ -1559,7 +1574,8 @@ Page({
     if (!app.globalData.questionDelete) {
       app.globalData.questionSolved = this.data.questionList[0].solved,
         app.globalData.questionCommentNum = this.data.questionList[0].commentNum,
-        app.globalData.questionView = this.data.questionList[0].watcher,
+        app.globalData.questionWatcher = this.data.questionList[0].watcher,
+        app.globalData.questionWatched = this.data.questionList[0].watched,
         app.globalData.questionCollect = this.data.collectNum
     }
     else {
