@@ -26,8 +26,6 @@ Component({
           wx.switchTab({
             url: '../../../pages/0-0 Show/Show'
           })
-        }).finally(() => {
-
         })
     },
   }

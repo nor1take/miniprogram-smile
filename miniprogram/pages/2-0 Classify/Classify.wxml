@@ -7,7 +7,8 @@
       <block wx:if="{{index == 1 && hasTheme}}">
         <view class="themeContainer">
           <view class="themeTitle">{{themeTitle}}</view>
-          <view class="themeBody">{{themeBody}}</view>
+          <text class="themeBody">{{themeBody}}</text>
+          <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx;" bindtap="Ask">参与活动</button>
         </view>
       </block>
       <block wx:if="{{item.questionList.length == 0}}">

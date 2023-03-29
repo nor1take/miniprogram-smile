@@ -118,7 +118,7 @@ Page({
     console.log(app.globalData)
     const { searchList } = this.data
     const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
+    if (app.globalData.isClick && questionIndex != -1) {
       if (app.globalData.questionDelete) {
         // console.log('执行这里')
         searchList.splice(questionIndex, 1)

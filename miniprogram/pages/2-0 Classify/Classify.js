@@ -10,23 +10,28 @@ Page({
    */
   data: {
     activeTab: 0,
+    //记得修改 case 1 * 2 / else if (index === 1 {
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
-      { id: 10, name: '#1 睡前记录3件好事', questionList: [] },
-      { id: 1, name: '学习', questionList: [] },
-      { id: 2, name: '生活', questionList: [] },
-      { id: 3, name: '我捡到…', questionList: [] },
-      { id: 4, name: '我丢了…', questionList: [] },
-      { id: 5, name: '求(组队/资料…)', questionList: [] },
-      { id: 6, name: '读书', questionList: [] },
-      { id: 7, name: '摄影', questionList: [] },
-      { id: 8, name: '音乐', questionList: [] },
-      { id: 9, name: '游戏', questionList: [] },
+      { id: 14, name: '#2 今天也要好好吃饭', questionList: [] },
+      { id: 10, name: '美食', questionList: [] },
+      { id: 15, name: '恋爱', questionList: [] },
+      { id: 1, name: '生活', questionList: [] },
+      { id: 11, name: '考研', questionList: [] },
+      { id: 2, name: '学习', questionList: [] },
+      { id: 12, name: '闲置', questionList: [] },
+      { id: 3, name: '求(组队/资料…)', questionList: [] },
+      { id: 4, name: '游戏', questionList: [] },
+      { id: 5, name: '音乐', questionList: [] },
+      { id: 7, name: '读书', questionList: [] },
+      { id: 6, name: '摄影', questionList: [] },
+      { id: 8, name: '我丢了…', questionList: [] },
+      { id: 9, name: '我捡到…', questionList: [] },
     ],
 
     hasTheme: true,
-    themeTitle:'每天晚上睡觉之前写下3件好事',
-    themeBody:'根据塞利格曼的《持续的幸福》一书，每天晚上睡觉之前写下3件好事，仅持续一周，在之后的半年里就出现了幸福度增强、忧郁度减轻的结果。可以写具体一点，时间、地点、什么原因令你来开心。仔细回想每天令你开心幸福的事，越关注幸福，就会越感到幸福～',
+    themeTitle: '今天也要好好吃饭',
+    themeBody: '虽然每天都有很多琐碎的烦恼，但吃饭的时候一定心无杂念，眼里心里胃里都被食物的填满。好好吃饭，是生命最高的仪式感。\n\n希望我们能通过记录一日三餐，保持对生活最极致的热忱。',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -38,6 +43,12 @@ Page({
     left: 281,
     right: 367,
     bottom: 80,
+  },
+
+  Ask: function () {
+    wx.navigateTo({
+      url: '../../packageShow/page/1-2 Ask/Ask',
+    })
   },
 
   beWatched: function (e) {
@@ -169,8 +180,23 @@ Page({
                 'tabs[12].questionList': res.data
               })
               break;
-          }
+            case 13:
+              this.setData({
+                'tabs[13].questionList': res.data
+              })
+              break;
+            case 14:
+              this.setData({
+                'tabs[14].questionList': res.data
+              })
+              break;
+            case 15:
+              this.setData({
+                'tabs[15].questionList': res.data
+              })
+              break;
 
+          }
         })
       }
     }
@@ -191,7 +217,8 @@ Page({
   updateList: function (index) {
     const { questionList } = this.data.tabs[index]
     const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
+    if (app.globalData.isClick && questionIndex != -1) {
+      app.globalData.isClick = false
       if (app.globalData.questionDelete) {
         app.globalData.questionDelete = false
         questionList.splice(questionIndex, 1)
@@ -269,6 +296,21 @@ Page({
             'tabs[12].questionList': questionList
           })
           break;
+        case 13:
+          this.setData({
+            'tabs[13].questionList': questionList
+          })
+          break;
+        case 14:
+          this.setData({
+            'tabs[14].questionList': questionList
+          })
+          break;
+        case 15:
+          this.setData({
+            'tabs[15].questionList': questionList
+          })
+          break;
       }
     }
   },
@@ -278,6 +320,9 @@ Page({
    */
   onShow: function () {
     this.updateList(this.data.activeTab)
+    if (app.globalData.isAsk) {
+      this.loadData(1, true)
+    }
   },
 
   /**
@@ -402,6 +447,18 @@ Page({
             } else if (index === 12) {
               this.setData({
                 'tabs[12].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 13) {
+              this.setData({
+                'tabs[13].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 14) {
+              this.setData({
+                'tabs[14].questionList': old_data.concat(new_data),
+              })
+            } else if (index === 15) {
+              this.setData({
+                'tabs[15].questionList': old_data.concat(new_data),
               })
             }
           })

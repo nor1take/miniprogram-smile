@@ -184,9 +184,6 @@
   color: #0C88B5;
 }
 
-.commentAgainBody {
-}
-
 /* 5 底部评论输入 */
 .imageShow {
   /* width: fit-content;
@@ -199,8 +196,8 @@
 
   display: flex;
   flex-wrap: wrap;
-  margin:0 auto;
-  
+  margin: 0 auto;
+
   padding: 16rpx;
   padding-left: 0;
 
@@ -242,20 +239,23 @@
 
   padding: 16rpx;
 }
-button{
-  border:none;
-}
-button::after {
-  border:none;
-}
+
 button {
-  border-radius: 25rpx; 
-  padding: 16rpx; 
-  margin: 0; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  width: max-content; 
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+button {
+  border-radius: 25rpx;
+  padding: 16rpx;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
   font-size: 14px;
 }
 
@@ -267,15 +267,29 @@ button {
   align-items: center;
   justify-content: center;
 }
-.sort{
+
+.sort {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding-right: 16rpx;
 
-  color:#0C88B5;
+  color: #0C88B5;
   font-size: 26rpx;
 }
+
+.sort2 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 68rpx;
+  padding: 16rpx;
+
+  color: #0C88B5;
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
 .hoverClass {
   background-color: #DDDDDD;
 }
@@ -287,11 +301,13 @@ button {
   .body {
     color: #dddddd;
   }
+
   /* 3 评论 */
   .commentBackground {
     border: 1rpx solid #3d3d3d;
     background-color: #3d3d3d;
   }
+
   .nickName {
     color: #7B7B7B;
   }
@@ -299,6 +315,7 @@ button {
   .commentBody {
     color: #DDDDDD;
   }
+
   .commentTime {
     color: #ACACAC;
   }
@@ -322,8 +339,8 @@ button {
     background-color: #3d3d3d;
   }
 
-  .hoverClass{
+  .hoverClass {
     background-color: #7b7b7b;
-    box-shadow:0 0 0rpx black;
+    box-shadow: 0 0 0rpx black;
   }
 }

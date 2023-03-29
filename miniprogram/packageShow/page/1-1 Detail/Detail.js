@@ -235,6 +235,11 @@ Page({
 
     _commentBody: ''
   },
+  goToLogin: function () {
+    wx.navigateTo({
+      url: '../../../packageLogin/pages/0-0 Login/Login',
+    })
+  },
   fold: function () {
     const { isFold } = this.data
     if (isFold) {
@@ -441,8 +446,8 @@ Page({
       console.log('成功获取 问题', res.data[0]._openid)
 
       let length = res.data[0].watcher.length;
-      
-      console.log('watcher[] = ', length)
+
+      console.log('watcher[] = ', length, res.data[0].watcher)
       console.log('watched = ', res.data[0].watched)
       if (length >= 2) {
         res.data[0].watched += length
@@ -474,7 +479,7 @@ Page({
     console.log(app.globalData.openId)
     if (app.globalData.openId == undefined) {
       wx.showToast({
-        title: '请前往小程序再操作',
+        title: '登录后操作。点击左上角←返回主界面',
         icon: 'none'
       })
     } else {
@@ -822,9 +827,9 @@ Page({
   },
   //问题右上角三个点
   threePointTap: function () {
-    if (app.globalData.openId == undefined) {
+    if (!app.globalData.isLogin) {
       wx.showToast({
-        title: '请前往小程序再操作',
+        title: '登录后操作。点击左上角←返回主界面',
         icon: 'none'
       })
     } else {
@@ -958,9 +963,9 @@ Page({
   },
   //评论右上角三个点
   threePointTap2: function (e) {
-    if (app.globalData.openId == undefined) {
+    if (!app.globalData.isLogin) {
       wx.showToast({
-        title: '请前往小程序再操作',
+        title: '登录后操作。点击左上角←返回主界面',
         icon: 'none'
       })
     } else {
@@ -1231,6 +1236,7 @@ Page({
               image_upload: that.data.fileID,
 
               isAuthentic: app.globalData.isAuthentic,
+              idTitle: app.globalData.idTitle,
 
               warner: [],
               warnerDetail: [],
@@ -1288,6 +1294,7 @@ Page({
               image_upload: that.data.fileID,
 
               isAuthentic: app.globalData.isAuthentic,
+              idTitle: app.globalData.idTitle,
 
               warner: [],
               warnerDetail: [],
@@ -1375,6 +1382,7 @@ Page({
                     postNickName: that.data.postNickName,
                     commentAgainBody: _commentBody,
                     isAuthentic: app.globalData.isAuthentic,
+                    idTitle: app.globalData.idTitle,
                     postUnknown: that.data.postUnknown,
 
                     image_upload: res,
@@ -1495,21 +1503,10 @@ Page({
           app.globalData.isLogin = true,
             app.globalData.isManager = res.data[0].isManager,
             app.globalData.isAuthentic = res.data[0].isAuthentic,
+            app.globalData.idTitle = res.data[0].idTitle,
             app.globalData.modifyNum = res.data[0].modifyNum,
             app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
-          console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
-          if (!app.globalData.isCheckSystemMsg) {
-            wx.setTabBarBadge({
-              index: 0,
-              text: 'Note'
-            })
-          } else {
-            wx.removeTabBarBadge({
-              index: 0,
-            }).catch(err => {
-              console.log(err)
-            })
-          }
+
           app.globalData.nickName = res.data[0].nickName,
             app.globalData.avatarUrl = res.data[0].avatarUrl,
             console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
@@ -1525,7 +1522,7 @@ Page({
         app.globalData.isLogin = false,
           wx.showToast({
             icon: 'none',
-            title: '游客模式。前往小程序进行登录',
+            title: '游客模式。登录后评论。点击左上角←返回主界面',
             duration: 3500,
           })
       })
@@ -1552,6 +1549,16 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    if (!app.globalData.isLogin) {
+      wx.showToast({
+        icon: 'none',
+        title: '游客模式。登录后评论',
+        duration: 3500,
+      })
+    }
+    if (app.globalData.isModify) {
+      this.getNicknameandImage()
+    }
     this.setData({
       isLogin: app.globalData.isLogin
     })
@@ -1660,7 +1667,7 @@ Page({
       })
     } else {
       comment.where({
-        time: _.lte(commentList[0].time),
+        // time: _.gte(commentList[0].time),
         questionId: app.globalData.questionId
         /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
       }).orderBy('likerNum', 'desc').orderBy('time', 'asc').count().then(res => {
@@ -1669,10 +1676,10 @@ Page({
             isBottom: false,
           })
           comment.where({
-            time: _.lt(commentList[showNum - 1].time),
+            // time: _.gt(commentList[showNum - 1].time),
             questionId: app.globalData.questionId
             /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
-          }).orderBy('likerNum', 'desc').orderBy('time', 'asc').
+          }).orderBy('likerNum', 'desc').orderBy('time', 'asc').skip(showNum).
             get().then(res => {
               let new_data = res.data
               let old_data = commentList
@@ -1695,7 +1702,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: this.data.questionList[0].title,
-      path: 'packageShow/page/1-1 Detail/Detail?id=' + app.globalData.questionId
+      path: 'pages/0-0 Show/Show?id=' + app.globalData.questionId
     }
   },
 

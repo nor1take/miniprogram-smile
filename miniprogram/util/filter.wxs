@@ -7,7 +7,7 @@ var abbreviation = function (value) {
 }
 
 var int = function (score) {
-  var value = score * 1000000000;
+  var value = score * 100000000;
   return value.toFixed(2);
 }
 

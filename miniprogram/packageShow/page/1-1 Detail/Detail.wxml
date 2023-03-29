@@ -39,8 +39,13 @@
       <image src="{{item.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx;"></image>
       <view class="nickName">{{item.nickName}}
         <block wx:if="{{item.isAuthentic}}">
-          <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
-          <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+          <image src="../../../icon/ic_public_security_filled.png" style="width: 20rpx; height: 20rpx; border-radius: 30rpx;"></image>
+          <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
+            <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
+          </block>
+          <block wx:else="">
+            <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+          </block>
         </block>
       </view>
     </view>
@@ -50,16 +55,18 @@
       <text class="body" user-select="true" bindtap="fold">
         <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
         </text>
-        <text wx:if="{{item.image.length > 0}}">[图片补充]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
+        <text wx:if="{{item.image.length > 0}}">
+          [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
       </text>
     </block>
 
     <block wx:else>
       <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
-        <text class="body" user-select="true" bindtap="fold">
+        <text class="body" user-select="true">
           <text wx:if="{{item.body.length > 0}}">{{item.body}}
           </text>
-          <text style="font-weight: bold; color:#0C88B5;"> 收起↑</text></text>
+        </text>
+        <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
       </block>
       <block wx:else>
         <text class="body" user-select="true">{{item.body}}</text>
@@ -83,8 +90,13 @@
 
   <!--1-2-3 关注/回应按钮 -->
   <view class="FollowReplybutton-area">
-    <button wx:if="{{WXS.isInArray(openId, item.collector)}}" class="FollowReplybutton" style="color: #acacac;" size="mini" bindtap="collectCancel">已关注</button>
-    <button wx:else class="FollowReplybutton" size="mini" bindtap="collectAdd">关注帖子</button>
+    <block wx:if="{{isLogin}}">
+      <button wx:if="{{WXS.isInArray(openId, item.collector)}}" class="FollowReplybutton" style="color: #acacac;" size="mini" bindtap="collectCancel">已关注</button>
+      <button wx:else class="FollowReplybutton" size="mini" bindtap="collectAdd">关注帖子</button>
+    </block>
+    <block wx:else="">
+      <button class="FollowReplybutton" type="primary" size="mini" style="width: 180rpx;" bindtap="goToLogin">登 录</button>
+    </block>
     <!-- <button class="FollowReplybutton" size="mini" type="primary" bindtap="answer">回应</button> -->
   </view>
   <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">
@@ -106,8 +118,13 @@
           <image src="{{item.image}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
           <view class="nickName">{{item.nickname}}
             <block wx:if="{{item.isAuthentic}}">
-              <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
-              <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+              <image src="../../../icon/ic_public_security_filled.png" style="width: 20rpx; height: 20rpx; border-radius: 30rpx;"></image>
+              <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
+                <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
+              </block>
+              <block wx:else="">
+                <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+              </block>
             </block>
           </view>
         </block>
@@ -152,6 +169,12 @@
       </view>
     </view>
     <!-- 评论的评论/评论的评论的评论 -->
+
+    <!-- <block wx:if="{{item.commenter.length>3}}">
+      <view class="">{{item.commenter[0]}}</view>
+      <view class="sort2">共 {{item.commenter.length}} 条评论</view>
+    </block>
+    <block wx:else=""></block> -->
     <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:for-index="idx" wx:key="_id">
       <view class="commentAgainBackground" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
         <view class="first">
@@ -163,8 +186,14 @@
             <image src="{{commentAgain.avatarUrl}}" style="width: 50rpx; height: 50rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
             <text class="commentAgainnickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
             <block wx:if="{{commentAgain.isAuthentic}}">
-              <image src="../../../icon/ic_public_security_filled.png" style="width: 25rpx; height: 25rpx; border-radius: 30rpx;"></image>
-              <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+              <image src="../../../icon/ic_public_security_filled.png" style="width: 22rpx; height: 22rpx; border-radius: 30rpx;"></image>
+              <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
+                <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+              </block>
+              <block wx:else="">
+                <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+              </block>
+
             </block>
           </block>
           回复
@@ -181,6 +210,7 @@
         </view>
       </view>
     </block>
+
   </view>
   <view class="bottom" wx:if="{{!isBottom && reachBottom}}">加载中...</view>
   <view class="bottom" wx:if="{{isBottom}}">没有更多评论了~</view>

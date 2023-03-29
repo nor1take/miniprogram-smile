@@ -42,7 +42,9 @@ Page({
       { id: 3, title: '', body: '', commentNum: 0, watched: 0 },
       { id: 4, title: '', body: '', commentNum: 0, watched: 0 },
       { id: 5, title: '', body: '', commentNum: 0, watched: 0 },
-    ]
+    ],
+
+    topWord: '',
   },
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
@@ -58,9 +60,15 @@ Page({
 
   alwaysTop: function () {
     console.log('置顶')
-    wx.navigateTo({
-      url: '../../packageMy/pages/0-1 TopPost/TopPost',
-    })
+    if (app.globalData.isCheckSystemMsg) {
+      wx.navigateTo({
+        url: '../../packageMy/pages/0-1 TopPost/TopPost',
+      })
+    } else {
+      wx.navigateTo({
+        url: '../../packageMy/pages/3-5 SystemMsg/SystemMsg',
+      })
+    }
   },
   hot: function () {
     console.log('热门')
@@ -282,26 +290,26 @@ Page({
             nickName: res.data[0].nickName,
             avatarUrl: res.data[0].avatarUrl,
             isLogin: true,
-            isManager: res.data[0].isManager
+            isManager: res.data[0].isManager,
+            isAuthentic: res.data[0].isAuthentic,
+            idTitle: res.data[0].idTitle
           })
           app.globalData.isLogin = true,
             app.globalData.isManager = res.data[0].isManager,
             app.globalData.isAuthentic = res.data[0].isAuthentic,
+            app.globalData.idTitle = res.data[0].idTitle,
             app.globalData.modifyNum = res.data[0].modifyNum,
             app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
-          console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
-          if (!app.globalData.isCheckSystemMsg) {
-            wx.setTabBarBadge({
-              index: 0,
-              text: 'Note'
+          if (res.data[0].isCheckSystemMsg) {
+            this.setData({
+              topWord: '置顶：使用帮助'
             })
           } else {
-            wx.removeTabBarBadge({
-              index: 0,
-            }).catch(err => {
-              console.log(err)
+            this.setData({
+              topWord: '有新的系统通知!!!'
             })
           }
+
           app.globalData.nickName = res.data[0].nickName,
             app.globalData.avatarUrl = res.data[0].avatarUrl,
             console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
@@ -329,10 +337,39 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function () {
+  onLoad: function (options) {
     // wx.cloud.callFunction({
     //   name: 'update',
     // })
+    // wx.request({
+    //   url: 'https://n58770595y.zicp.fun',
+    //   success(res) {
+    //     console.log(res.data)
+    //   },
+    //   fail(err) {
+    //     console.log(err.data)
+    //   }
+    // })
+    console.log('onLoad')
+    const { id } = options
+    if (id != undefined) {
+      app.globalData.questionId = id
+      let d = new Date().getTime();
+      console.log(d)
+      setTimeout(
+        function () {
+          question.doc(id).update({
+            data: {
+              // watched: _.inc(1),
+              watcher: _.addToSet('guest' + d)
+            }
+          })
+          wx.navigateTo({
+            url: '../../packageShow/page/1-1 Detail/Detail',
+          })
+        }
+        , 500)
+    }
     this.getNicknameandImage()
     this.getData()
     this.getOtherData()
@@ -348,29 +385,23 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if (!app.globalData.isCheckSystemMsg) {
-      wx.setTabBarBadge({
-        index: 0,
-        text: 'Note'
-      })
-    } else {
-      wx.removeTabBarBadge({
-        index: 0,
-      }).catch(err => {
-        console.log(err)
+    console.log(app.globalData)
+    if (app.globalData.isCheckSystemMsg && this.data.topWord != '置顶：使用帮助') {
+      this.setData({
+        topWord: '置顶：使用帮助'
       })
     }
-    console.log(app.globalData)
     var d = new Date().getTime()
     this.setData({
       startTime: d
     })
 
     if (app.globalData.stayTime / 1000 / 10 > 1) {
+      console.log('getCurrentMessageNum')
       app.globalData.stayTime = 0
       this.getCurrentMessageNum()
     }
-    console.log()
+
     if (app.globalData.isModify) {
       this.getNicknameandImage()
       app.globalData.isModify = false
@@ -378,7 +409,8 @@ Page({
 
     const { questionList } = this.data
     const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
+    if (app.globalData.isClick && questionIndex != -1) {
+      app.globalData.isClick = false
       if (app.globalData.questionDelete) {
         questionList.splice(questionIndex, 1)
         this.setData({

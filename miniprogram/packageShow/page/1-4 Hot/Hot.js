@@ -52,9 +52,9 @@ Page({
           $.sum([
             $.multiply([$.log10(
               $.sum(['$watched', $.size('$watcher')])
-            ), 4]),
-            '$collectNum',
-            $.multiply(['$commentNum', 2])
+            ), 1]),
+            $.multiply(['$collectNum', 8000]),
+            $.multiply(['$commentNum', 16000])
           ]),
           $.pow([
             $.sum(
@@ -100,19 +100,6 @@ Page({
             app.globalData.isAuthentic = res.data[0].isAuthentic,
             app.globalData.modifyNum = res.data[0].modifyNum,
             app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
-          console.log('app.globalData.isCheckSystemMsg', app.globalData.isCheckSystemMsg)
-          if (!app.globalData.isCheckSystemMsg) {
-            wx.setTabBarBadge({
-              index: 0,
-              text: 'Note'
-            })
-          } else {
-            wx.removeTabBarBadge({
-              index: 0,
-            }).catch(err => {
-              console.log(err)
-            })
-          }
           app.globalData.nickName = res.data[0].nickName,
             app.globalData.avatarUrl = res.data[0].avatarUrl,
             console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
@@ -138,6 +125,11 @@ Page({
       this.getNicknameandImage()
     }
     this.getData()
+  },
+
+  onUnload() { 
+    console.log('HOT onUnload')
+    app.globalData.isClick = false
   },
 
   /**

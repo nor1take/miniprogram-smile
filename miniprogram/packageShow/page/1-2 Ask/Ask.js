@@ -175,12 +175,12 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
-    tagsList: ['#1 睡前记录3件好事', '学习', '生活', '读书', '摄影', '音乐', '游戏', '求(组队/资料…)', '我捡到…', '我丢了…',],
+    tagsList: ['#2 今天也要好好吃饭', '美食', '生活', '学习', '恋爱', '考研', '闲置', '游戏', '音乐', '摄影', '读书', '我捡到…', '我丢了…', '求(组队/资料…)', '#1 睡前记录3件好事'],
 
     titleContent: false,
 
     tagId: 1,
-    tag: '#1 睡前记录3件好事',
+    tag: '#2 今天也要好好吃饭',
     _unknown: false,
     focus: false,
 
@@ -411,6 +411,7 @@ Page({
                         solved: false,
 
                         isAuthentic: app.globalData.isAuthentic,
+                        idTitle: app.globalData.idTitle
                       },
                     }).then((res) => {
                       /**

@@ -12,6 +12,9 @@ Component({
     nickName: { type: String, value: '' },
     avatarUrl: { type: String, value: '' },
     isManager: { type: Boolean, value: false },
+    isAuthentic: { type: Boolean, value: false },
+    idTitle: { type: String, value: '' },
+
   },
 
   /**
@@ -34,7 +37,7 @@ Component({
       })
     },
 
-    modify: function(){
+    modify: function () {
       wx.navigateTo({
         url: '../../packageLogin/pages/0-0 Login/Login',
       })
@@ -100,12 +103,12 @@ Component({
         url: '../../packageMy/pages/0-1 TopPost/TopPost',
       })
     },
-    warn: function(){
+    warn: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-4 WarnPosts/WarnPosts',
       })
     },
-    systemMsg:function(){
+    systemMsg: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-5 SystemMsg/SystemMsg',
       })

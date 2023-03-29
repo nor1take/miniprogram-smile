@@ -29,7 +29,7 @@
   border-bottom-right-radius: 10rpx;
 
   padding: 32rpx;
-  margin: 32rpx;
+  margin: 16rpx;
 }
 
 @media (prefers-color-scheme: dark) {

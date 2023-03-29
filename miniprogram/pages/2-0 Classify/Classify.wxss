@@ -1,39 +1,63 @@
-.container{
-  width: 100%; height: 32px; 
+button {
+  border: none;
+}
 
-  position: fixed; 
-  
+button::after {
+  border: none;
+}
+
+button {
+  border-radius: 25rpx;
+  padding: 16rpx;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  font-size: 14px;
+}
+
+.container {
+  width: 100%;
+  height: 32px;
+
+  position: fixed;
+
   display: flex;
   align-items: center;
 
-  font-size: 34rpx; 
+  font-size: 34rpx;
   font-weight: bold;
   color: #3d3d3d;
 }
-.searchInput{
-  height:32px;
+
+.searchInput {
+  height: 32px;
 
   border-radius: 50rpx;
   background-color: #3d3d3d;
   opacity: 0.85;
 
-  padding-left: 30rpx; padding-right: 30rpx;
-  
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+
   font-size: 34rpx;
   color: white;
 }
 
-.themeContainer{
+.themeContainer {
   margin: 32rpx;
   padding: 32rpx;
   display: flex;
   flex-direction: column;
 }
-.themeTitle{
+
+.themeTitle {
   font-size: 38rpx;
   font-weight: bolder;
   margin-bottom: 32rpx;
 }
-.themeBody{
+
+.themeBody {
   font-size: 32rpx;
 }

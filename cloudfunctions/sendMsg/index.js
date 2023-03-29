@@ -8,7 +8,7 @@ exports.main = async (event, context) => {
   try {
     const result = await cloud.openapi.subscribeMessage.send({
       "touser": receiver, //接收者（用户）的 openid
-      "page": 'packageShow/page/1-1 Detail/Detail?id=' + questionId,
+      "page": 'pages/0-0 Show/Show?id=' + questionId,
       "lang": 'zh_CN',
       "data": {
         "thing1": {

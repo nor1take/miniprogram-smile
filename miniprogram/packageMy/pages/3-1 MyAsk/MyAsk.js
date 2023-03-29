@@ -156,7 +156,7 @@ Page({
   updateQuestionListAll: function () {
     const { questionList } = this.data.tabs[0]
     const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
+    if (app.globalData.isClick && questionIndex != -1) {
       if (app.globalData.questionDelete) {
         app.globalData.questionDelete = false
         questionList.splice(questionIndex, 1)
@@ -181,7 +181,7 @@ Page({
   updateQuestionListNo: function () {
     const { questionList } = this.data.tabs[1]
     const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
+    if (app.globalData.isClick && questionIndex != -1) {
       if (app.globalData.questionDelete) {
         app.globalData.questionDelete = false
         questionList.splice(questionIndex, 1)
@@ -205,7 +205,7 @@ Page({
   updateQuestionListYes: function () {
     const { questionList } = this.data.tabs[2]
     const { questionIndex } = app.globalData
-    if (app.globalData.isClick) {
+    if (app.globalData.isClick && questionIndex != -1) {
       if (app.globalData.questionDelete) {
         app.globalData.questionDelete = false
         questionList.splice(questionIndex, 1)

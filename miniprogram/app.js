@@ -2,7 +2,6 @@
 App({
   globalData: {
     questionId: '',
-    questionIndex: 0,
     isClick: false,
 
     questionSolved: false,
@@ -22,6 +21,7 @@ App({
     isManager: false,
     isLogin: false,
     isAuthentic: false,
+    idTitle:'',
     modifyNum: 0,
     isCheckSystemMsg: true,
     isModify: false,
@@ -49,6 +49,7 @@ App({
       stayTime: 0,
       questionWatcher: [],
       questionWatched: 0,
+      questionIndex: -1,
     };
   },
 });

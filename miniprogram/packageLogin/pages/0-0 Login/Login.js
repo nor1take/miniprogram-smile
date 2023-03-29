@@ -86,9 +86,21 @@ Page({
             }).then(() => {
               wx.hideLoading()
               app.globalData.isModify = true
-              wx.switchTab({
-                url: '../../../pages/0-0 Show/Show'
-              })
+              wx.navigateBack()
+                .catch(() => {
+                  wx.navigateBack()
+                    .catch(() => {
+                      wx.switchTab({
+                        url: '../../../pages/0-0 Show/Show'
+                      })
+                    })
+                  // wx.switchTab({
+                  //   url: '../../../pages/0-0 Show/Show'
+                  // })
+                })
+              // wx.switchTab({
+              //   url: '../../../pages/0-0 Show/Show'
+              // })
             })
           } else {
             app.globalData.modifyNum = app.globalData.modifyNum - 1;
@@ -108,9 +120,15 @@ Page({
               })
               app.globalData.isModify = true
               setTimeout(function () {
-                wx.switchTab({
-                  url: '../../../pages/0-0 Show/Show'
-                })
+                wx.navigateBack()
+                  .catch(() => {
+                    wx.switchTab({
+                      url: '../../../pages/0-0 Show/Show'
+                    })
+                  })
+                // wx.switchTab({
+                //   url: '../../../pages/0-0 Show/Show'
+                // })
               }, 1000);
             })
           }
@@ -134,9 +152,15 @@ Page({
                 }).then(() => {
                   wx.hideLoading()
                   app.globalData.isModify = true
-                  wx.switchTab({
-                    url: '../../../pages/0-0 Show/Show'
-                  })
+                  wx.navigateBack()
+                    .catch(() => {
+                      wx.switchTab({
+                        url: '../../../pages/0-0 Show/Show'
+                      })
+                    })
+                  // wx.switchTab({
+                  //   url: '../../../pages/0-0 Show/Show'
+                  // })
                 })
               } else {
                 console.log(res)
@@ -157,9 +181,15 @@ Page({
                   })
                   app.globalData.isModify = true
                   setTimeout(function () {
-                    wx.switchTab({
-                      url: '../../../pages/0-0 Show/Show'
-                    })
+                    wx.navigateBack()
+                      .catch(() => {
+                        wx.switchTab({
+                          url: '../../../pages/0-0 Show/Show'
+                        })
+                      })
+                    // wx.switchTab({
+                    //   url: '../../../pages/0-0 Show/Show'
+                    // })
                   }, 1000);
                 })
               }
