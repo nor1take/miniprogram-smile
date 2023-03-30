@@ -34,7 +34,7 @@
   font-size: 34rpx; /* 17 */
   color: #3d3d3d;
 
-  line-height: 175%;
+  line-height: 1.75;
 }
 
 .middle {
@@ -100,11 +100,11 @@
   color: black;
   padding-right: 16rpx;
 
-  line-height: 175%;
+  line-height: 1.75;
 }
 
 .commentAgainBody {
-  line-height: 150%;
+  line-height: 1.5;
 }
 
 .first {

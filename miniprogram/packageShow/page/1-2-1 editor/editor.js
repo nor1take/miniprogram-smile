@@ -1,4 +1,110 @@
+const app = getApp()
+const db = wx.cloud.database()
+const _ = db.command
+const question = db.collection('question')
+const traceId = db.collection('traceId')
+const systemMsg = db.collection('systemMsg')
+const userInfo = db.collection('userInfo')
+
+function matchLabel(labelNum) {
+  switch (labelNum) {
+    case 100:
+      return '正常';
+      break;
+    case 10001:
+      return '广告';
+      break;
+    case 20001:
+      return '时政';
+      break;
+    case 20002:
+      return '色情';
+      break;
+    case 20003:
+      return '辱骂';
+      break;
+    case 20006:
+      return '违法犯罪';
+      break;
+    case 20008:
+      return '欺诈';
+      break;
+    case 20012:
+      return '低俗';
+      break;
+    case 20013:
+      return '版权';
+      break;
+    case 21000:
+      return '其他';
+      break;
+  }
+}
+
+/**
+ * 删除已上传图片列表中的违规图片，并移除traceId对象
+ * @param {已上传图片列表} fileIds 
+ * @param {*违规图片集合} cloudFileIds 
+ */
+async function deleteInvalidImages(fileIds, cloudFileIds) {
+  return new Promise(async function (resolve, reject) {
+    try {
+      const promises = [];
+      let fileIdsWithoutCommon = [];
+      promises.push(new Promise((resolve, reject) => {
+        // 找到数组 fileIds 和数组 cloudFileIds 共有的元素
+        const common = fileIds.filter((elementA) =>
+          cloudFileIds.some((elementB) => elementA === elementB.fileId)
+        );
+
+        // 删除数组 fileIds 中的共有元素
+        fileIdsWithoutCommon = fileIds.filter((elementA) =>
+          !cloudFileIds.some((elementB) => elementA === elementB.fileId)
+        );
+        /**
+         * 删除云存储中的违规图片
+         */
+        wx.cloud.deleteFile({
+          fileList: common,
+          success: res => {
+            console.log(res)
+            resolve();
+          },
+          fail: err => {
+            console.log(err)
+            reject(err);
+          }
+        })
+
+        /**
+         * 移除traceId对象
+         */
+        traceId.where({
+          fileId: _.in(common)
+        }).remove({
+          success: res => {
+            console.log(res)
+            resolve();
+          },
+          fail: err => {
+            console.log(err)
+            reject(err);
+          }
+        })
+      }));
+
+      await Promise.all(promises);
+      resolve(fileIdsWithoutCommon);
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
 Page({
+  options: {
+    pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
+  },
   data: {
     formats: {},
     readOnly: false,
@@ -9,12 +115,31 @@ Page({
     safeHeight: 0,
     toolBarHeight: 50,
 
+    _unknown: false,
+    tagId: 1,
+    tag: '#3 令你心动的offer',
+    fileID: [],
+
     top: 48,
     left: 281,
     right: 367,
     bottom: 80,
 
-    tagsList: ['#2 今天也要好好吃饭', '美食', '生活', '学习', '恋爱', '考研', '闲置', '游戏', '音乐', '摄影', '读书', '我捡到…', '我丢了…', '求(组队/资料…)', '#1 睡前记录3件好事'],
+    tagsList: [
+      '#3 令你心动的offer',
+      '学习',
+      '生活',
+      '音乐',
+      '美食',
+      '恋爱',
+      '读书',
+      '游戏',
+      '摄影',
+      '闲置',
+      '组队',
+      '我捡到…',
+      '我丢了…',
+    ],
   },
 
   switchChange: function (e) {
@@ -47,16 +172,159 @@ Page({
     })
   },
 
+  sendPost: function () {
+    let that = this
+    wx.requestSubscribeMessage({
+      tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
+      complete(res1) {
+        console.log(res1)
+        wx.showLoading({
+          title: '审核中',
+          mask: true
+        })
+        const { title } = that.data;
+        const { html } = that.data;
+        const { text } = that.data;
+        const { tag } = that.data;
+
+        userInfo.where({
+          _openid: '{openid}'
+        }).get()
+          .then((res) => {
+            if (res.data[0].isForbidden) {
+              wx.hideLoading()
+              wx.navigateTo({
+                url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
+              })
+            } else {
+              /**
+               * 一、文字审核
+               */
+              wx.cloud.callFunction({
+                name: 'checkContent',
+                data: {
+                  txt: title + text + tag,
+                  scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+                }
+              }).then((res) => {
+                console.log(res)
+                const { label } = res.result.msgR.result
+                const { suggest } = res.result.msgR.result
+                if (suggest === 'risky') {
+                  wx.hideLoading()
+                  wx.showToast({
+                    title: '危险：包含' + matchLabel(label) + '信息！',
+                    icon: 'none'
+                  })
+                } else if (suggest === 'review') {
+                  wx.hideLoading()
+                  wx.showToast({
+                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    icon: 'none'
+                  })
+                } else {
+                  app.globalData.isAsk = true
+                  var d = new Date().getTime();
+
+                  question.add({
+                    data: {
+                      //时间
+                      answerTime: 0,
+
+                      time: d,
+
+                      isHTML: true,
+
+                      unknown: that.data._unknown,
+                      nickName: app.globalData.nickName,
+                      avatarUrl: app.globalData.avatarUrl,
+
+                      title: title,
+                      body: text,
+                      html: html,
+                      image: that.data.fileID,
+
+                      tagId: that.data.tagId,
+                      tag: tag,
+
+                      watched: 1,
+                      watcher: [],
+
+                      commentNum: 0,
+                      commenter: [],
+
+                      message: 0,
+
+                      collector: [],
+                      collectNum: 0,
+
+                      warner: [],
+                      warnerDetail: [],
+
+                      solved: false,
+
+                      isAuthentic: app.globalData.isAuthentic,
+                      idTitle: app.globalData.idTitle
+                    },
+                  }).then((res) => {
+                    /**
+                     * 二、图片审核：处理异步检测结果推送
+                     */
+
+                    /**
+                     * 1、拿到全部的traceId集合（违规图片集合）
+                     */
+                    const { _id } = res
+                    traceId.orderBy('CreateTime', 'desc').get()
+                      .then((res) => {
+                        console.log(res)
+                        /**
+                         * 2、删除上传图片列表中违规图片
+                         */
+                        deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                          console.log('deleteInvalidImages', res)
+                          /**
+                           * 3、更新图片列表
+                           */
+                          question.doc(_id).update({
+                            data: {
+                              image: res
+                            }
+                          }).then(() => {
+                            wx.hideLoading()
+                            wx.showToast({
+                              title: '发布成功',
+                            })
+                            setTimeout(function () {
+                              wx.switchTab({
+                                url: '../../../pages/0-0 Show/Show'
+                              })
+                            }, 1500);
+                          }).catch((err) => {
+                            console.log(err)
+                          })
+                        })
+                      })
+                  })
+
+                }
+              })
+            }
+          })
+      }
+    })
+  },
+
   title: function (e) {
-    const {value} = e.detail
+    const { value } = e.detail
     if (value == '') {
       this.setData({
-        titleContent: value
+        title: value
       })
     }
     else {
       this.setData({
-        titleContent: value
+        title: value
       })
     }
   },
@@ -72,9 +340,14 @@ Page({
     })
     console.log(res)
   },
-  
+
   loseFocus: function (e) {
-    console.log(e)
+    console.log(e.detail.html)
+    console.log(e.detail.text)
+    this.setData({
+      html: e.detail.html,
+      text: e.detail.text
+    })
   },
 
   onLoad() {
@@ -177,21 +450,77 @@ Page({
   },
   insertImage() {
     const that = this
-    wx.chooseImage({
+    wx.chooseMedia({
       count: 1,
-      success(res) {
-        that.editorCtx.insertImage({
-          src: res.tempFilePaths[0],
+      sizeType: ['original', 'compressed'],
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      camera: 'back',
+      success: res => {
+        wx.showLoading({
+          title: '上传中',
+          mask: true
+        })
+        //checkAndUploadManyImages(res.tempFiles, this)
+        const { tempFilePath } = res.tempFiles[0]
+        console.log(tempFilePath)
+
+        wx.cloud.callFunction({
+          name: 'checkContent',
           data: {
-            id: 'abcd',
-            role: 'god'
+            value: wx.cloud.CDN({
+              type: 'filePath',
+              filePath: tempFilePath
+            }),
+            scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
           },
-          width: '80%',
-          success() {
-            console.log('insert image success')
+          success: json => {
+            console.log(json)
+            const { traceId } = json.result.imageR
+            /**
+             * 2、将traceId作为图片的云存储路径
+             */
+            wx.cloud.uploadFile({
+              cloudPath: traceId, // 上传至云端的路径
+              filePath: tempFilePath, // 小程序临时文件路径
+              success: res => {
+                const { fileID } = res
+                console.log('fileID', fileID)
+                that.data.fileID.push(fileID)
+                that.setData({
+                  fileID: that.data.fileID,
+                })
+                that.editorCtx.insertImage({
+                  src: fileID,
+                  width: '100%',
+                  success() {
+                    console.log('insert image success')
+                  }
+                })
+                wx.hideLoading()
+                wx.showToast({
+                  title: '上传成功 等待审核',
+                  icon: 'none'
+                })
+              },
+              fail: err => {
+                console.error('uploadFile err：', err)
+                wx.hideLoading()
+                wx.showToast({
+                  icon: 'error',
+                  title: '上传失败',
+                })
+              }
+            })
+          },
+          fail: err => {
+            console.log('checkContent err：', err)
           }
         })
-      }
+      },
+      fail: err => {
+        console.log(err)
+      },
     })
   },
   readOnlyChange() {

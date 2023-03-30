@@ -70,7 +70,7 @@ button {
   display: flex;
   font-size: 28rpx;
   color: #7B7B7B;
-  line-height: 150%;
+  line-height: 1.5;
   /* word-break: break-all; */
 }
 

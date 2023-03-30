@@ -51,35 +51,38 @@
     </view>
     <text class="title" user-select="true">{{item.title}}</text>
 
-    <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
-      <text class="body" user-select="true" bindtap="fold">
-        <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
-        </text>
-        <text wx:if="{{item.image.length > 0}}">
-          [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
-      </text>
-    </block>
-
-    <block wx:else>
-      <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
-        <text class="body" user-select="true">
-          <text wx:if="{{item.body.length > 0}}">{{item.body}}
+    <block wx:if="{{!item.isHTML}}">
+      <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
+        <text class="body" user-select="true" bindtap="fold">
+          <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
           </text>
+          <text wx:if="{{item.image.length > 0}}">
+            [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
         </text>
-        <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
       </block>
+
       <block wx:else>
-        <text class="body" user-select="true">{{item.body}}</text>
-      </block>
-
-      <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
-        <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="*this">
-          <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+        <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
+          <text class="body" user-select="true">
+            <text wx:if="{{item.body.length > 0}}">{{item.body}}
+            </text>
+          </text>
+          <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
         </block>
-      </view>
+        <block wx:else>
+          <text class="body" user-select="true">{{item.body}}</text>
+        </block>
+
+        <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
+          <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="*this">
+            <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+          </block>
+        </view>
+      </block>
     </block>
-
-
+    <block wx:else="">
+      <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
+    </block>
 
     <view class="last">
       <text>{{filter.timeString(item.time)}}</text> ·

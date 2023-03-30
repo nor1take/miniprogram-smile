@@ -1,6 +1,7 @@
 <return top="{{top}}" bottom="{{bottom}}" topWord=""></return>
 <view style="position: fixed; top:{{top}}px; width: {{left}}px; z-index: 1;">
-  <button class="sendBtn" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};">发 布</button>
+  <button wx:if="{{title && title.length !=0 && tag && tag.length !=0}}" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};" bindtap="sendPost">发 布</button>
+  <button wx:else disabled="true" size="default" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};">发 布</button>
 </view>
 <view class="switch">
   <view class="switchContent">匿名发布</view>

@@ -23,7 +23,7 @@
   </view>
   <view class="tip">* 每次最多能上传 9 张图片。</view>
 
-  <!-- <view class="tip" style="display: flex; align-items: center; justify-content: flex-end; font-weight: bolder;" bindtap="goToRichtext">>>> 转到富文本编辑器</view> -->
+  <view class="tip" style="display: flex; align-items: center; justify-content: flex-end; font-weight: bolder;" bindtap="goToRichtext">>>> 转到长文本编辑器</view>
   <view class="tagsArea">
     <view class="text">推荐标签</view>
     <tags isScroll='{{false}}' tagsList='{{tagsList}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
@@ -35,7 +35,7 @@
   </view>
 
   <view class="btn-area">
-    <button wx:if="{{titleContent && tag}}" size="default" type="primary" formType="submit">发布</button>
+    <button wx:if="{{titleContent && tag && tag.length != 0}}" size="default" type="primary" formType="submit">发布</button>
     <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
   </view>
 </form>

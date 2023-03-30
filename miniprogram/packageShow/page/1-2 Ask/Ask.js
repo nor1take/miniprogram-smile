@@ -175,12 +175,26 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
-    tagsList: ['#2 今天也要好好吃饭', '美食', '生活', '学习', '恋爱', '考研', '闲置', '游戏', '音乐', '摄影', '读书', '我捡到…', '我丢了…', '求(组队/资料…)', '#1 睡前记录3件好事'],
+    tagsList: [
+      '#3 令你心动的offer',
+      '学习',
+      '生活',
+      '音乐',
+      '美食',
+      '恋爱',
+      '读书',
+      '游戏',
+      '摄影',
+      '闲置',
+      '组队',
+      '我捡到…',
+      '我丢了…',
+    ],
 
     titleContent: false,
 
     tagId: 1,
-    tag: '#2 今天也要好好吃饭',
+    tag: '#3 令你心动的offer',
     _unknown: false,
     focus: false,
 
@@ -192,7 +206,7 @@ Page({
     bottom: 80,
   },
 
-  goToRichtext: function () { 
+  goToRichtext: function () {
     wx.navigateTo({
       url: '../1-2-1 editor/editor',
     })
@@ -226,7 +240,7 @@ Page({
       })
     }
   },
-  
+
   //自定义标签
   tagInput: function (e) {
     const { value } = e.detail
@@ -304,7 +318,7 @@ Page({
             if (res.data[0].isForbidden) {
               wx.hideLoading()
               wx.navigateTo({
-                url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
+                url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
               })
             } else {
               /**
