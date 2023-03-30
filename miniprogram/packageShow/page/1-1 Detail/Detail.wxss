@@ -22,7 +22,7 @@
 }
 
 .title {
-  font-size: 38rpx;
+  font-size: 40rpx; /* 19 */
   font-weight: bold;
   margin: 32rpx;
 }
@@ -31,8 +31,10 @@
 
   display: flex;
   align-items: center;
-  font-size: 30rpx;
+  font-size: 34rpx; /* 17 */
   color: #3d3d3d;
+
+  line-height: 175%;
 }
 
 .middle {
@@ -97,6 +99,12 @@
   font-size: 30rpx;
   color: black;
   padding-right: 16rpx;
+
+  line-height: 175%;
+}
+
+.commentAgainBody {
+  line-height: 150%;
 }
 
 .first {
