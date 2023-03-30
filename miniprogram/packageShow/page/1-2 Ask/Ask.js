@@ -192,6 +192,12 @@ Page({
     bottom: 80,
   },
 
+  goToRichtext: function () { 
+    wx.navigateTo({
+      url: '../1-2-1 editor/editor',
+    })
+  },
+
   //0-1 标题的输入状态，更新titleContent数据 → 发布按钮的disable
   title: function (e) {
     if (e.detail.value == '') {
@@ -206,7 +212,7 @@ Page({
     }
     // console.log('title',this.data.titleContent)
   },
-  //0-2-1 tags标签 → 发布按钮的disable
+  //固定标签
   tagTap: function (e) {
     console.log(e)
     const { tagname } = e.detail
@@ -220,6 +226,8 @@ Page({
       })
     }
   },
+  
+  //自定义标签
   tagInput: function (e) {
     const { value } = e.detail
     console.log('taginput', value)

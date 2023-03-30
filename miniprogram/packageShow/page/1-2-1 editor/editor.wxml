@@ -1,0 +1,33 @@
+<return top="{{top}}" bottom="{{bottom}}" topWord=""></return>
+<view style="position: fixed; top:{{top}}px; width: {{left}}px; z-index: 1;">
+  <button class="sendBtn" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};">发 布</button>
+</view>
+<view class="switch">
+  <view class="switchContent">匿名发布</view>
+  <switch bindchange="switchChange" />
+</view>
+<view class="tagsArea">
+  <view class="text">推荐标签（左滑查看更多标签）</view>
+  <tags style="margin-top:{{bottom+16}}px" isScroll='{{true}}' tagsList='{{tagsList}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
+</view>
+
+<view class="container">
+  <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的帖子（必填）" name="title" bindinput="title"></textarea>
+
+  <editor id="editor" class="ql-container" placeholder="{{placeholder}}" style="padding-bottom: {{toolBarHeight*2}}px;" bindstatuschange="onStatusChange" bindready="onEditorReady" bindblur="loseFocus">
+  </editor>
+</view>
+
+<view>
+  <view class="toolbar" catchtouchend="format" hidden="{{false}}" style="bottom: {{isIOS ? keyboardHeight : 0}}px; height: {{toolBarHeight}}px;">
+    <i class="iconfont icon-charutupian" catchtouchend="insertImage"></i>
+    <i class="iconfont icon-format-header-2 {{formats.header === 2 ? 'ql-active' : ''}}" data-name="header" data-value="{{2}}"></i>
+    <i class="iconfont icon-format-header-3 {{formats.header === 3 ? 'ql-active' : ''}}" data-name="header" data-value="{{3}}"></i>
+    <i class="iconfont icon-zitijiacu {{formats.bold ? 'ql-active' : ''}}" data-name="bold"></i>
+    <i class="iconfont icon-zitixieti {{formats.italic ? 'ql-active' : ''}}" data-name="italic"></i>
+    <i class="iconfont icon-zitixiahuaxian {{formats.underline ? 'ql-active' : ''}}" data-name="underline"></i>
+    <i class="iconfont icon--checklist" data-name="list" data-value="check"></i>
+    <i class="iconfont icon-youxupailie {{formats.list === 'ordered' ? 'ql-active' : ''}}" data-name="list" data-value="ordered"></i>
+    <i class="iconfont icon-wuxupailie {{formats.list === 'bullet' ? 'ql-active' : ''}}" data-name="list" data-value="bullet"></i>
+  </view>
+</view>

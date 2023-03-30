@@ -9,14 +9,14 @@
 <!-- <view style="width: 100%; height: {{top+32+8}}px;"></view> -->
 <view class="topBlock" style="width: 100%; height: {{top+32+8}}px;"></view>
 <view class="topContainer">
-  <swiper class="swiperContainer" vertical autoplay circular interval='5000'>
-    <swiper-item class="swiperItem" bindtap="alwaysTop">
-      <image src="../../icon/download-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
-    </swiper-item>
+  <swiper class="swiperContainer" vertical autoplay circular interval='3000'>
     <swiper-item class="swiperItem" bindtap="hot">
       <image src="../../icon/fire-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
       <view style="margin-left: 16rpx; font-size: 30rpx;">热门</view>
+    </swiper-item>
+    <swiper-item class="swiperItem" bindtap="alwaysTop">
+      <image src="../../icon/download-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
   </swiper>
   <view class="sort" bindtap="sort">
