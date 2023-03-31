@@ -375,6 +375,12 @@ Page({
     this.setData({ isIOS, safeHeight, toolBarHeight: isIOS ? safeHeight + 50 : 50 })
     this.updatePosition(0)
   },
+  onShow() {
+    console.log('onShow')
+  },
+  onHide() {
+    console.log('onHide')
+  },
   updatePosition(keyboardHeight) {
     const toolbarHeight = 50
     const { windowHeight } = wx.getSystemInfoSync()

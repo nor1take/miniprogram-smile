@@ -240,6 +240,11 @@ Page({
       url: '../../../packageLogin/pages/0-0 Login/Login',
     })
   },
+  goToRegist: function () {
+    wx.navigateTo({
+      url: '../../../packageShow/page/1-2-2 regist/regist',
+    })
+  },
   fold: function () {
     const { isFold } = this.data
     if (isFold) {

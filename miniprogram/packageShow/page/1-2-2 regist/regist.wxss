@@ -1,0 +1,43 @@
+.input{
+  width: 100%;
+  height: fit-content;
+  padding: 64rpx;
+  box-sizing: border-box
+}
+
+input{
+  margin: 32rpx;
+  padding: 32rpx;
+  background-color: white;
+  border-radius: 15rpx;
+}
+/* 6 发布按钮 */
+.btn-area {
+
+  margin-top: 64rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+button {
+  border-radius: 40rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+
+  font-size: 32rpx;
+  padding-left: 128rpx;
+  padding-right: 128rpx;
+}

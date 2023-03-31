@@ -1,0 +1,14 @@
+<return top="{{top}}" bottom="{{bottom}}" topWord="报名"></return>
+
+<!-- 表单 -->
+<form catchsubmit="formSubmit" catchreset="formReset">
+  <view class="input">
+    <input name="name" placeholder="姓名" />
+    <input name="classNum" placeholder="班号" />
+    <input name="id" placeholder="学号" />
+  </view>
+  <view class="btn-area">
+    <button size="default" type="primary" formType="submit">报名</button>
+  </view>
+</form>
+<view style="width: 100%; height: 10%; position: absolute;"></view>
