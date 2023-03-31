@@ -1,6 +1,7 @@
-.topBlock{
+.topBlock {
   background-color: #f3f3f3;
 }
+
 movable-area {
   z-index: 1;
   width: 91%;
@@ -14,9 +15,10 @@ movable-area {
 
   /* background-color: blanchedalmond; */
   overflow: visible;
-  pointer-events:none;
+  pointer-events: none;
 }
-movable-view{
+
+movable-view {
   width: 100rpx;
   height: 100rpx;
 
@@ -25,7 +27,7 @@ movable-view{
 
   background-color: black;
   opacity: 0.77;
-  box-shadow:0 0 20rpx #7B7B7B;
+  box-shadow: 0 0 20rpx #7B7B7B;
   color: white;
   font-size: 25rpx;
 
@@ -37,29 +39,33 @@ movable-view{
   backdrop-filter: blur(5px);
 }
 
-.swiperContainer{
+.swiperContainer {
   width: 100%;
   /* border: 1rpx solid black; */
-  margin-right: 32rpx;  margin-left: 32rpx;
+  margin-right: 32rpx;
+  margin-left: 32rpx;
   border-radius: 40rpx;
   height: 80rpx;
 }
-.swiperItem{
+
+.swiperItem {
   background-color: #3d3d3d;
   border-radius: 40rpx;
   display: flex;
   align-items: center;
   color: white;
 }
-.topContainer{
-  width: 100%; 
-  display: flex; 
-  align-items: center; 
+
+.topContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   /* border: 1rpx solid black;  */
   margin-top: 16rpx;
 }
-.sort{
+
+.sort {
   margin-right: 32rpx;
 
   height: fit-content;
@@ -67,45 +73,47 @@ movable-view{
   align-items: center;
   justify-content: center;
 }
-.sortImage{
-  width: 37rpx; 
-  height: 37rpx; 
+
+.sortImage {
+  width: 37rpx;
+  height: 37rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   padding-top: 5rpx;
 }
-.sortWord{
+
+.sortWord {
   width: max-content;
   margin-left: 8rpx;
-  display: flex; 
+  display: flex;
   align-items: center;
   justify-content: center;
-  
-  color:#0C88B5;
-  font-size: 28rpx; 
+
+  color: #0C88B5;
+  font-size: 28rpx;
+}
+
+.body {
+  word-break: break-all;
 }
 
 /******************************************************************
 ** 夜间模式
 ******************************************************************/
-@media (prefers-color-scheme: dark){
-  .topBlock{
+@media (prefers-color-scheme: dark) {
+  .topBlock {
     background-color: #3d3d3d;
   }
-  movable-view{
+
+  movable-view {
     background-color: white;
-    box-shadow:0 0 20rpx black;
+    box-shadow: 0 0 20rpx black;
     color: black;
   }
-  
-  .swiperItem{
+
+  .swiperItem {
     background-color: black;
     color: #dddddd;
   }
 }
-
-
-
-
-

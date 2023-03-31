@@ -80,9 +80,37 @@
         </view>
       </block>
     </block>
+
+
+
     <block wx:else="">
-      <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
+      <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
+        <text class="body" user-select="true" bindtap="fold">
+          <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
+          </text>
+          <text wx:if="{{item.image.length > 0}}">
+            [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 富文本形式呈现↓</text>
+        </text>
+      </block>
+
+      <block wx:else>
+        <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
+
+          <block wx:if="{{item.body.length > 0}}">
+            <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
+          </block>
+
+          <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 化简↑</text>
+        </block>
+        <block wx:else>
+          <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
+        </block>
+
+
+
+      </block>
     </block>
+
 
     <view class="last">
       <text>{{filter.timeString(item.time)}}</text> ·
