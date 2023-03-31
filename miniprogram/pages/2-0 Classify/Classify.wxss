@@ -61,3 +61,7 @@ button {
 .themeBody {
   font-size: 32rpx;
 }
+
+.body {
+  word-break: break-all;
+}
