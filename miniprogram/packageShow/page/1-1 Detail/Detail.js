@@ -766,9 +766,14 @@ Page({
     console.log('失去焦点')
     if (!this.data.inputContent) {
       this.setData({
+        height: 0,
         tapAnswerButton: true,
         tapReplyButton: false,
         tapAgainButton: false,
+      })
+    } else {
+      this.setData({
+        height: 0,
       })
     }
   },
@@ -1552,7 +1557,7 @@ Page({
     if (!app.globalData.isLogin) {
       wx.showToast({
         icon: 'none',
-        title: '游客模式。登录后评论',
+        title: '点击左上角←返回主界面',
         duration: 3500,
       })
     }
