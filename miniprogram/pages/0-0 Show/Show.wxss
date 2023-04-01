@@ -1,3 +1,4 @@
+@import "../../assets/iconfont.wxss";
 .topBlock {
   background-color: #f3f3f3;
 }

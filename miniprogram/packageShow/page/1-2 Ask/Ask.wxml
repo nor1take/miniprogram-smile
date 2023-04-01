@@ -15,10 +15,10 @@
       <image src="{{item}}" mode="aspectFill" style="height: 214rpx; width: 214rpx;  margin-left: 16rpx; margin-top: 8rpx;" bindtap="imageTap" id="{{item}}" data-index="{{index}}">{{item}}</image>
     </block>
     <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">
-      <image src="../../../icon/ic_public_add.png" mode='aspectFit' style="width: 80rpx; height: 80rpx;"></image>
+      <i class="iconfont icon-ic_public_add" style="font-size: 80rpx;"></i>
     </view>
     <view class="upload" wx:else bindtap="upload">
-      <image src="../../../icon/ic_public_add.png" mode='aspectFit' style="width: 80rpx; height: 80rpx;"></image>
+      <i class="iconfont icon-ic_public_add" style="font-size: 80rpx;"></i>
     </view>
   </view>
   <view class="tip">* 每次最多能上传 9 张图片。</view>

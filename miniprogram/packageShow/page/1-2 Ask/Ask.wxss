@@ -1,3 +1,4 @@
+@import "../../../assets/iconfont.wxss";
 /*1 标题 */
 page {
   background-color: white;

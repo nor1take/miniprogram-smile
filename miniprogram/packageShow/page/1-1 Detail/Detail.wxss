@@ -1,3 +1,5 @@
+@import "../../../assets/iconfont.wxss";
+
 /* 1 问题 */
 .word {
   width: 100%;
@@ -22,7 +24,8 @@
 }
 
 .title {
-  font-size: 40rpx; /* 19 */
+  font-size: 40rpx;
+  /* 19 */
   font-weight: bold;
   margin: 32rpx;
 }
@@ -31,7 +34,8 @@
 
   display: flex;
   align-items: center;
-  font-size: 34rpx; /* 17 */
+  font-size: 34rpx;
+  /* 17 */
   color: #3d3d3d;
 
   line-height: 1.75;
@@ -95,6 +99,9 @@
 
 .commentBody {
   /* border: 1rpx solid black; */
+  word-break: break-all;
+  width: fit-content;
+
   display: flex;
   font-size: 30rpx;
   color: black;
@@ -147,12 +154,7 @@
   justify-content: flex-end;
 }
 
-.LikeCommentImage {
-  height: 37rpx;
-  width: 37rpx;
 
-  margin: 8rpx;
-}
 
 .buttonLike {
   margin-right: 24rpx;
@@ -301,6 +303,7 @@ button {
 .hoverClass {
   background-color: #DDDDDD;
 }
+
 
 /******************************************************************
 ** 夜间模式

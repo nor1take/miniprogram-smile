@@ -33,13 +33,13 @@
         </block>
         {{item.tag}}
       </view>
-      <image src="../../../icon/more-fill.png" style="height:25px; width: 25px; margin-right: 32rpx;" bindtap="threePointTap"></image>
+      <i class="iconfont icon-more-fill" style="font-size: 25px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap"></i>
     </view>
     <view class="middle" wx:if="{{!item.unknown}}">
       <image src="{{item.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx;"></image>
       <view class="nickName">{{item.nickName}}
         <block wx:if="{{item.isAuthentic}}">
-          <image src="../../../icon/ic_public_security_filled.png" style="width: 20rpx; height: 20rpx; border-radius: 30rpx;"></image>
+          <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>
           <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
             <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
           </block>
@@ -137,7 +137,7 @@
   </view>
   <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">
     <view style="display: flex; align-items: center; justify-content: center; padding-top: 2rpx;">
-      <image src="../../../icon/sort-asc.png" style="width: 30rpx; height: 30rpx; margin-right: 4rpx;"></image>
+      <i class="iconfont icon-sort-asc" style="font-size: 30rpx; margin-right: 4rpx; color: #0C88B5;"></i>
     </view>
     {{sortWord}}
   </view>
@@ -154,7 +154,7 @@
           <image src="{{item.image}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
           <view class="nickName">{{item.nickname}}
             <block wx:if="{{item.isAuthentic}}">
-              <image src="../../../icon/ic_public_security_filled.png" style="width: 20rpx; height: 20rpx; border-radius: 30rpx;"></image>
+              <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>
               <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
                 <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
               </block>
@@ -165,7 +165,7 @@
           </view>
         </block>
       </view>
-      <image src="../../../icon/more-fill.png" style="height:20px; width: 20px; margin-right: 32rpx;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></image>
+      <i class="iconfont icon-more-fill" style="font-size: 20px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></i>
     </view>
 
     <view class="commentBodyContainer" hover-class="hoverClass" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
@@ -186,19 +186,19 @@
       <view class="buttonArea">
         <view class="LikeCommentbutton-area">
           <!-- 点赞按钮 -->
-          <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: red;" bindtap="likeCancel">
-            <image class="LikeCommentImage" style="pointer-events:none;" src="../../../icon/good.png" mode="widthFix"></image>
+          <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
+            <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
             {{item.liker.length}}
           </view>
 
           <view class="buttonLike" wx:else id="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
-            <image class="LikeCommentImage" style="pointer-events:none;" src="../../../icon/_good.png" mode="widthFix"></image>
+            <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none;"></i>
             {{item.liker.length}}
           </view>
 
           <!-- 评论按钮 -->
           <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
-            <image class="LikeCommentImage" src="../../../icon/comment.png" mode="widthFix"></image>
+            <i class="iconfont icon-comment" style="font-size: 37rpx; margin: 8rpx;"></i>
             {{item.commentNum}}
           </view>
         </view>
@@ -222,7 +222,7 @@
             <image src="{{commentAgain.avatarUrl}}" style="width: 50rpx; height: 50rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
             <text class="commentAgainnickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
             <block wx:if="{{commentAgain.isAuthentic}}">
-              <image src="../../../icon/ic_public_security_filled.png" style="width: 22rpx; height: 22rpx; border-radius: 30rpx;"></image>
+              <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
               <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
                 <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
               </block>
@@ -263,7 +263,7 @@
 
 <view wx:if="{{isLogin}}" class="bottomInput-Container" style="bottom: {{height}}px;">
   <view class="imageArea" bindtap="upload">
-    <image src="../../../icon/image-add-fill.png" style="width: 50rpx; height: 50rpx;"></image>
+    <i class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
   </view>
   <textarea maxlength="2500" class="bottomInput" auto-height focus="{{answer?true:false}}" show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:if="{{tapAnswerButton}}" placeholder="在这里输入你的回应 :)" bindinput="input" bindkeyboardheightchange="focus" value="{{inputValue}}">
   </textarea>

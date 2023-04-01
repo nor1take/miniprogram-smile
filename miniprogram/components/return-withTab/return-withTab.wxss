@@ -1,4 +1,4 @@
-/* components/return-withTab/return-withTab.wxss */
+@import "../../assets/iconfont.wxss";
 .topBlock{
   background-color: white;
   box-shadow:0 0 10rpx #d2d2d2;

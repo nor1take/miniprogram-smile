@@ -2,7 +2,7 @@
 <search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
 <movable-area wx:if="{{isLogin}}">
   <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask" bindlongtap="goToTop">
-    <image src="../../icon/ic_public_add.png" mode='aspectFit' style="width: 50rpx; height: 50rpx;"></image>
+    <i class="iconfont icon-ic_public_add" style="font-size: 50rpx;"></i>
   </movable-view>
 </movable-area>
 
@@ -11,17 +11,17 @@
 <view class="topContainer">
   <swiper class="swiperContainer" vertical autoplay circular interval='3000'>
     <swiper-item class="swiperItem" bindtap="hot">
-      <image src="../../icon/fire-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
+      <i class="iconfont icon-fire-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FA5151;"></i>
       <view style="margin-left: 16rpx; font-size: 30rpx;">热门</view>
     </swiper-item>
     <swiper-item class="swiperItem" bindtap="alwaysTop">
-      <image src="../../icon/download-line.png" style="height:40rpx; width: 40rpx; margin-left: 29rpx;"></image>
+      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
       <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
   </swiper>
   <view class="sort" bindtap="sort">
     <view class="sortImage">
-      <image src="../../icon/sort-asc.png" mode="heightFix" style="width: 37rpx; height: 37rpx;"></image>
+      <i class="iconfont icon-sort-asc" style="font-size: 37rpx; color: #0C88B5;"></i>
     </view>
     <view class="sortWord">{{sortWord}}</view>
   </view>

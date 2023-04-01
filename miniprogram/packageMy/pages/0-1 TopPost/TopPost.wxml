@@ -2,8 +2,8 @@
 
 <view class="title_help" bindtap="help" data-id='0'>
   用户须知
-  <image wx:if="{{currentId===0}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+  <i wx:if="{{currentId===0}}" class="iconfont icon-arrow-up-s-line" style="font-size: 35px;"></i>
+  <i wx:else class="iconfont icon-arrow-down-s-line" style="font-size: 35px;"></i>
 </view>
 <view wx:if="{{currentId===0}}" class="body_help">
   <view class="item">1、请仔细阅读<text bindtap="rule1" style="color: #10aeff; font-weight: bold;">《微校Smile小程序协议》</text>。</view>
@@ -25,8 +25,8 @@
 
 <view class="title_help" bindtap="help" data-id='1'>
   发帖
-  <image wx:if="{{currentId===1}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+  <i wx:if="{{currentId===1}}" class="iconfont icon-arrow-up-s-line" style="font-size: 35px;"></i>
+  <i wx:else class="iconfont icon-arrow-down-s-line" style="font-size: 35px;"></i>
 </view>
 <view wx:if="{{currentId===1}}" class="body_help">
   <view class="item">点击首页右下角的“+”悬浮按钮（可自由移动）即可进入发帖页面。</view>
@@ -38,8 +38,8 @@
 
 <view class="title_help" bindtap="help" data-id='2'>
   帖子左上角颜色圆点说明
-  <image wx:if="{{currentId===2}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+  <i wx:if="{{currentId===2}}" class="iconfont icon-arrow-up-s-line" style="font-size: 35px;"></i>
+  <i wx:else class="iconfont icon-arrow-down-s-line" style="font-size: 35px;"></i>
 </view>
 <view wx:if="{{currentId===2}}" class="body_help">
   <view class="item">主要针对问题类型的帖子。</view>
@@ -51,8 +51,8 @@
 
 <view class="title_help" bindtap="help" data-id='3'>
   其他主要功能
-  <image wx:if="{{currentId===3}}" src="../../../icon/arrow-up-s-line.png" style="height: 35px; width: 35px;"></image>
-  <image wx:else src="../../../icon/arrow-down-s-line.png" style="height: 35px; width: 35px;"></image>
+  <i wx:if="{{currentId===3}}" class="iconfont icon-arrow-up-s-line" style="font-size: 35px;"></i>
+  <i wx:else class="iconfont icon-arrow-down-s-line" style="font-size: 35px;"></i>
 </view>
 <view wx:if="{{currentId===3}}" class="body_help">
   <view class="item">1、点击首页左上方按钮，在滑出的菜单中点击头像进行登录或修改。</view>

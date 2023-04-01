@@ -1,3 +1,4 @@
+@import "../../../assets/iconfont.wxss";
 .title_help{
 
   margin: 32rpx;
