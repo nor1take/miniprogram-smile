@@ -9,17 +9,16 @@ const question = db.collection('question')
 const comment = db.collection('comment')
 // 云函数入口函数
 exports.main = async (event, context) => {
-  // comment.where({
-  //   nickname: '小程序开发者',
-  //   idTitle: ''
-  // }).update({
-  //   data: {
-  //     nickname: 'noritake',
-  //     idTitle: '开发者'
-  //   }
-  // }).then((res) => {
-  //   return res;
-  // }).catch((err) => {
-  //   return err
-  // })
+  question.where({
+    _id: _.exists(true)
+  }).update({
+    data: {
+      liker: [],
+      postLikeNum: 0
+    }
+  }).then((res) => {
+    return res;
+  }).catch((err) => {
+    return err
+  })
 }

@@ -227,7 +227,8 @@ Page({
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
           questionList[questionIndex].watcher = app.globalData.questionWatcher,
           questionList[questionIndex].watched = app.globalData.questionWatched,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
+          questionList[questionIndex].collectNum = app.globalData.questionCollect,
+          questionList[questionIndex].postLikeNum = app.globalData.questionLikeNum
       }
       switch (index) {
         case 0:

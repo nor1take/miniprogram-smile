@@ -400,6 +400,7 @@ Page({
                     question.add({
                       data: {
                         //时间
+
                         answerTime: 0,
 
                         time: d,
@@ -426,6 +427,9 @@ Page({
 
                         collector: [],
                         collectNum: 0,
+
+                        liker: [],
+                        postLikeNum: 0,
 
                         warner: [],
                         warnerDetail: [],

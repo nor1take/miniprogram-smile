@@ -446,6 +446,7 @@ Page({
       this.setData({
         questionList: res.data,
         collectNum: res.data[0].collector.length,
+        postLikeNum: res.data[0].liker.length,
         openId: app.globalData.openId
       })
       console.log('成功获取 问题', res.data[0]._openid)
@@ -489,12 +490,12 @@ Page({
       })
     } else {
       wx.showToast({
-        title: '关注成功',
+        title: '收藏成功',
         icon: 'none'
       })
       const { questionList } = this.data
       let { collectNum } = this.data
-      console.log('关注 add', questionList[0].collector, app.globalData.questionId)
+      console.log('收藏 add', questionList[0].collector, app.globalData.questionId)
       questionList[0].collector.push(app.globalData.openId)
       collectNum++;
       this.setData({
@@ -511,12 +512,12 @@ Page({
   },
   collectCancel: function () {
     wx.showToast({
-      title: '取消关注',
+      title: '取消收藏',
       icon: 'none'
     })
     const { questionList } = this.data
     let { collectNum } = this.data
-    console.log('关注 cancel', questionList[0].collector)
+    console.log('收藏 cancel', questionList[0].collector)
     // questionList[0].collector.push(app.globalData.openId)
     let collectorIndex = questionList[0].collector.indexOf(app.globalData.openId)
     if (collectorIndex != -1) {
@@ -532,6 +533,61 @@ Page({
       data: {
         collector: _.pull(app.globalData.openId),
         collectNum: collectNum
+      }
+    })
+  },
+  postLikeAdd: function () {
+    console.log(app.globalData.openId)
+    if (app.globalData.openId == undefined) {
+      wx.showToast({
+        title: '登录后操作。点击左上角←返回主界面',
+        icon: 'none'
+      })
+    } else {
+      wx.showToast({
+        title: '点赞成功',
+        icon: 'none'
+      })
+      const { questionList } = this.data
+      let { postLikeNum } = this.data
+
+      questionList[0].liker.push(app.globalData.openId)
+      postLikeNum++;
+      this.setData({
+        questionList,
+        postLikeNum
+      })
+      question.doc(app.globalData.questionId).update({
+        data: {
+          liker: _.addToSet(app.globalData.openId),
+          postLikeNum: postLikeNum
+        }
+      })
+    }
+  },
+  postLikeCancel: function () {
+    wx.showToast({
+      title: '取消点赞',
+      icon: 'none'
+    })
+    const { questionList } = this.data
+    let { postLikeNum } = this.data
+
+    // questionList[0].collector.push(app.globalData.openId)
+    let likerIndex = questionList[0].liker.indexOf(app.globalData.openId)
+    if (likerIndex != -1) {
+      questionList[0].liker.splice(likerIndex, 1)
+      postLikeNum--;
+    }
+
+    this.setData({
+      questionList,
+      postLikeNum
+    })
+    question.doc(app.globalData.questionId).update({
+      data: {
+        liker: _.pull(app.globalData.openId),
+        postLikeNum: postLikeNum
       }
     })
   },
@@ -1593,7 +1649,8 @@ Page({
         app.globalData.questionCommentNum = this.data.questionList[0].commentNum,
         app.globalData.questionWatcher = this.data.questionList[0].watcher,
         app.globalData.questionWatched = this.data.questionList[0].watched,
-        app.globalData.questionCollect = this.data.collectNum
+        app.globalData.questionCollect = this.data.collectNum,
+        app.globalData.questionLikeNum = this.data.postLikeNum
     }
     else {
       app.globalData.questionDelete = true

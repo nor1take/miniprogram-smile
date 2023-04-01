@@ -115,25 +115,27 @@
     <view class="last">
       <text>{{filter.timeString(item.time)}}</text> ·
       <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
-      <text class="watched">{{collectNum}} 关注</text>
+      <text class="watched">{{collectNum}} 收藏</text> ·
+      <text class="watched">{{postLikeNum}} 喜欢</text>
     </view>
   </view>
 
-  <!--1-2-3 关注/回应按钮 -->
+  <!--1-2-3 收藏/回应按钮 -->
   <view class="FollowReplybutton-area">
     <block wx:if="{{isLogin}}">
       <block wx:if="{{item.isActivity}}">
         <button class="FollowReplybutton" type="primary" size="mini" style="width: 180rpx;" bindtap="goToRegist">报 名</button>
       </block>
       <block wx:else="">
-        <button wx:if="{{WXS.isInArray(openId, item.collector)}}" class="FollowReplybutton" style="color: #acacac;" size="mini" bindtap="collectCancel">已关注</button>
-        <button wx:else class="FollowReplybutton" size="mini" bindtap="collectAdd">关注帖子</button>
+        <i wx:if="{{WXS.isInArray(openId, item.collector)}}" class="iconfont icon-ic_public_highlight_filled" style="color: #FCC300; font-size: 64rpx;" bindtap="collectCancel"></i>
+        <i wx:else class="iconfont icon-ic_public_highlight" style="color: #d2d2d2; font-size: 64rpx;" bindtap="collectAdd"></i>
       </block>
     </block>
     <block wx:else="">
       <button class="FollowReplybutton" type="primary" size="mini" style="width: 180rpx;" bindtap="goToLogin">登 录</button>
     </block>
-    <!-- <button class="FollowReplybutton" size="mini" type="primary" bindtap="answer">回应</button> -->
+    <i wx:if="{{WXS.isInArray(openId, item.liker)}}" class="iconfont icon-ic_public_favor_filled" style="color: #F50057; font-size: 64rpx; margin-left: 32rpx;" bindtap="postLikeCancel"></i>
+    <i wx:else="" class="iconfont icon-ic_public_favor" style="color: #d2d2d2; font-size: 64rpx; margin-left: 32rpx;" bindtap="postLikeAdd"></i>
   </view>
   <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">
     <view style="display: flex; align-items: center; justify-content: center; padding-top: 2rpx;">

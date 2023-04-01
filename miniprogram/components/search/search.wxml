@@ -19,7 +19,7 @@
     </view>
     <view class="button" hover-class="hoverClass" bindtap="myCollect">
       <i class="iconfont icon-star-line" style="font-size: 50rpx; margin-right: 32rpx;"></i>
-      我的关注
+      我的收藏
     </view>
     <view class="button" hover-class="hoverClass" bindtap="myComment">
       <i class="iconfont icon-question-answer-line" style="font-size: 50rpx; margin-right: 32rpx;"></i>
@@ -47,7 +47,7 @@
       </button>
     </view>
   </view>
-  <view class="version">版本号：v1.3.4</view>
+  <view class="version">版本号：v1.3.5</view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>
 <view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>

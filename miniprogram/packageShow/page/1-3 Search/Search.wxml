@@ -3,7 +3,7 @@
 <return top="{{top}}" bottom="{{bottom}}" color="#F3F3F3"></return>
 
 <view class="searchContainer" style="width: 100%; position: fixed; top:{{top}}px;  z-index: 1;">
-  <input class="searchInput" confirm-type="search" focus style="margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input"placeholder="搜索标签/标题/正文"/>
+  <input class="searchInput" confirm-type="search" focus style="margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input" placeholder="搜索标签/标题/正文" />
 </view>
 <block wx:if="{{searchList.length == 0 && isDone}}">
   <view class="bottom" style="margin-top: 40%;">（搜索结果为空）</view>
@@ -26,7 +26,8 @@
       <view class="last">
         <text>{{filter.timeString(item.time)}}</text> ·
         <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
-        <text class="watched">{{item.collectNum}} 关注</text>
+        <text class="watched">{{item.collectNum}} 收藏</text> ·
+        <text class="watched">{{item.postLikeNum}} 喜欢</text>
       </view>
     </view>
     <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">

@@ -54,7 +54,8 @@ Page({
               $.sum(['$watched', $.size('$watcher')])
             ), 1]),
             $.multiply(['$collectNum', 8000]),
-            $.multiply(['$commentNum', 16000])
+            $.multiply(['$commentNum', 16000]),
+            $.multiply(['$postLikeNum', 32000]),
           ]),
           $.pow([
             $.sum(
@@ -127,7 +128,7 @@ Page({
     this.getData()
   },
 
-  onUnload() { 
+  onUnload() {
     console.log('HOT onUnload')
     app.globalData.isClick = false
   },

@@ -50,6 +50,7 @@ App({
       questionWatcher: [],
       questionWatched: 0,
       questionIndex: -1,
+      questionLikeNum: 0
     };
   },
 });

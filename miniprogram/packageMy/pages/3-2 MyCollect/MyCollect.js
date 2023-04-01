@@ -12,7 +12,7 @@ Page({
     tabs: [
       {
         id: 0,
-        name: '全部关注',
+        name: '全部收藏',
       },
       {
         id: 1,
@@ -145,84 +145,41 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  updateQuestionListAll: function () {
-    const { questionList } = this.data.tabs[0]
+  updateupdateQuestionList: function (index) {
+    const { questionList } = this.data.tabs[index]
     const { questionIndex } = app.globalData
     if (app.globalData.isClick && questionIndex != -1) {
       if (app.globalData.questionDelete) {
         app.globalData.questionDelete = false
         questionList.splice(questionIndex, 1)
-        this.setData({
-          'tabs[0].questionList': questionList
-        })
       }
       else {
         console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionWatcher,
-          questionList[questionIndex].watched = app.globalData.questionWatched,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
+        questionList[questionIndex].solved = app.globalData.questionSolved
+        questionList[questionIndex].commentNum = app.globalData.questionCommentNum
+        questionList[questionIndex].watcher = app.globalData.questionWatcher
+        questionList[questionIndex].watched = app.globalData.questionWatched
+        questionList[questionIndex].collectNum = app.globalData.questionCollect
+        questionList[questionIndex].postLikeNum = app.globalData.questionLikeNum
+      }
+      if (index === 0) {
         this.setData({
           'tabs[0].questionList': questionList
         })
-        // console.log(this.data.tabs[0].questionList[0])
-      }
-    }
-  },
-  updateQuestionListNo: function () {
-    const { questionList } = this.data.tabs[1]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick && questionIndex != -1) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 1) {
         this.setData({
           'tabs[1].questionList': questionList
         })
-      }
-      else {
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionWatcher,
-          questionList[questionIndex].watched = app.globalData.questionWatched,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          'tabs[1].questionList': questionList
-        })
-        console.log(this.data.tabs[1].questionList[0])
-      }
-    }
-  },
-  updateQuestionListYes: function () {
-    const { questionList } = this.data.tabs[2]
-    const { questionIndex } = app.globalData
-    if (app.globalData.isClick && questionIndex != -1) {
-      if (app.globalData.questionDelete) {
-        app.globalData.questionDelete = false
-        questionList.splice(questionIndex, 1)
+      } else if (index === 2) {
         this.setData({
           'tabs[2].questionList': questionList
         })
-      }
-      else {
-        questionList[questionIndex].collectNum = app.globalData.questionCollect
-        questionList[questionIndex].solved = app.globalData.questionSolved,
-          questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
-          questionList[questionIndex].watcher = app.globalData.questionWatcher,
-          questionList[questionIndex].watched = app.globalData.questionWatched,
-          this.setData({
-            'tabs[2].questionList': questionList
-          })
-        console.log(this.data.tabs[2].questionList[0])
       }
     }
   },
 
   onShow: function () {
-
     console.log(app.globalData.isAsk)
-
     if (app.globalData.isAsk) {
       this.getData()
       this.setData({
@@ -232,15 +189,7 @@ Page({
     }
 
     const { activeTab } = this.data
-    if (activeTab === 0) {
-      this.updateQuestionListAll()
-    }
-    else if (activeTab === 1) {
-      this.updateQuestionListNo()
-    }
-    else {
-      this.updateQuestionListYes()
-    }
+    this.updateupdateQuestionList(activeTab)
   },
 
   /**

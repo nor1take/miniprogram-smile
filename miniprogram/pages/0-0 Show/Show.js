@@ -338,6 +338,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    ////记得及时注释！！！
     // wx.cloud.callFunction({
     //   name: 'update',
     // })
@@ -422,10 +423,11 @@ Page({
           questionList[questionIndex].commentNum = app.globalData.questionCommentNum,
           questionList[questionIndex].watcher = app.globalData.questionWatcher,
           questionList[questionIndex].watched = app.globalData.questionWatched,
-          questionList[questionIndex].collectNum = app.globalData.questionCollect
-        this.setData({
-          questionList
-        })
+          questionList[questionIndex].collectNum = app.globalData.questionCollect,
+          questionList[questionIndex].postLikeNum = app.globalData.questionLikeNum,
+          this.setData({
+            questionList
+          })
         // console.log(this.data.tabs[0].questionList[0])
       }
     }
