@@ -50,7 +50,7 @@
         </block>
         <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
         <text class="watched">{{item.collectNum}} 收藏</text> ·
-        <text class="watched">{{item.postLikeNum}} 喜欢</text>
+        <text class="watched">{{item.postLikeNum}} 赞</text>
       </view>
     </view>
     <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">

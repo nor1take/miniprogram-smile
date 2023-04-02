@@ -140,11 +140,11 @@
     </block>
     <view wx:if="{{WXS.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
       <i class="iconfont icon-ic_public_favor_filled" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-      {{postLikeNum === 0 ? '喜欢' : postLikeNum}}
+      {{postLikeNum === 0 ? '赞' : postLikeNum}}
     </view>
     <view wx:else="" class="button-area" bindtap="postLikeAdd">
       <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-      {{postLikeNum === 0 ? '喜欢' : postLikeNum}}
+      {{postLikeNum === 0 ? '赞' : postLikeNum}}
     </view>
   </view>
   <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">

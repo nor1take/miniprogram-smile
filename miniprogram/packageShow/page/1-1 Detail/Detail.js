@@ -490,7 +490,7 @@ Page({
       })
     } else {
       wx.showToast({
-        title: '收藏成功',
+        title: '收藏 +1',
         icon: 'none'
       })
       const { questionList } = this.data
@@ -545,7 +545,7 @@ Page({
       })
     } else {
       wx.showToast({
-        title: '喜欢 +1',
+        title: '赞 +1',
         icon: 'none'
       })
       const { questionList } = this.data
