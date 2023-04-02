@@ -58,18 +58,19 @@
 
 /* 2 关注/回应按钮 */
 .FollowReplybutton-area {
+  font-size: small;
   padding: 32rpx;
+  padding-top: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
 
-.FollowReplybutton {
-  /* font-weight: 100; */
+.button-area {
+  color: #ACACAC;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 32rpx;
 }
 
 /* 3 评论 */

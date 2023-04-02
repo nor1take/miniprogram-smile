@@ -545,7 +545,7 @@ Page({
       })
     } else {
       wx.showToast({
-        title: '点赞成功',
+        title: '喜欢 +1',
         icon: 'none'
       })
       const { questionList } = this.data
@@ -566,10 +566,6 @@ Page({
     }
   },
   postLikeCancel: function () {
-    wx.showToast({
-      title: '取消点赞',
-      icon: 'none'
-    })
     const { questionList } = this.data
     let { postLikeNum } = this.data
 
