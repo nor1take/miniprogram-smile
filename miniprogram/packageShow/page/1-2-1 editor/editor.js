@@ -253,6 +253,9 @@ Page({
                       commentNum: 0,
                       commenter: [],
 
+                      liker: [],
+                      postLikeNum: 0,
+
                       message: 0,
 
                       collector: [],
