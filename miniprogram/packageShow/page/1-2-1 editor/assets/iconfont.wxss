@@ -76,6 +76,7 @@
 }
 
 .icon-723bianjiqi_duanhouju:before {
+  /* 段后距 */
   content: "\e65f";
 }
 
@@ -100,6 +101,7 @@
 }
 
 .icon-baocun:before {
+  /* 保存 */
   content: "\ec09";
 }
 
@@ -108,6 +110,7 @@
 }
 
 .icon-quanping:before {
+  /* 全屏 */
   content: "\ec13";
 }
 
@@ -124,18 +127,22 @@
 }
 
 .icon-fuzhi:before {
+  /* 复制 */
   content: "\ec7a";
 }
 
 .icon-shanchu:before {
+  /* 删除 */
   content: "\ec7b";
 }
 
 .icon-bianjisekuai:before {
+  /* 编辑色块 */
   content: "\ec7c";
 }
 
 .icon-fengexian:before {
+  /* 分割线 */
   content: "\ec7f";
 }
 
@@ -144,6 +151,7 @@
 }
 
 .icon-charulianjie:before {
+  /* 插入链接 */
   content: "\ec81";
 }
 

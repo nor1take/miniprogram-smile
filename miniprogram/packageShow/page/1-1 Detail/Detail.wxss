@@ -33,7 +33,7 @@
 }
 
 .body {
-
+  word-break: break-all;
   display: flex;
   align-items: center;
   font-size: 34rpx;

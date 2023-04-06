@@ -291,6 +291,11 @@ Page({
           commentList: res.data,
           openId: app.globalData.openId
         })
+        if (res.data.length == 0) {
+          this.setData({
+            isFold: false
+          })
+        }
       })
   },
   showActionSheetChange: function (word) {
@@ -449,6 +454,7 @@ Page({
         postLikeNum: res.data[0].liker.length,
         openId: app.globalData.openId
       })
+
       console.log('成功获取 问题', res.data[0]._openid)
 
       let length = res.data[0].watcher.length;
@@ -1552,9 +1558,10 @@ Page({
           question.doc(app.globalData.questionId).update({
             data: {
               // watched: _.inc(1)
-              watcher: _.addToSet(app.globalData.openId)
+              watcher: _.addToSet(res.data[0]._openid)
             }
-          }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+          })
+
           this.setData({
             nickName: res.data[0].nickName,
             avatarUrl: res.data[0].avatarUrl,
@@ -1576,6 +1583,13 @@ Page({
       })
       .catch(() => {
         console.log('用户未登录')
+        let d = new Date().getTime();
+        question.doc(app.globalData.questionId).update({
+          data: {
+            // watched: _.inc(1)
+            watcher: _.addToSet('guest' + d)
+          }
+        })
         this.setData({
           nickName: '',
           avatarUrl: '',
