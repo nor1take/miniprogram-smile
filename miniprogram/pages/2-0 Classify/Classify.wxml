@@ -4,7 +4,7 @@
     <view slot="tab-content-{{index}}">
       <view style="width:100%; height: {{bottom}}px;"></view>
 
-      <block wx:if="{{index == 1 && hasTheme}}">
+      <block wx:if="{{index == 2 && hasTheme}}">
         <view class="themeContainer">
           <view class="themeTitle">{{themeTitle}}</view>
           <text class="themeBody">{{themeBody}}</text>

@@ -13,10 +13,12 @@ Page({
     //记得修改 case 1 * 2 / else if (index === 1 {
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
-      { id: 13, name: '#3 令你心动的offer', questionList: [] },
-      { id: 1, name: '学习', questionList: [] },
-      { id: 2, name: '生活', questionList: [] },
+      { id: 15, name: 'ChatGPT', questionList: [] },
+      { id: 14, name: '#4 耳机分你一半', questionList: [] },
       { id: 3, name: '音乐', questionList: [] },
+      { id: 1, name: '学习', questionList: [] },
+      { id: 13, name: '#3 令你心动的offer', questionList: [] },
+      { id: 2, name: '生活', questionList: [] },
       { id: 4, name: '美食', questionList: [] },
       { id: 5, name: '恋爱', questionList: [] },
       { id: 6, name: '游戏', questionList: [] },
@@ -29,8 +31,8 @@ Page({
     ],
 
     hasTheme: true,
-    themeTitle: '令你心动的offer',
-    themeBody: '考研/保研/留学/工作/…\n\n无论你是否已着手准备，还是仍然迷茫着，都希望你能在这里有所收获。\n\n说出你的疑惑，分享你的经验，最终拿到令你心动的offer。',
+    themeTitle: '耳机分你一半',
+    themeBody: 'Music saves lives. 音乐拯救生命。\n\n耳机分你一半，与同好灵魂共振，分享音乐的美好，探索音乐的可能。',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',

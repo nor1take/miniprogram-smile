@@ -177,11 +177,11 @@ Page({
   },
   data: {
     tagsList: [
-      'ChatGPT',
-      '#3 令你心动的offer',
-      '学习',
-      '生活',
+      '#4 耳机分你一半',
       '音乐',
+      '学习',
+      '#3 令你心动的offer',
+      '生活',
       '美食',
       '恋爱',
       '读书',
@@ -196,7 +196,7 @@ Page({
     titleContent: false,
 
     tagId: 1,
-    tag: 'ChatGPT',
+    tag: '#4 耳机分你一半',
     _unknown: false,
     focus: false,
 
@@ -469,6 +469,9 @@ Page({
 
                       //ChatGPT内测使用：tag为ChatGPT时发布评论
                       if (tag == 'ChatGPT') {
+                        /**
+                         * 云函数
+                         */
                         // wx.cloud.callFunction({
                         //   name: 'gptComment',
                         //   data: {
@@ -476,7 +479,11 @@ Page({
                         //     postId: _id
                         //   },
                         // })
-                        that.gptsentComment(prompt, _id)
+                        
+                        /**
+                         * 本地函数
+                         */
+                        //that.gptsentComment(prompt, _id)
                       }
 
                       traceId.orderBy('CreateTime', 'desc').get()
