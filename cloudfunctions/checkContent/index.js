@@ -5,10 +5,11 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 exports.main = async (event, context) => {
   const { value, txt, scene } = event;
   const { OPENID } = cloud.getWXContext()
+  // const OPENID = 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs'
   try {
     let msgR = false;
     let imageR = false;
-    
+
     //检查 文字内容是否违规
     if (txt) {
       msgR = await cloud.openapi.security.msgSecCheck({
@@ -32,7 +33,8 @@ exports.main = async (event, context) => {
     return {
       msgR,   //内容检查返回值
       imageR,   //图片检查返回值
-      value
+      value,
+      txt
     };
   } catch (err) {
     // 错误处理

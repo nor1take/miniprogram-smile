@@ -2,6 +2,7 @@ const app = getApp()
 const db = wx.cloud.database()
 const _ = db.command
 const question = db.collection('question')
+const comment = db.collection('comment')
 const traceId = db.collection('traceId')
 const systemMsg = db.collection('systemMsg')
 const userInfo = db.collection('userInfo')
@@ -176,6 +177,7 @@ Page({
   },
   data: {
     tagsList: [
+      'ChatGPT',
       '#3 令你心动的offer',
       '学习',
       '生活',
@@ -194,7 +196,7 @@ Page({
     titleContent: false,
 
     tagId: 1,
-    tag: '#3 令你心动的offer',
+    tag: 'ChatGPT',
     _unknown: false,
     focus: false,
 
@@ -298,7 +300,26 @@ Page({
    * @param {*传入的表单} e 
    */
   formSubmit(e) {
+
     let that = this
+
+    const { title } = e.detail.value;
+    const { body } = e.detail.value;
+    const { tag } = that.data;
+
+
+    //ChatGPT 内测使用：限制提问文字长度
+    const prompt = title + body
+    if (tag == 'ChatGPT') {
+      if (prompt.length > 300) {
+        wx.showToast({
+          title: '字数超过 300 字',
+          icon: 'none'
+        })
+        return;
+      }
+    }
+
     wx.requestSubscribeMessage({
       tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
       complete(res1) {
@@ -307,9 +328,6 @@ Page({
           title: '审核中',
           mask: true
         })
-        const { title } = e.detail.value;
-        const { body } = e.detail.value;
-        const { tag } = that.data;
 
         userInfo.where({
           _openid: '{openid}'
@@ -448,6 +466,19 @@ Page({
                        * 1、拿到全部的traceId集合（违规图片集合）
                        */
                       const { _id } = res
+
+                      //ChatGPT内测使用：tag为ChatGPT时发布评论
+                      if (tag == 'ChatGPT') {
+                        // wx.cloud.callFunction({
+                        //   name: 'gptComment',
+                        //   data: {
+                        //     prompt: prompt,
+                        //     postId: _id
+                        //   },
+                        // })
+                        that.gptsentComment(prompt, _id)
+                      }
+
                       traceId.orderBy('CreateTime', 'desc').get()
                         .then((res) => {
                           console.log(res)
@@ -475,8 +506,6 @@ Page({
                           })
                         })
                     })
-
-
                   }
 
                 }
@@ -485,7 +514,105 @@ Page({
           })
       }
     })
+  },
 
+  //ChatGPT内测使用：审核 completion
+  gptsentComment: function (prompt, postId) {
+    let that = this
+    wx.request({
+      url: 'https://n58770595y.zicp.fun/gpt',
+      data: {
+        prompt: prompt
+      },
+      timeout: 60000000,
+      success(res) {
+        console.log(res.data)
+        const completion = res.data
+        wx.cloud.callFunction({
+          name: 'checkContent',
+          data: {
+            txt: completion,
+            scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+          },
+          success(_res) {
+            console.log(_res)
+            if (_res.result.msgR) {
+              const { label } = _res.result.msgR.result
+              const { suggest } = _res.result.msgR.result
+              if (suggest === 'risky') {
+                that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', postId)
+              } else if (suggest === 'review') {
+                console.log('可能包含' + matchLabel(label) + '信息')
+                that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, postId)
+              } else {
+                that.sendCompletion(completion, postId)
+              }
+            } else {
+              that.sendCompletion(completion, postId)
+            }
+          },
+          fail(_res) {
+            console.log('checkContent云函数调用失败', _res)
+          }
+        })
+      },
+      fail(err) {
+        console.log(err.data)
+      }
+    })
+  },
+
+  //ChatGPT内测使用：发布 completion
+  sendCompletion: function (completion, postId) {
+    var d = new Date().getTime()
+
+
+    question.doc(postId).update({ data: { commentNum: _.inc(1) } })
+    question.doc(postId).get().then(res => {
+      console.log(res)
+      //console.log(res[0].data)
+      console.log(res.data)
+      console.log(res.data.title)
+      const { title } = res.data
+      const posterId = res.data._openid
+      wx.cloud.callFunction({
+        name: 'sendMsg',
+        data: {
+          receiver: posterId,
+          questionId: postId,
+          sender: 'ChatGPT',
+          commentBody: completion,
+          postTitle: title
+        }
+      })
+      comment.add({
+        data: {
+          //时间
+          time: d,
+
+          isUnknown: false,
+          questionId: postId,
+          questionTitle: title,
+          posterId: posterId,
+
+          body: completion,
+          commentNum: 0,
+          nickname: 'ChatGPT',
+          image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/oJ-6m5axZUm5_3cDLwmUjyA0Jwvs/avatar1680586472951',
+
+          commenter: [],
+          liker: [],
+          likerNum: 0,
+          image_upload: [],
+
+          isAuthentic: true,
+          idTitle: '内测版',
+
+          warner: [],
+          warnerDetail: [],
+        },
+      })
+    })
 
   },
 

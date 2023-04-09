@@ -61,7 +61,8 @@ Page({
     question.doc(e.currentTarget.id).update({
       data: {
         // watched: _.inc(1)
-        watcher: _.addToSet(app.globalData.openId)
+        watcher: _.addToSet(app.globalData.openId),
+        tmp:_.addToSet(app.globalData.openId)
       }
     })
   },

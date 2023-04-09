@@ -166,7 +166,8 @@ Page({
     question.doc(e.currentTarget.id).update({
       data: {
         // watched: _.inc(1),
-        watcher: _.addToSet(app.globalData.openId)
+        watcher: _.addToSet(app.globalData.openId),
+        tmp: _.addToSet(app.globalData.openId)
       }
     })
   },
@@ -342,15 +343,6 @@ Page({
     // wx.cloud.callFunction({
     //   name: 'update',
     // })
-    // wx.request({
-    //   url: 'https://n58770595y.zicp.fun',
-    //   success(res) {
-    //     console.log(res.data)
-    //   },
-    //   fail(err) {
-    //     console.log(err.data)
-    //   }
-    // })
     console.log('onLoad')
     const { id } = options
     if (id != undefined) {
@@ -362,7 +354,7 @@ Page({
           question.doc(id).update({
             data: {
               // watched: _.inc(1),
-              watcher: _.addToSet('guest' + d)
+              watcher: _.addToSet('guest' + d),
             }
           })
           wx.navigateTo({

@@ -1558,7 +1558,8 @@ Page({
           question.doc(app.globalData.questionId).update({
             data: {
               // watched: _.inc(1)
-              watcher: _.addToSet(res.data[0]._openid)
+              watcher: _.addToSet(res.data[0]._openid),
+              tmp:_.addToSet(res.data[0]._openid)
             }
           })
 
