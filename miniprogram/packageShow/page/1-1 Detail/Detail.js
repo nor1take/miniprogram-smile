@@ -291,11 +291,6 @@ Page({
           commentList: res.data,
           openId: app.globalData.openId
         })
-        if (res.data.length == 0) {
-          this.setData({
-            isFold: false
-          })
-        }
       })
   },
   showActionSheetChange: function (word) {
@@ -378,7 +373,8 @@ Page({
     console.log('上传图片')
     wx.chooseMedia({
       count: 9,
-      sizeType: ['original', 'compressed'],
+      // sizeType: ['original', 'compressed'],
+      sizeType: ['compressed'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
@@ -454,6 +450,12 @@ Page({
         postLikeNum: res.data[0].liker.length,
         openId: app.globalData.openId
       })
+
+      if (res.data[0].commentNum <= 1) {
+        this.setData({
+          isFold: false
+        })
+      }
 
       console.log('成功获取 问题', res.data[0]._openid)
 
@@ -1559,7 +1561,7 @@ Page({
             data: {
               // watched: _.inc(1)
               watcher: _.addToSet(res.data[0]._openid),
-              tmp:_.addToSet(res.data[0]._openid)
+              tmp: _.addToSet(res.data[0]._openid)
             }
           })
 

@@ -18,6 +18,9 @@ Page({
   /**
    * 页面的初始数据
    */
+  options: {
+    pureDataPattern: /^_/
+  },
   data: {
     isLogin: false,
     sortWord: '最新发帖',
@@ -111,12 +114,6 @@ Page({
           this.getNewAnswer()
           this.setData({
             sortWord: '最新回应',
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            day: d.getDate(),
-            h: d.getHours(),
-            m: d.getMinutes(),
-            s: d.getSeconds(),
           })
         }
         else {
@@ -127,14 +124,7 @@ Page({
           })
           this.getNewData()
           this.setData({
-            sortWord: '最新发帖',
-
-            year: d.getFullYear(),
-            month: d.getMonth() + 1,
-            day: d.getDate(),
-            h: d.getHours(),
-            m: d.getMinutes(),
-            s: d.getSeconds(),
+            sortWord: '最新发帖'
           })
 
         }
@@ -177,13 +167,6 @@ Page({
     if (this.data.sortWord == "最新发帖") this.getNewData()
     else this.getNewAnswer()
     this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-
       top: app.globalData.top,
       left: app.globalData.left,
       right: app.globalData.right,
@@ -385,9 +368,8 @@ Page({
       })
     }
     var d = new Date().getTime()
-    this.setData({
-      startTime: d
-    })
+    this.startTimeData = { startTime: d }
+
 
     if (app.globalData.stayTime / 1000 / 10 > 1) {
       console.log('getCurrentMessageNum')
@@ -438,7 +420,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    var stayTime = new Date().getTime() - this.data.startTime
+    var stayTime = new Date().getTime() - this.startTimeData.startTime
     app.globalData.stayTime += stayTime
     app.globalData.isClick = false
   },

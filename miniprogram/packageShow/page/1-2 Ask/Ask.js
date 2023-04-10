@@ -268,7 +268,8 @@ Page({
   upload: function (e) {
     wx.chooseMedia({
       count: 9,
-      sizeType: ['original', 'compressed'],
+      // sizeType: ['original', 'compressed'],
+      sizeType: ['compressed'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
@@ -309,16 +310,16 @@ Page({
 
 
     //ChatGPT 内测使用：限制提问文字长度
-    const prompt = title + body
-    if (tag == 'ChatGPT') {
-      if (prompt.length > 300) {
-        wx.showToast({
-          title: '字数超过 300 字',
-          icon: 'none'
-        })
-        return;
-      }
-    }
+    // const prompt = title + body
+    // if (tag == 'ChatGPT') {
+    //   if (prompt.length > 300) {
+    //     wx.showToast({
+    //       title: '字数超过 300 字',
+    //       icon: 'none'
+    //     })
+    //     return;
+    //   }
+    // }
 
     wx.requestSubscribeMessage({
       tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],

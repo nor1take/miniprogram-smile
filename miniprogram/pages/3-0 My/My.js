@@ -37,8 +37,6 @@ Page({
 
     reachBottom: false,
     top: 48,
-
-    loading: false
   },
 
   gotoDetail: function (e) {
@@ -164,13 +162,6 @@ Page({
   getData: function () {
     var d = new Date();
     this.setData({
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate(),
-      h: d.getHours(),
-      m: d.getMinutes(),
-      s: d.getSeconds(),
-
       top: app.globalData.top,
       // height:app.globalData.height
       // left: app.globalData.left,
@@ -197,9 +188,6 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.setData({
-      loading: true
-    })
   },
 
   /**

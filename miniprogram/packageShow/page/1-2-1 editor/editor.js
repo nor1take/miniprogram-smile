@@ -117,7 +117,7 @@ Page({
 
     _unknown: false,
     tagId: 1,
-    tag: '#3 令你心动的offer',
+    tag: '#4 耳机分你一半',
     fileID: [],
 
     top: 48,
@@ -126,10 +126,11 @@ Page({
     bottom: 80,
 
     tagsList: [
-      '#3 令你心动的offer',
-      '学习',
-      '生活',
+      '#4 耳机分你一半',
       '音乐',
+      '学习',
+      '#3 令你心动的offer',
+      '生活',
       '美食',
       '恋爱',
       '读书',
@@ -461,7 +462,8 @@ Page({
     const that = this
     wx.chooseMedia({
       count: 1,
-      sizeType: ['original', 'compressed'],
+      // sizeType: ['original', 'compressed'],
+      sizeType: ['compressed'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
