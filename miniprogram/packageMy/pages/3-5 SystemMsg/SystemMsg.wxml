@@ -30,6 +30,6 @@
       </block>
     </block>
   </view>
-  <view class="last">{{filter.timeString(item.time)}}</view>
+  <view class="last">{{filter.timeString(item.time, true)}}</view>
 </view>
 <view class="bottom"></view>
