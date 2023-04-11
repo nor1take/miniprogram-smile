@@ -113,7 +113,7 @@
 
 
     <view class="last">
-      <text>{{filter.timeString(item.time)}}</text> ·
+      <text>{{filter.timeString(item.time, true)}}</text> ·
       <text class="watched">{{item.watched + item.watcher.length}} 浏览</text>
     </view>
   </view>

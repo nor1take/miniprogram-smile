@@ -47,7 +47,7 @@
       </button>
     </view>
   </view>
-  <view class="version">版本号：v1.4.5</view>
+  <view class="version">版本号：v1.4.6</view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>
 <view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>

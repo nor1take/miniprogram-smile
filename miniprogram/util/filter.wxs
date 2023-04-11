@@ -11,28 +11,55 @@ var int = function (score) {
   return value.toFixed(2);
 }
 
-var timeString = function (time) {
-  if (time == null || time == 0) return '';
-  var t1 = getDate().getTime();
-  var t2 = time;
-  var d = (t1 - t2) / 1000;
 
-  if (d < 30) return "刚刚";
-  else if (d < 60) return (parseInt(d) + " 秒前");
-  else if (d < 60 * 60) return (parseInt(d / 60) + " 分钟前");
-  else if (d < 60 * 60 * 24) return (parseInt(d / 60 / 60) + " 小时前");
-  else if (d < 60 * 60 * 24 * 2) return "昨天";
-  else if (d < 60 * 60 * 24 * 3) return "前天";
-  else if (d < 60 * 60 * 24 * 30) return (parseInt(d / 60 / 60 / 24) + " 天前");
-  else {
-    var date = getDate(time * 1000);
-    var Y = date.getFullYear() + '-';
-    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-    var D = date.getDate() + ' ';
-    var h = date.getHours() + ':';
-    var m = date.getMinutes() + ':';
-    var s = date.getSeconds();
-    return Y + M + D + h + m + s;
+function extendZero(num) {
+  if (num > 9) return num;
+  return '0' + num;
+}
+
+var timeString = function (time, isFull = false) {
+  if (time == null || time == 0) return '';
+  var now = getDate();
+  var date = getDate(time);
+  if (!isFull) {
+    var t1 = now.getTime();
+    var t2 = time;
+    var d = (t1 - t2) / 1000;
+
+    if (d < 30) return "刚刚";
+    else if (d < 60) return (parseInt(d) + " 秒前");
+    else if (d < 60 * 60) return (parseInt(d / 60) + " 分钟前");
+    else if (d < 60 * 60 * 24) return (parseInt(d / 60 / 60) + " 小时前");
+    else if (d < 60 * 60 * 24 * 2) return "昨天";
+    else if (d < 60 * 60 * 24 * 3) return "前天";
+    else if (d < 60 * 60 * 24 * 30) return (parseInt(d / 60 / 60 / 24) + " 天前");
+    else if (date.getFullYear() == now.getFullYear()) {
+      var M = extendZero(date.getMonth() + 1) + '-';
+      var D = extendZero(date.getDate());
+      return M + D;
+    }
+    else {
+      var Y = date.getFullYear() - 2000 + '-';
+      var M = extendZero(date.getMonth() + 1) + '-';
+      var D = extendZero(date.getDate());
+      return Y + M + D;
+    }
+  } else {
+    if (date.getFullYear() == now.getFullYear()) {
+      var M = extendZero(date.getMonth() + 1) + '-';
+      var D = extendZero(date.getDate()) + ' ';
+      var h = extendZero(date.getHours()) + ':';
+      var m = extendZero(date.getMinutes());
+      return M + D + h + m;
+    }
+    else {
+      var Y = date.getFullYear() - 2000 + '-';
+      var M = extendZero(date.getMonth() + 1) + '-';
+      var D = extendZero(date.getDate()) + ' ';
+      var h = extendZero(date.getHours()) + ':';
+      var m = extendZero(date.getMinutes());
+      return Y + M + D + h + m;
+    }
   }
 }
 
