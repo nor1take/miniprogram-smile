@@ -19,6 +19,7 @@
       <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
   </swiper>
+  <i class="iconfont icon-openai gptlogo" bindtap="goToChatGPT"></i>
   <view class="sort" bindtap="sort">
     <view class="sortImage">
       <i class="iconfont icon-sort-asc" style="font-size: 37rpx; color: #0C88B5;"></i>

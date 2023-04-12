@@ -1,0 +1,104 @@
+<wxs module="WXS">
+  var isInArray = function (v, a) {
+    if (a) {
+      for (var i = 0; i < a.length; i++) {
+        if (v == a[i]) return true
+      }
+    }
+    return false
+  }
+  module.exports = {
+    isInArray: isInArray
+  };
+</wxs>
+<return top="{{top}}" bottom="{{bottom}}" topWord="ChatGPT"></return>
+<wxs src="../../../util/filter.wxs" module="filter" />
+
+<!-- <scroll-view class="tabs" scroll-x="true" scroll-with-animation enhanced show-scrollbar="{{false}}"> -->
+<swiper class="swiperContainer" indicator-dots autoplay circular interval='5000' style="height: {{screenHeight}}px;">
+  <swiper-item>
+    <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/8d14e8f0-e267-4b8b-a9f2-a79120808f5a/chatgpt.jpg?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
+      <view class="hotLabel">热门提问 TOP 3</view>
+      <block>
+        <view class="background hotQ" wx:for="{{hotPostList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+          <view style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+            <view wx:if="{{index+1 == 1}}" style="color: {{color1}}; font-weight: bolder;">{{index+1}}</view>
+            <view wx:elif="{{index+1 == 2}}" style="color: {{color2}}; font-weight: bolder;">{{index+1}}</view>
+            <view wx:elif="{{index+1 == 3}}" style="color: {{color3}}; font-weight: bolder;">{{index+1}}</view>
+            <view class="title hotTitle">{{item.title}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </swiper-item>
+  <swiper-item>
+    <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/c51f2c96-3595-48ae-9fb6-165563fbb086/chat-plugins.png?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
+      <view class="hotLabel">热门回答 TOP 3</view>
+      <block>
+        <view class="background hotQ" wx:for="{{hotCommentList}}" wx:key="_id" id="{{item.questionId}}" data-index="{{index}}" bindtap="beWatched">
+          <view wx:if="{{index+1 == 1}}" style="color: {{color1}}; font-weight: bolder;">{{index+1}}</view>
+          <view wx:elif="{{index+1 == 2}}" style="color: {{color2}}; font-weight: bolder;">{{index+1}}</view>
+          <view wx:elif="{{index+1 == 3}}" style="color: {{color3}}; font-weight: bolder;">{{index+1}}</view>
+          <view class="title hotTitle" style="font-size: 28rpx;">“{{filter.abbreviation(item.body)}}”</view>
+        </view>
+      </block>
+    </view>
+  </swiper-item>
+</swiper>
+
+<view class="hotLabel" style="color: black;">最新提问</view>
+
+<view class="background" wx:for="{{newPostList}}" wx:key="_id">
+  <view>
+    <view class="word">
+      <view class="tag">
+        <image src="{{item.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
+        {{item.nickName}}
+      </view>
+      <view class="title">{{item.title}}</view>
+      <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+    </view>
+    <view class="last">
+      <!-- 帖子点赞 -->
+      <view>{{filter.timeString(item.time)}}</view>
+      <view style="display: flex; flex-direction: row; align-items: center;">
+        <view wx:if="{{WXS.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel" id="{{item._id}}" data-index="{{index}}">
+          <i class="iconfont icon-ic_public_favor_filled" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+        </view>
+        <view wx:else="" class="button-area" bindtap="postLikeAdd" id="{{item._id}}" data-index="{{index}}">
+          <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{item.commenter[0].completion}}" class="body gptComment">
+      <view style="display: flex;">
+        <i class="iconfont icon-openai" style="font-size: 50rpx; margin-right: 32rpx; color: #47A082;"></i>
+        <view class="commentBody">{{item.commenter[0].completion}}</view>
+      </view>
+      <view style="display: flex; justify-content: flex-end;">
+        <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.commenter[0].liker)}}" id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
+          <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
+        </view>
+        <view class="buttonLike" wx:else id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
+          <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #ACACAC;"></i>
+        </view>
+      </view>
+      <!-- 评论点赞 -->
+
+    </view>
+  </view>
+</view>
+<view class="last" style="display: flex; justify-content: center; align-items: center;">仅展示前20条。前往 分类-ChatGPT 标签下查看全部发帖。</view>
+<view style="width: 100%; height: 500rpx;"></view>
+
+
+<view class="background gptBG" style="bottom: {{keyboardHeight}}px;">
+  <i class="iconfont icon-openai" style="font-size: 60rpx; color: white;"></i>
+  <block wx:if="{{isTesting}}">
+    <textarea class="gptInput" placeholder-style="color:white" maxlength="300" placeholder="在这里输入你的问题 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
+    <i class="iconfont icon-ic_public_email_send" style="font-size: 60rpx; color: white;" bindtap="send"></i>
+  </block>
+  <block wx:else="">
+    <textarea class="gptInput" placeholder-style="color:white" disabled placeholder="{{testMsg}}" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}"></textarea>
+  </block>
+</view>

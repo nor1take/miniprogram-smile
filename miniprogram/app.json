@@ -48,7 +48,8 @@
         "page/1-3 Search/Search",
         "page/1-4 Hot/Hot",
         "page/1-2-1 editor/editor",
-        "page/1-2-2 regist/regist"
+        "page/1-2-2 regist/regist",
+        "page/1-5 ChatGPT/ChatGPT"
       ]
     },
     {
@@ -59,7 +60,8 @@
         "pages/3-2 MyCollect/MyCollect",
         "pages/3-3 MyComment/MyComment",
         "pages/3-4 WarnPosts/WarnPosts",
-        "pages/3-5 SystemMsg/SystemMsg"
+        "pages/3-5 SystemMsg/SystemMsg",
+        "pages/3-0 MySpace/MySpace"
       ]
     },
     {

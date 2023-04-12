@@ -36,7 +36,7 @@
       <i class="iconfont icon-more-fill" style="font-size: 25px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap"></i>
     </view>
     <view class="middle" wx:if="{{!item.unknown}}">
-      <image src="{{item.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx;"></image>
+      <avatar avatarUrl="{{item.avatarUrl}}" length="55"></avatar>
       <view class="nickName">{{item.nickName}}
         <block wx:if="{{item.isAuthentic}}">
           <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>

@@ -52,6 +52,12 @@ Page({
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
 
+  goToChatGPT: function () {
+    wx.navigateTo({
+      url: '../../packageShow/page/1-5 ChatGPT/ChatGPT',
+    })
+  },
+
   goToTop: function () {
     wx.pageScrollTo({
       scrollTop: 0,
@@ -80,7 +86,11 @@ Page({
     })
   },
   getNewData: function () {
-    question.orderBy('time', 'desc').get()
+    question.
+      where({
+        tag: _.neq('ChatGPT')
+      })
+      .orderBy('time', 'desc').get()
       .then((res) => {
         // console.log(res.data)
         this.setData({
@@ -90,6 +100,7 @@ Page({
   },
   getNewAnswer: function () {
     question.where({
+      tag: _.neq('ChatGPT'),
       commenter: _.neq([])
     }).orderBy('answerTime', 'desc').get()
       .then((res) => {
@@ -329,22 +340,29 @@ Page({
     console.log('onLoad')
     const { id } = options
     if (id != undefined) {
-      app.globalData.questionId = id
-      let d = new Date().getTime();
-      console.log(d)
-      setTimeout(
-        function () {
-          question.doc(id).update({
-            data: {
-              // watched: _.inc(1),
-              watcher: _.addToSet('guest' + d),
-            }
-          })
-          wx.navigateTo({
-            url: '../../packageShow/page/1-1 Detail/Detail',
-          })
-        }
-        , 500)
+      if (id === 'gpt') {
+        wx.navigateTo({
+          url: '../../packageShow/page/1-5 ChatGPT/ChatGPT',
+        })
+      } else {
+        app.globalData.questionId = id
+        let d = new Date().getTime();
+        console.log(d)
+        setTimeout(
+          function () {
+            question.doc(id).update({
+              data: {
+                // watched: _.inc(1),
+                watcher: _.addToSet('guest' + d),
+              }
+            })
+            wx.navigateTo({
+              url: '../../packageShow/page/1-1 Detail/Detail',
+            })
+          }
+          , 500)
+      }
+
     }
     this.getNicknameandImage()
     this.getData()
@@ -453,6 +471,7 @@ Page({
     const showNum = questionList.length
     if (this.data.sortWord == "最新发帖") {
       question.where({
+        tag: _.neq('ChatGPT'),
         time: _.lte(questionList[0].time)
       }).count().then((res) => {
         if (showNum < res.total) {
@@ -460,6 +479,7 @@ Page({
             isBottom: false,
           })
           question.where({
+            tag: _.neq('ChatGPT'),
             time: _.lt(questionList[showNum - 1].time)
           }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
@@ -478,6 +498,7 @@ Page({
     }
     else {
       question.where({
+        tag: _.neq('ChatGPT'),
         answerTime: _.lte(questionList[0].answerTime),
         commenter: _.neq([])
       }).count().then((res) => {
@@ -486,6 +507,7 @@ Page({
             isBottom: false,
           })
           question.where({
+            tag: _.neq('ChatGPT'),
             answerTime: _.lt(questionList[showNum - 1].answerTime),
             commenter: _.neq([]),
           }).orderBy('answerTime', 'desc').get().then(res => {

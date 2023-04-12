@@ -1,6 +1,17 @@
 @import "../../assets/iconfont.wxss";
+
 .topBlock {
   background-color: #f3f3f3;
+}
+
+.gptlogo {
+  background-color: #3d3d3d;
+  font-size: 45rpx;
+  margin-left: 32rpx;
+  margin-right: 32rpx;
+  padding: 16rpx;
+  color: #47A082;
+  border-radius: 30rpx;
 }
 
 movable-area {
@@ -43,15 +54,14 @@ movable-view {
 .swiperContainer {
   width: 100%;
   /* border: 1rpx solid black; */
-  margin-right: 32rpx;
   margin-left: 32rpx;
-  border-radius: 40rpx;
+  border-radius: 30rpx;
   height: 80rpx;
 }
 
 .swiperItem {
   background-color: #3d3d3d;
-  border-radius: 40rpx;
+  border-radius: 30rpx;
   display: flex;
   align-items: center;
   color: white;
@@ -103,6 +113,9 @@ movable-view {
 ** 夜间模式
 ******************************************************************/
 @media (prefers-color-scheme: dark) {
+  .gptlogo {
+    background-color: black;
+  }
   .topBlock {
     background-color: #3d3d3d;
   }

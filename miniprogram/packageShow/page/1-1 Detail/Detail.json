@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "return":"../../../components/return-noTab/return-noTab"
+    "return": "../../../components/return-noTab/return-noTab",
+    "avatar": "../../../components/avatar/avatar"
   }
-
 }

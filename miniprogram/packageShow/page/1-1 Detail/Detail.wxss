@@ -230,11 +230,11 @@
 }
 
 .bottomInput-Container {
-  width: 100%;
-  height: fit-content;
-
   position: fixed;
-
+  left: 0;
+  right: 0;
+  height: fit-content;
+  
   border-top: 1rpx solid #ECECEC;
   background-color: white;
 
