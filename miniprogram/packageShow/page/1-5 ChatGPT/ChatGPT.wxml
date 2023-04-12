@@ -18,7 +18,7 @@
 <swiper class="swiperContainer" indicator-dots autoplay circular interval='5000' style="height: {{screenHeight}}px;">
   <swiper-item>
     <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/8d14e8f0-e267-4b8b-a9f2-a79120808f5a/chatgpt.jpg?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
-      <view class="hotLabel">热门提问 TOP 3</view>
+      <view class="hotLabel" style="color: white;">热门提问 TOP 3</view>
       <block>
         <view class="background hotQ" wx:for="{{hotPostList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
           <view style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
@@ -33,7 +33,7 @@
   </swiper-item>
   <swiper-item>
     <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/c51f2c96-3595-48ae-9fb6-165563fbb086/chat-plugins.png?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
-      <view class="hotLabel">热门回答 TOP 3</view>
+      <view class="hotLabel" style="color: white;">热门回答 TOP 3</view>
       <block>
         <view class="background hotQ" wx:for="{{hotCommentList}}" wx:key="_id" id="{{item.questionId}}" data-index="{{index}}" bindtap="beWatched">
           <view wx:if="{{index+1 == 1}}" style="color: {{color1}}; font-weight: bolder;">{{index+1}}</view>
@@ -46,7 +46,7 @@
   </swiper-item>
 </swiper>
 
-<view class="hotLabel" style="color: black;">最新提问</view>
+<view class="hotLabel">最新提问</view>
 
 <view class="background" wx:for="{{newPostList}}" wx:key="_id">
   <view>

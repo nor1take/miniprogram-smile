@@ -362,7 +362,6 @@ Page({
           }
           , 500)
       }
-
     }
     this.getNicknameandImage()
     this.getData()

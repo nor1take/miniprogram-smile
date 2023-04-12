@@ -61,7 +61,7 @@
 }
 
 .hotLabel {
-  color: white;
+
   font-size: 32rpx;
   font-weight: bold;
   margin: 32rpx;
