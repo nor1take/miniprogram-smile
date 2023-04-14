@@ -4,7 +4,7 @@
   background-color: #f3f3f3;
 }
 
-.gptlogo {
+.ailogo {
   background-color: #3d3d3d;
   font-size: 45rpx;
   margin-left: 32rpx;
@@ -113,7 +113,7 @@ movable-view {
 ** 夜间模式
 ******************************************************************/
 @media (prefers-color-scheme: dark) {
-  .gptlogo {
+  .ailogo {
     background-color: black;
   }
   .topBlock {

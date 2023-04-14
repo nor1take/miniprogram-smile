@@ -13,7 +13,7 @@ Page({
     //记得修改 case 1 * 2 / else if (index === 1 {
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
-      { id: 15, name: 'ChatGPT', questionList: [] },
+      { id: 15, name: 'AI', questionList: [] },
       { id: 14, name: '#4 耳机分你一半', questionList: [] },
       { id: 3, name: '音乐', questionList: [] },
       { id: 1, name: '学习', questionList: [] },

@@ -9,12 +9,12 @@ const question = db.collection('question')
 const comment = db.collection('comment')
 // 云函数入口函数
 exports.main = async (event, context) => {
-  question.where({
-    _id: _.exists(true)
+  comment.where({
+    nickname: 'ChatGPT'
   }).update({
     data: {
-      liker: [],
-      postLikeNum: 0
+      nickname: 'AI',
+      image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/6438dde0-63639101-4414b950'
     }
   }).then((res) => {
     return res;

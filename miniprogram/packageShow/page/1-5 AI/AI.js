@@ -186,124 +186,126 @@ Page({
     const prompt = this.commentData.commentContent
     if (prompt === '') return;
     let that = this
-    wx.requestSubscribeMessage({
-      tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
-      complete(res1) {
-        console.log(res1)
-        wx.showLoading({
-          title: '审核中',
-          mask: true
-        })
-        that.setData({
-          inputValue: ''
-        })
-        userInfo.where({
-          _openid: '{openid}'
-        }).get()
-          .then((res) => {
-            if (res.data[0].isForbidden) {
+
+    wx.showLoading({
+      title: '审核中',
+      mask: true
+    })
+
+    userInfo.where({
+      _openid: '{openid}'
+    }).get()
+      .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.hideLoading()
+          wx.navigateTo({
+            url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
+          })
+        } else {
+          /**
+           * 一、文字审核
+           */
+          wx.cloud.callFunction({
+            name: 'checkContent',
+            data: {
+              txt: prompt,
+              scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+            }
+          }).then((res) => {
+            console.log(res)
+            const { label } = res.result.msgR.result
+            const { suggest } = res.result.msgR.result
+            if (suggest === 'risky') {
               wx.hideLoading()
-              wx.navigateTo({
-                url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
+              wx.showToast({
+                title: '危险：包含' + matchLabel(label) + '信息！',
+                icon: 'none'
+              })
+            } else if (suggest === 'review') {
+              wx.hideLoading()
+              wx.showToast({
+                title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
+                icon: 'none'
               })
             } else {
-              /**
-               * 一、文字审核
-               */
-              wx.cloud.callFunction({
-                name: 'checkContent',
+              that.setData({
+                inputValue: ''
+              })
+              app.globalData.isAsk = true
+              var d = new Date().getTime();
+
+              question.add({
                 data: {
-                  txt: prompt,
-                  scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-                }
+                  //时间
+                  answerTime: 0,
+                  time: d,
+                  image: [],
+
+                  unknown: false,
+                  nickName: app.globalData.nickName,
+                  avatarUrl: app.globalData.avatarUrl,
+
+                  title: prompt,
+                  body: '',
+
+                  tagId: 1,
+                  tag: 'AI',
+
+                  watched: 1,
+                  watcher: [],
+
+                  commentNum: 0,
+                  commenter: [{
+                    nickName: 'AI',
+                    completion: '[正在生成回答中…请不要离开小程序（把小程序放后台不行），耐心等待1-2分钟。等待时间取决于你问题的长度和答案的长度。期间你可以浏览其他帖子。]',
+                    commentId: '',
+                    liker: []
+                  }],
+
+
+                  message: 0,
+
+                  collector: [],
+                  collectNum: 0,
+
+                  liker: [],
+                  postLikeNum: 0,
+
+                  warner: [],
+                  warnerDetail: [],
+
+                  solved: false,
+
+                  isAuthentic: app.globalData.isAuthentic,
+                  idTitle: app.globalData.idTitle
+                },
               }).then((res) => {
-                console.log(res)
-                const { label } = res.result.msgR.result
-                const { suggest } = res.result.msgR.result
-                if (suggest === 'risky') {
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '危险：包含' + matchLabel(label) + '信息！',
-                    icon: 'none'
-                  })
-                } else if (suggest === 'review') {
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
-                    icon: 'none'
-                  })
-                } else {
-                  app.globalData.isAsk = true
-                  var d = new Date().getTime();
-
-                  question.add({
-                    data: {
-                      //时间
-                      answerTime: 0,
-                      time: d,
-                      image: [],
-
-                      unknown: false,
-                      nickName: app.globalData.nickName,
-                      avatarUrl: app.globalData.avatarUrl,
-
-                      title: prompt,
-                      body: '',
-
-                      tagId: 1,
-                      tag: 'ChatGPT',
-
-                      watched: 1,
-                      watcher: [],
-
-                      commentNum: 0,
-                      commenter: [{
-                        completion: '[正在生成回答中…请不要离开此界面，耐心等待1-2分钟。等待时间取决于你问题的长度和答案的长度。期间你可以浏览此页面其他用户的提问。]'
-                      }],
-
-                      message: 0,
-
-                      collector: [],
-                      collectNum: 0,
-
-                      liker: [],
-                      postLikeNum: 0,
-
-                      warner: [],
-                      warnerDetail: [],
-
-                      solved: false,
-
-                      isAuthentic: app.globalData.isAuthentic,
-                      idTitle: app.globalData.idTitle
-                    },
-                  }).then((res) => {
-                    const { _id } = res
-                    wx.hideLoading()
-                    that.getNewData()
-                    wx.pageScrollTo({
-                      scrollTop: that.data.screenHeight,
-                      duration: 1000
-                    }).then((res) => {
-                      console.log(res)
-                    })
-                    that.gptsentComment(prompt, _id)
-                  })
-                }
+                const { _id } = res
+                wx.hideLoading()
+                that.getNewData()
+                wx.pageScrollTo({
+                  scrollTop: that.data.screenHeight,
+                  duration: 1000
+                }).then((res) => {
+                  console.log(res)
+                })
+                that.gptsentComment(prompt, _id)
               })
             }
           })
-          .catch(() => {
-            wx.showToast({
-              title: '请先登录',
-              icon: 'error'
-            })
-          })
-      }
-    })
+        }
+      })
+      .catch(() => {
+        wx.showToast({
+          title: '请先登录',
+          icon: 'error'
+        })
+      })
+
+
   },
 
-  //ChatGPT内测使用：审核 completion
+  //AI内测使用：审核 completion
   gptsentComment: function (prompt, postId) {
     let that = this
     wx.request({
@@ -349,7 +351,7 @@ Page({
     })
   },
 
-  //ChatGPT内测使用：发布 completion
+  //AI内测使用：发布 completion
   sendCompletion: function (completion, postId) {
     let that = this
     var d = new Date().getTime()
@@ -366,7 +368,7 @@ Page({
         data: {
           receiver: posterId,
           questionId: postId,
-          sender: 'ChatGPT',
+          sender: 'AI',
           commentBody: completion,
           postTitle: title
         }
@@ -383,8 +385,8 @@ Page({
 
           body: completion,
           commentNum: 0,
-          nickname: 'ChatGPT',
-          image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/oJ-6m5axZUm5_3cDLwmUjyA0Jwvs/avatar1680586472951',
+          nickname: 'AI',
+          image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/6438dde0-63639101-4414b950',
 
           commenter: [],
           liker: [],
@@ -402,7 +404,7 @@ Page({
           data: {
             commentNum: _.inc(1),
             commenter: [{
-              nickName: 'ChatGPT',
+              nickName: 'AI',
               completion: completion,
               commentId: res._id,
               liker: []
@@ -429,7 +431,7 @@ Page({
 
   getNewData: function () {
     question.where({
-      tag: 'ChatGPT'
+      tag: 'AI'
     }).orderBy('time', 'desc').get()
       .then((res) => {
         // console.log(res.data)
@@ -441,7 +443,7 @@ Page({
 
   getHotPost: function () {
     question.where({
-      tag: 'ChatGPT'
+      tag: 'AI'
     })
       .orderBy('postLikeNum', 'desc')
       .orderBy('time', 'desc')
@@ -457,7 +459,7 @@ Page({
 
   getHotComment: function () {
     comment.where({
-      nickname: 'ChatGPT'
+      nickname: 'AI'
     })
       .orderBy('likerNum', 'desc')
       .orderBy('time', 'desc')
@@ -544,13 +546,13 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '微校Smile - ChatGPT',
+      title: '微校Smile - AI',
       path: 'pages/0-0 Show/Show?id=' + 'gpt'
     }
   },
   onShareTimeline: function () {
     return {
-      title: '微校Smile - ChatGPT'
+      title: '微校Smile - AI'
     }
   }
 })

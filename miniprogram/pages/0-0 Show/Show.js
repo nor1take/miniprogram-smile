@@ -52,9 +52,9 @@ Page({
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
 
-  goToChatGPT: function () {
+  goToAI: function () {
     wx.navigateTo({
-      url: '../../packageShow/page/1-5 ChatGPT/ChatGPT',
+      url: '../../packageShow/page/1-5 AI/AI',
     })
   },
 
@@ -88,7 +88,7 @@ Page({
   getNewData: function () {
     question.
       where({
-        tag: _.neq('ChatGPT')
+        tag: _.neq('AI')
       })
       .orderBy('time', 'desc').get()
       .then((res) => {
@@ -100,7 +100,7 @@ Page({
   },
   getNewAnswer: function () {
     question.where({
-      tag: _.neq('ChatGPT'),
+      tag: _.neq('AI'),
       commenter: _.neq([])
     }).orderBy('answerTime', 'desc').get()
       .then((res) => {
@@ -342,7 +342,7 @@ Page({
     if (id != undefined) {
       if (id === 'gpt') {
         wx.navigateTo({
-          url: '../../packageShow/page/1-5 ChatGPT/ChatGPT',
+          url: '../../packageShow/page/1-5 AI/AI',
         })
       } else {
         app.globalData.questionId = id
@@ -470,7 +470,7 @@ Page({
     const showNum = questionList.length
     if (this.data.sortWord == "最新发帖") {
       question.where({
-        tag: _.neq('ChatGPT'),
+        tag: _.neq('AI'),
         time: _.lte(questionList[0].time)
       }).count().then((res) => {
         if (showNum < res.total) {
@@ -478,7 +478,7 @@ Page({
             isBottom: false,
           })
           question.where({
-            tag: _.neq('ChatGPT'),
+            tag: _.neq('AI'),
             time: _.lt(questionList[showNum - 1].time)
           }).orderBy('time', 'desc').get().then(res => {
             let new_data = res.data
@@ -497,7 +497,7 @@ Page({
     }
     else {
       question.where({
-        tag: _.neq('ChatGPT'),
+        tag: _.neq('AI'),
         answerTime: _.lte(questionList[0].answerTime),
         commenter: _.neq([])
       }).count().then((res) => {
@@ -506,7 +506,7 @@ Page({
             isBottom: false,
           })
           question.where({
-            tag: _.neq('ChatGPT'),
+            tag: _.neq('AI'),
             answerTime: _.lt(questionList[showNum - 1].answerTime),
             commenter: _.neq([]),
           }).orderBy('answerTime', 'desc').get().then(res => {

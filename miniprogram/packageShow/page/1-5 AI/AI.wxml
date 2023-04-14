@@ -11,7 +11,7 @@
     isInArray: isInArray
   };
 </wxs>
-<return top="{{top}}" bottom="{{bottom}}" topWord="ChatGPT"></return>
+<return top="{{top}}" bottom="{{bottom}}" topWord="AI"></return>
 <wxs src="../../../util/filter.wxs" module="filter" />
 
 <!-- <scroll-view class="tabs" scroll-x="true" scroll-with-animation enhanced show-scrollbar="{{false}}"> -->
@@ -72,8 +72,8 @@
     </view>
     <view wx:if="{{item.commenter[0].completion}}" class="body gptComment">
       <view style="display: flex;">
-        <i class="iconfont icon-openai" style="font-size: 50rpx; margin-right: 32rpx; color: #47A082;"></i>
-        <view class="commentBody">{{item.commenter[0].completion}}</view>
+        <i class="iconfont icon-AI" style="font-size: 50rpx; margin-right: 32rpx; color: #47A082;"></i>
+        <text class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
       </view>
       <view style="display: flex; justify-content: flex-end;">
         <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.commenter[0].liker)}}" id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
@@ -93,7 +93,7 @@
 
 
 <view class="background gptBG" style="bottom: {{keyboardHeight}}px;">
-  <i class="iconfont icon-openai" style="font-size: 60rpx; color: white;"></i>
+  <i class="iconfont icon-AI" style="font-size: 60rpx; color: white;"></i>
   <block wx:if="{{isTesting}}">
     <textarea class="gptInput" placeholder-style="color:white" maxlength="300" placeholder="在这里输入你的问题 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
     <i class="iconfont icon-ic_public_email_send" style="font-size: 60rpx; color: white;" bindtap="send"></i>

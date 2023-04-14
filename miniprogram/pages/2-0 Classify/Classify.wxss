@@ -6,6 +6,14 @@ button::after {
   border: none;
 }
 
+.title {
+  word-break: break-all;
+}
+
+.body{
+  word-break: break-all;
+}
+
 button {
   border-radius: 25rpx;
   padding: 16rpx;
