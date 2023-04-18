@@ -257,12 +257,10 @@ Page({
                   commentNum: 0,
                   commenter: [{
                     nickName: 'AI',
-                    completion: '[正在生成回答中…请不要离开小程序（把小程序放后台不行），耐心等待1-2分钟。等待时间取决于你问题的长度和答案的长度。期间你可以浏览其他帖子。]',
+                    completion: '[正在生成回答中…预计需要 10-15s]',
                     commentId: '',
                     liker: []
                   }],
-
-
                   message: 0,
 
                   collector: [],
@@ -289,7 +287,18 @@ Page({
                 }).then((res) => {
                   console.log(res)
                 })
-                that.gptsentComment(prompt, _id)
+                wx.cloud.callFunction({
+                  name: 'chatglm',
+                  data: {
+                    input: prompt,
+                    postId: _id
+                  }
+                }).then((res) => {
+                  console.log(res.result.completion)
+                  that.gptsentComment(res.result.completion, _id)
+                }).catch((err) => {
+                  console.log(err)
+                })
               })
             }
           })
@@ -301,52 +310,36 @@ Page({
           icon: 'error'
         })
       })
-
-
   },
 
   //AI内测使用：审核 completion
-  gptsentComment: function (prompt, postId) {
+  gptsentComment: function (completion, postId) {
     let that = this
-    wx.request({
-      url: 'https://n58770595y.zicp.fun/gpt',
+    wx.cloud.callFunction({
+      name: 'checkContent',
       data: {
-        prompt: prompt
+        txt: completion,
+        scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       },
-      timeout: 60000000,
       success(res) {
-        console.log(res.data)
-        const completion = res.data
-        wx.cloud.callFunction({
-          name: 'checkContent',
-          data: {
-            txt: completion,
-            scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-          },
-          success(_res) {
-            console.log(_res)
-            if (_res.result.msgR) {
-              const { label } = _res.result.msgR.result
-              const { suggest } = _res.result.msgR.result
-              if (suggest === 'risky') {
-                that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', postId)
-              } else if (suggest === 'review') {
-                console.log('可能包含' + matchLabel(label) + '信息')
-                that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, postId)
-              } else {
-                that.sendCompletion(completion, postId)
-              }
-            } else {
-              that.sendCompletion(completion, postId)
-            }
-          },
-          fail(_res) {
-            console.log('checkContent云函数调用失败', _res)
+        console.log(res)
+        if (res.result.msgR) {
+          const { label } = res.result.msgR.result
+          const { suggest } = res.result.msgR.result
+          if (suggest === 'risky') {
+            that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', postId)
+          } else if (suggest === 'review') {
+            console.log('可能包含' + matchLabel(label) + '信息')
+            that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, postId)
+          } else {
+            that.sendCompletion(completion, postId)
           }
-        })
+        } else {
+          that.sendCompletion(completion, postId)
+        }
       },
       fail(err) {
-        console.log(err.data)
+        console.log('checkContent云函数调用失败', err)
       }
     })
   },
@@ -394,7 +387,7 @@ Page({
           image_upload: [],
 
           isAuthentic: true,
-          idTitle: '内测版',
+          idTitle: 'ChatGLM_6B',
 
           warner: [],
           warnerDetail: [],
@@ -405,7 +398,7 @@ Page({
             commentNum: _.inc(1),
             commenter: [{
               nickName: 'AI',
-              completion: completion,
+              completion,
               commentId: res._id,
               liker: []
             }]
@@ -426,7 +419,6 @@ Page({
         })
       })
     })
-
   },
 
   getNewData: function () {

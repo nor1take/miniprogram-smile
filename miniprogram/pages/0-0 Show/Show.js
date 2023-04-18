@@ -337,6 +337,18 @@ Page({
     // wx.cloud.callFunction({
     //   name: 'update',
     // })
+
+    // wx.cloud.callFunction({
+    //   name: 'chatglm',
+    //   data: {
+    //     input: 'hello'
+    //   }
+    // }).then((res) => {
+    //   console.log(res)
+    // }).catch((err) => {
+    //   console.log(err)
+    // })
+
     console.log('onLoad')
     const { id } = options
     if (id != undefined) {
