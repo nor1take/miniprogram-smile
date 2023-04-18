@@ -19,7 +19,7 @@
       <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
   </swiper>
-  <i class="iconfont icon-AI ailogo" bindtap="goToAI"></i>
+  <i class="iconfont icon-chatglm ailogo" style="color: #3485FF;" bindtap="goToAI"></i>
   <view class="sort" bindtap="sort">
     <view class="sortImage">
       <i class="iconfont icon-sort-asc" style="font-size: 37rpx; color: #0C88B5;"></i>

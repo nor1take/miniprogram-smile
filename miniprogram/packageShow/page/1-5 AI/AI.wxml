@@ -15,7 +15,11 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 
 <!-- <scroll-view class="tabs" scroll-x="true" scroll-with-animation enhanced show-scrollbar="{{false}}"> -->
-<swiper class="swiperContainer" indicator-dots autoplay circular interval='5000' style="height: {{screenHeight}}px;">
+<view class="background" style="padding: 32rpx;">
+  <image src="https://chatglm.cn/img/logo_alpha.1527ae36.svg" mode="aspectFit" style="height: 64rpx;"></image>
+  <view class="body" style="margin:0;">ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。</view>
+</view>
+<swiper class="swiperContainer" indicator-dots autoplay circular interval='5000' style="height: {{screenHeight*4/5}}px;">
   <swiper-item>
     <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/8d14e8f0-e267-4b8b-a9f2-a79120808f5a/chatgpt.jpg?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
       <view class="hotLabel" style="color: white;">热门提问 TOP 3</view>
@@ -72,7 +76,7 @@
     </view>
     <view wx:if="{{item.commenter[0].completion}}" class="body gptComment">
       <view style="display: flex;">
-        <i class="iconfont icon-AI" style="font-size: 50rpx; margin-right: 32rpx; color: #47A082;"></i>
+        <i class="iconfont icon-chatglm" style="font-size: 60rpx; margin-right: 8rpx; color: #3485FF;"></i>
         <text class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
       </view>
       <view style="display: flex; justify-content: flex-end;" wx:if="{{item.commenter[0].commentId.length != 0}}">
@@ -92,7 +96,7 @@
 
 
 <view class="background gptBG" style="bottom: {{keyboardHeight}}px;">
-  <i class="iconfont icon-AI" style="font-size: 60rpx; color: white;"></i>
+  <i class="iconfont icon-chatglm" style="font-size: 60rpx; color: white;"></i>
   <block wx:if="{{isTesting}}">
     <textarea class="gptInput" placeholder-style="color:white" maxlength="300" placeholder="在这里输入你的问题 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
     <i class="iconfont icon-ic_public_email_send" style="font-size: 60rpx; color: white;" bindtap="send"></i>

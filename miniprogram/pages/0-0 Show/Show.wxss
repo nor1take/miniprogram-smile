@@ -10,7 +10,6 @@
   margin-left: 32rpx;
   margin-right: 32rpx;
   padding: 16rpx;
-  color: #47A082;
   border-radius: 30rpx;
 }
 

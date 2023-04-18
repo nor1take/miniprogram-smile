@@ -436,7 +436,7 @@ Page({
           body: completion,
           commentNum: 0,
           nickname: 'AI',
-          image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/6438dde0-63639101-4414b950',
+          image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/643e9b5d-5bb3223d-55291b27',
 
           commenter: [],
           liker: [],

@@ -58,8 +58,8 @@ async function getResponseFromAPI2(input) {
     console.log(tokenData.data);
     const chatData = await rp({
       method: "POST",
-      // uri: ChatGLM_130B_url,
-      uri: ChatGLM_6B_url,
+      uri: ChatGLM_130B_url,
+      // uri: ChatGLM_6B_url,
       headers: {
         Authorization: tokenData.data,
       },
