@@ -11,6 +11,9 @@ const apiKey = "d35e4df0c6d54e74b3bd35cf3e608b26";
 // 定义公钥
 const publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKBRzxjnRbvr+gaK56bQ9u23ZlEWL3d7g1zUC5SaZxipJj9l/DuQPgEFcczwFIv3lqkIgfAVNOkR1f0RYtjJTJsCAwEAAQ==";
 
+const ChatGLM_6B_url = "https://maas.aminer.cn/api/paas/model/v2/open/engines/chatglm_qa_6b/chatglm_6b"
+const ChatGLM_130B_url = "https://maas.aminer.cn/api/paas/model/v1/open/engines/chatGLM/chatGLM"
+
 function rsaEncode(text, publicKey) {
   const buffer = Buffer.from(text, "utf-8");
   const key = crypto.createPublicKey({
@@ -32,6 +35,7 @@ function rsaEncode(text, publicKey) {
 
 async function getResponseFromAPI2(input) {
   const a = {
+    generatedLength: 450,
     top_p: 0.7,
     temperature: 0.9,
     prompt: input,
@@ -54,8 +58,8 @@ async function getResponseFromAPI2(input) {
     console.log(tokenData.data);
     const chatData = await rp({
       method: "POST",
-      uri:
-        "https://maas.aminer.cn/api/paas/model/v2/open/engines/chatglm_qa_6b/chatglm_6b",
+      // uri: ChatGLM_130B_url,
+      uri: ChatGLM_6B_url,
       headers: {
         Authorization: tokenData.data,
       },

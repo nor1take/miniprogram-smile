@@ -75,7 +75,7 @@
         <i class="iconfont icon-AI" style="font-size: 50rpx; margin-right: 32rpx; color: #47A082;"></i>
         <text class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
       </view>
-      <view style="display: flex; justify-content: flex-end;">
+      <view style="display: flex; justify-content: flex-end;" wx:if="{{item.commenter[0].commentId.length != 0}}">
         <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.commenter[0].liker)}}" id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
           <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
         </view>
@@ -83,7 +83,6 @@
           <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #ACACAC;"></i>
         </view>
       </view>
-      <!-- 评论点赞 -->
 
     </view>
   </view>

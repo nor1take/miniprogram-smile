@@ -9,6 +9,41 @@ const traceId = db.collection('traceId')
 const userInfo = db.collection('userInfo')
 const deleteRecord = db.collection('deleteRecord')
 
+function matchLabel(labelNum) {
+  switch (labelNum) {
+    case 100:
+      return '正常';
+      break;
+    case 10001:
+      return '广告';
+      break;
+    case 20001:
+      return '时政';
+      break;
+    case 20002:
+      return '色情';
+      break;
+    case 20003:
+      return '辱骂';
+      break;
+    case 20006:
+      return '违法犯罪';
+      break;
+    case 20008:
+      return '欺诈';
+      break;
+    case 20012:
+      return '低俗';
+      break;
+    case 20013:
+      return '版权';
+      break;
+    case 21000:
+      return '其他';
+      break;
+  }
+}
+
 Page({
 
   /**
