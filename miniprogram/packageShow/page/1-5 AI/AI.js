@@ -181,7 +181,6 @@ Page({
     }).catch(err => { console.log(err) })
   },
 
-
   beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
 
@@ -231,6 +230,18 @@ Page({
       _openid: '{openid}'
     }).get()
       .then((res) => {
+        let { askTime } = res.data[0]
+        askTime = askTime - 1
+        if (askTime < 0) {
+          wx.showToast({
+            title: '提问次数已用尽！请前往“意见反馈”联系开发者',
+            icon: 'none',
+            duration: 5000
+          })
+          return;
+        }
+
+        const userInfoId = res.data[0]._id
         if (res.data[0].isForbidden) {
           wx.hideLoading()
           wx.navigateTo({
@@ -240,6 +251,7 @@ Page({
           /**
            * 一、文字审核
            */
+
           wx.cloud.callFunction({
             name: 'checkContent',
             data: {
@@ -263,6 +275,16 @@ Page({
                 icon: 'none'
               })
             } else {
+              userInfo.doc(userInfoId).update({
+                data: {
+                  askTime: askTime
+                }
+              })
+              wx.showToast({
+                title: '还有 ' + askTime + ' 次提问机会',
+                icon: 'none',
+                duration: 5000
+              })
               that.setData({
                 inputValue: ''
               })
