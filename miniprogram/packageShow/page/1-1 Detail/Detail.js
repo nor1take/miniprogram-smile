@@ -1696,19 +1696,30 @@ Page({
       _openid: '{openid}'
     }).get()
       .then((res) => {
+        const { _id } = res.data[0]
         if (res.data[0].isForbidden) {
           wx.hideLoading()
           wx.navigateTo({
             url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
           })
         } else {
-          if (this.data.isAskChatGLM && res.data[0].askTime == 0) {
-            wx.showToast({
-              title: '提问次数已用尽！请前往“意见反馈”联系开发者',
-              icon: 'none',
-              duration: 5000
-            })
-            return;
+          if (this.data.isAskChatGLM) {
+            let askTime = res.data[0].askTime
+            askTime = askTime - 1;
+            if (askTime < 0) {
+              wx.showToast({
+                title: '提问次数已用尽！请前往“意见反馈”联系开发者',
+                icon: 'none',
+                duration: 5000
+              })
+              return;
+            } else {
+              userInfo.doc(_id).update({
+                data: {
+                  askTime: askTime
+                }
+              })
+            }
           }
           //文字审核
           wx.cloud.callFunction({
