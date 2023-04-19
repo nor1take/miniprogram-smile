@@ -275,7 +275,7 @@
 
 <view wx:if="{{isLogin}}" class="bottomInput-Container" style="bottom: {{height}}px;">
   <view class="imageArea" bindtap="upload">
-    <i class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
+    <i wx:if="{{!isAskChatGLM}}" class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
   </view>
   <textarea maxlength="2500" class="bottomInput" auto-height focus="{{answer?true:false}}" show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:if="{{tapAnswerButton}}" placeholder="在这里输入你的回应 :)" bindinput="input" bindkeyboardheightchange="focus" value="{{inputValue}}">
   </textarea>
@@ -285,7 +285,8 @@
 
   <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:else="{{tapAgainButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">
   </textarea>
-
+  <i wx:if="{{isAskChatGLM}}" class="iconfont icon-chatglm" style="font-size: 65rpx; margin-right: 16rpx; color: #3485FF;" bindtap="isAskChatGLM"></i>
+  <i wx:else="" class="iconfont icon-chatglm" style="font-size: 65rpx; margin-right: 16rpx; color: #7b7b7b;" bindtap="isAskChatGLM"></i>
   <view class="sendButton">
     <button style="font-weight: bold;" size="mini" type="primary" wx:if="{{inputContent}}" bindtap="sendComment">
       发送

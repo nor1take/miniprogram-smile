@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
     _id: _.exists(true)
   }).update({
     data: {
-      askTime: 20
+      askTime: 15
     }
   }).then((res) => {
     return res

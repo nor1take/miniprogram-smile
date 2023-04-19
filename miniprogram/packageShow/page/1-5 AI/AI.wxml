@@ -75,9 +75,10 @@
       </view>
     </view>
     <view wx:if="{{item.commenter[0].completion}}" class="body gptComment">
-      <view style="display: flex;">
-        <i class="iconfont icon-chatglm" style="font-size: 60rpx; margin-right: 8rpx; color: #3485FF;"></i>
-        <text class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
+      <view style="display: flex;" bindtap="beWatched" id="{{item._id}}">
+        <i class="iconfont icon-chatglm" style="font-size: 60rpx; color: #3485FF;"></i>
+        <text wx:if="{{item.commenter[0].completion.length > 75}}" class="commentBody" user-select="{{true}}">{{filter.abbreviation(item.commenter[0].completion)}}\n\n[点击查看完整回答]</text>
+        <text wx:else="" class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
       </view>
       <view style="display: flex; justify-content: flex-end;" wx:if="{{item.commenter[0].commentId.length != 0}}">
         <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.commenter[0].liker)}}" id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">

@@ -95,8 +95,13 @@
   padding: 32rpx;
 }
 
+.body{
+  padding: 0;
+}
+
 .gptComment {
-  padding: 32rpx;
+  padding: 16rpx;
+  padding-left: 32rpx;
   background-color: #F3F3F3;
   border-radius: 25rpx;
   display: flex;

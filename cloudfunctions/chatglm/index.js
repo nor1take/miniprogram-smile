@@ -33,13 +33,13 @@ function rsaEncode(text, publicKey) {
   return encrypted.toString("base64");
 }
 
-async function getResponseFromAPI2(input) {
+async function getResponseFromAPI2(input, history) {
   const a = {
     generatedLength: 450,
     top_p: 0.7,
     temperature: 0.9,
     prompt: input,
-    history: [],
+    history: history,
     requestTaskNo: OPENID + Date.now().toString(),
   };
   console.log(publicKey);
@@ -58,8 +58,8 @@ async function getResponseFromAPI2(input) {
     console.log(tokenData.data);
     const chatData = await rp({
       method: "POST",
-      uri: ChatGLM_130B_url,
-      // uri: ChatGLM_6B_url,
+      // uri: ChatGLM_130B_url,
+      uri: ChatGLM_6B_url,
       headers: {
         Authorization: tokenData.data,
       },
@@ -94,8 +94,8 @@ async function getResponseFromAPI2(input) {
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const { input } = event;
-  const completion = await getResponseFromAPI2(input);
+  const { input, history } = event;
+  const completion = await getResponseFromAPI2(input, history);
 
   return {
     completion,

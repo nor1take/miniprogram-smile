@@ -208,6 +208,8 @@ Page({
     defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
     isLogin: false,
 
+    isAskChatGLM: false,
+
     isFold: true,
     sortWord: "按赞数",
     fileID: [],
@@ -235,6 +237,24 @@ Page({
 
     _commentBody: ''
   },
+  isAskChatGLM: function () {
+    const { isAskChatGLM } = this.data
+    if (isAskChatGLM) {
+      wx.showToast({
+        title: '已取消让ChatGLM回答',
+        icon: 'none'
+      })
+    } else {
+      wx.showToast({
+        title: '已选择让ChatGLM回答',
+        icon: 'none'
+      })
+    }
+    this.setData({
+      isAskChatGLM: !isAskChatGLM
+    })
+  },
+
   goToLogin: function () {
     wx.navigateTo({
       url: '../../../packageLogin/pages/0-0 Login/Login',
@@ -1209,39 +1229,29 @@ Page({
     })
   },
 
-  sendEnd: function () {
+  sendEnd: function (title = '发送成功', isScrollTop = true) {
     const { sortWord } = this.data
     wx.showToast({
-      title: '发送成功',
-      icon: 'none'
+      title: title,
+      icon: 'success'
     })
-    if (sortWord == "按最新") {
-      this.NewCommentFirst()
-      if (this.data.tapAnswerButton) {
-        wx.pageScrollTo({
-          scrollTop: 0,
-          duration: 1250
-        })
+    let scrollTop = 0;
+    if (this.data.tapAnswerButton && isScrollTop) {
+      if (sortWord == "按最新") {
+        scrollTop = 0
+      } else {
+        scrollTop = 10000000
       }
+      wx.pageScrollTo({
+        scrollTop: scrollTop,
+        duration: 1250
+      })
     }
-    else if (sortWord == "按最早") {
-      this.OldCommentFirst()
-      if (this.data.tapAnswerButton) {
-        wx.pageScrollTo({
-          scrollTop: 10000000,
-          duration: 1250
-        })
-      }
-    }
-    else {
-      this.LikemostCommentFisrt()
-      if (this.data.tapAnswerButton) {
-        wx.pageScrollTo({
-          scrollTop: 10000000,
-          duration: 1250
-        })
-      }
-    }
+
+    if (sortWord == "按最新") { this.NewCommentFirst() }
+    else if (sortWord == "按最早") { this.OldCommentFirst() }
+    else { this.LikemostCommentFisrt() }
+
     this.getQuestionandCollectData()
     this.setData({
       inputValue: '',
@@ -1260,10 +1270,17 @@ Page({
    * @param {} _commentBody 
    */
   sendContent: function (_commentBody) {
+    if (this.data.isAskChatGLM) {
+      this.sendContent2(_commentBody)
+      return;
+    }
     let that = this
     var d = new Date().getTime()
+    //回应帖子
     if (that.data.tapAnswerButton) {
       question.doc(app.globalData.questionId).get().then(res => {
+        let isUnknown = false
+        // 非本人帖
         if (res.data._openid != that.data.openId) {
           wx.cloud.callFunction({
             name: 'sendMsg',
@@ -1275,6 +1292,11 @@ Page({
               postTitle: that.data.questionList[0].title
             }
           })
+
+          let position = 0
+          if (res.data.commenter[0] && res.data.commenter[0].nickName == 'AI') {
+            position = 1
+          }
           question.doc(app.globalData.questionId).update({
             data: {
               answerTime: d,
@@ -1283,124 +1305,64 @@ Page({
 
               commenter: _.push({
                 each: [{ nickName: app.globalData.nickName, openId: app.globalData.openId }],
-                position: 0,
+                position: position
               }) //头插法
             }
           })
-          comment.add({
-            data: {
-              //时间
-              time: d,
-
-              questionId: app.globalData.questionId,
-              questionTitle: this.data.questionList[0].title,
-              posterId: this.data.questionList[0]._openid,
-
-              body: _commentBody,
-              commentNum: 0,
-              nickname: app.globalData.nickName,
-              image: app.globalData.avatarUrl,
-              commenter: [],
-              liker: [],
-              likerNum: 0,
-              image_upload: that.data.fileID,
-
-              isAuthentic: app.globalData.isAuthentic,
-              idTitle: app.globalData.idTitle,
-
-              warner: [],
-              warnerDetail: [],
-            },
-          }).then((res) => {
-            /**
-            * 二、图片审核：处理异步检测结果推送
-            */
-
-            /**
-             * 1、拿到全部的traceId集合（违规图片集合）
-             */
-            const { _id } = res
-            traceId.orderBy('CreateTime', 'desc').get()
-              .then((res) => {
-                /**
-                 * 2、删除上传图片列表中违规图片
-                 */
-                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                  /**
-                   * 3、更新图片列表
-                   */
-                  comment.doc(_id).update({
-                    data: {
-                      image_upload: res
-                    }
-                  }).then(() => {
-                    wx.hideLoading()
-                    that.sendEnd()
-                  })
-                })
-              })
-          })
         }
+        // 本人发帖
         else {
           question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
-          comment.add({
-            data: {
-              //时间
-              time: d,
+          isUnknown = res.data.unknown
+        }
+        comment.add({
+          data: {
+            //时间
+            time: d,
 
-              isUnknown: res.data.unknown,
-              questionId: app.globalData.questionId,
-              questionTitle: this.data.questionList[0].title,
-              posterId: this.data.questionList[0]._openid,
+            isUnknown: isUnknown,
+            questionId: app.globalData.questionId,
+            questionTitle: this.data.questionList[0].title,
+            posterId: this.data.questionList[0]._openid,
 
-              body: _commentBody,
-              commentNum: 0,
-              nickname: app.globalData.nickName,
-              image: app.globalData.avatarUrl,
+            body: _commentBody,
+            commentNum: 0,
+            nickname: app.globalData.nickName,
+            image: app.globalData.avatarUrl,
 
-              commenter: [],
-              liker: [],
-              likerNum: 0,
-              image_upload: that.data.fileID,
+            commenter: [],
+            liker: [],
+            likerNum: 0,
+            image_upload: that.data.fileID,
 
-              isAuthentic: app.globalData.isAuthentic,
-              idTitle: app.globalData.idTitle,
+            isAuthentic: app.globalData.isAuthentic,
+            idTitle: app.globalData.idTitle,
 
-              warner: [],
-              warnerDetail: [],
-            },
-          }).then((res) => {
-            /**
-            * 二、图片审核：处理异步检测结果推送
-            */
-
-            /**
-             * 1、拿到全部的traceId集合（违规图片集合）
-             */
-            const { _id } = res
-            traceId.orderBy('CreateTime', 'desc').get()
-              .then((res) => {
-                /**
-                 * 2、删除上传图片列表中违规图片
-                 */
-                deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                  /**
-                   * 3、更新图片列表
-                   */
-                  comment.doc(_id).update({
-                    data: {
-                      image_upload: res
-                    }
-                  }).then(() => {
-                    wx.hideLoading()
-                    that.sendEnd()
-                  })
+            warner: [],
+            warnerDetail: [],
+          },
+        }).then((res) => {
+          //二、图片审核：处理异步检测结果推送
+          //1、拿到全部的traceId集合（违规图片集合）
+          const { _id } = res
+          traceId.orderBy('CreateTime', 'desc').get()
+            .then((res) => {
+              // 2、删除上传图片列表中违规图片
+              deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                // 3、更新图片列表
+                comment.doc(_id).update({
+                  data: { image_upload: res }
+                }).then(() => {
+                  wx.hideLoading()
+                  that.sendEnd()
                 })
               })
-          })
-        }
+            })
+        })
       })
-    } else {
+    }
+    //回应评论
+    else {
       question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
       let isUnknown = false;
       if (app.globalData.openId == this.data.questionList[0]._openid) {
@@ -1473,6 +1435,252 @@ Page({
       })
     }
   },
+
+  sendContent2: function (_commentBody) {
+    let that = this
+    const d = new Date().getTime()
+    const postId = app.globalData.questionId
+
+    if (that.data.tapAnswerButton) {
+      question.doc(postId).get().then(res => {
+        let history = []
+        if (res.data._openid == that.data.openId) {
+          history = res.data.history
+        }
+
+        comment.add({
+          data: {
+            history: history,
+
+            time: d,
+
+            isUnknown: false,
+            questionId: postId,
+            questionTitle: this.data.questionList[0].title,
+            posterId: this.data.questionList[0]._openid,
+
+            body: _commentBody,
+            commentNum: 0,
+            nickname: app.globalData.nickName,
+            image: app.globalData.avatarUrl,
+
+            commenter: [{
+              isUnknown: false,
+              avatarUrl: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/643e9b5d-5bb3223d-55291b27',
+              newOpenId: 'ChatGLM',
+              postOpenId: app.globalData.openId,
+              newNickName: 'AI',
+              postNickName: app.globalData.nickName,
+              commentAgainBody: '[正在根据该帖上下文进行回答...预计需要 10-15s]',
+              isAuthentic: true,
+              idTitle: 'ChatGLM-130B',
+              postUnknown: false,
+
+              image_upload: [],
+            }],
+            liker: [],
+            likerNum: 0,
+            image_upload: [],
+
+            isAuthentic: app.globalData.isAuthentic,
+            idTitle: app.globalData.idTitle,
+
+            warner: [],
+            warnerDetail: [],
+          },
+        }).then((res) => {
+          const commentId = res._id
+          wx.cloud.callFunction({
+            name: 'chatglm',
+            data: {
+              input: _commentBody,
+              history: history,
+            }
+          }).then((res) => {
+            wx.hideLoading()
+            that.sendEnd()
+
+            console.log(res.result.completion)
+            that.gptsentComment(res.result.completion, commentId, postId)
+          }).catch((err) => {
+            console.log(err)
+          })
+        })
+      })
+    } else {
+      const commentId = that.data._commentId;
+      comment.doc(commentId).get().then((res) => {
+        let history = []
+
+        if (app.globalData.openId == res._openid && res.history) {
+          history = res.history
+        }
+
+        commentAgain.add({
+          data: {
+            answerTime: d,
+            isUnknown: false,
+            commentAgainBody: _commentBody,
+            newOpenId: app.globalData.openId,
+            postOpenId: that.data._postOpenId,
+            newNickName: app.globalData.nickName,
+            postNickName: that.data.postNickName,
+            questionId: app.globalData.questionId,
+            commentId: commentId,
+            isWatched: false,
+
+            image_upload: [],
+          }
+        }).then((res) => {
+          comment.doc(commentId).update({
+            data: {
+              commentNum: _.inc(1),
+              commenter: _.push([{
+                isUnknown: false,
+                avatarUrl: app.globalData.avatarUrl,
+                newOpenId: app.globalData.openId,
+                postOpenId: that.data._postOpenId,
+                newNickName: app.globalData.nickName,
+                postNickName: that.data.postNickName,
+                commentAgainBody: _commentBody,
+                isAuthentic: app.globalData.isAuthentic,
+                idTitle: app.globalData.idTitle,
+                postUnknown: false,
+
+                image_upload: [],
+              }, {
+                isUnknown: false,
+                avatarUrl: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/643e9b5d-5bb3223d-55291b27',
+                newOpenId: 'ChatGLM',
+                postOpenId: app.globalData.openId,
+                newNickName: 'AI',
+                postNickName: app.globalData.nickName,
+                commentAgainBody: '[正在根据该帖上下文进行回答...预计需要 10-15s]',
+                isAuthentic: true,
+                idTitle: 'ChatGLM-130B',
+                postUnknown: false,
+
+                image_upload: [],
+              }])
+            }
+          }).then(() => {
+            wx.cloud.callFunction({
+              name: 'chatglm',
+              data: {
+                input: _commentBody,
+                history: history,
+              }
+            }).then((res) => {
+              wx.hideLoading()
+              that.sendEnd()
+
+              console.log(res.result.completion)
+              that.gptsentComment(res.result.completion, commentId, postId)
+            }).catch((err) => {
+              console.log(err)
+            })
+          })
+        })
+      })
+
+    }
+  },
+  //AI内测使用：审核 completion
+  gptsentComment: function (completion, commentId, postId) {
+    let that = this
+    wx.cloud.callFunction({
+      name: 'checkContent',
+      data: {
+        txt: completion,
+        scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+      },
+      success(res) {
+        console.log(res)
+        if (res.result.msgR) {
+          const { label } = res.result.msgR.result
+          const { suggest } = res.result.msgR.result
+          if (suggest === 'risky') {
+            that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', commentId, postId)
+          } else if (suggest === 'review') {
+            console.log('可能包含' + matchLabel(label) + '信息')
+            that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, commentId, postId)
+          } else {
+            that.sendCompletion(completion, commentId, postId)
+          }
+        } else {
+          that.sendCompletion(completion, commentId, postId)
+        }
+      },
+      fail(err) {
+        console.log('checkContent云函数调用失败', err)
+      }
+    })
+  },
+
+  //AI内测使用：发布 completion
+  sendCompletion: function (completion, commentId, postId) {
+    let that = this
+    const prompt = this.data._commentBody
+    var d = new Date().getTime()
+
+    question.doc(postId).update({
+      data: {
+        commentNum: _.inc(2),
+        history: _.push([prompt, completion])
+      }
+    })
+
+    question.doc(postId).get().then(res => {
+      commentAgain.add({
+        data: {
+          answerTime: d,
+          isUnknown: false,
+          commentAgainBody: completion,
+          newOpenId: 'ChatGLM',
+          postOpenId: app.globalData.openId,
+          newNickName: 'AI',
+          postNickName: app.globalData.nickName,
+          questionId: postId,
+          commentId: commentId,
+          isWatched: false,
+
+          image_upload: [],
+        }
+      }).then((res) => {
+        const { _id } = res
+        comment.doc(commentId).update({
+          data: {
+            commenter: _.pop()
+          }
+        }).then(() => {
+          comment.doc(commentId).update({
+            data: {
+              commentNum: _.inc(1),
+              commenter: _.push([{
+                isUnknown: false,
+                avatarUrl: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/643e9b5d-5bb3223d-55291b27',
+                newOpenId: 'ChatGLM',
+                postOpenId: app.globalData.openId,
+                newNickName: 'AI',
+                postNickName: app.globalData.nickName,
+                commentAgainBody: completion,
+                isAuthentic: true,
+                idTitle: 'ChatGLM-130B',
+                postUnknown: false,
+
+                image_upload: [],
+              }]),
+
+              history: _.push([prompt, completion])
+            }
+          }).then(() => {
+            wx.hideToast()
+            that.sendEnd('回答已生成', false)
+          })
+        })
+      })
+    })
+  },
   /**
    * 点击发送按钮
    * @param {*} e 
@@ -1494,9 +1702,15 @@ Page({
             url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
           })
         } else {
-          /**
-           * 一、文字审核
-           */
+          if (this.data.isAskChatGLM && res.data[0].askTime == 0) {
+            wx.showToast({
+              title: '提问次数已用尽！请前往“意见反馈”联系开发者',
+              icon: 'none',
+              duration: 5000
+            })
+            return;
+          }
+          //文字审核
           wx.cloud.callFunction({
             name: 'checkContent',
             data: {

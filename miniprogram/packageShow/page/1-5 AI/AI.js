@@ -318,6 +318,7 @@ Page({
                     commentId: '',
                     liker: []
                   }],
+                  history: [prompt],
                   message: 0,
 
                   collector: [],
@@ -348,7 +349,7 @@ Page({
                   name: 'chatglm',
                   data: {
                     input: prompt,
-                    postId: _id
+                    history: [],
                   }
                 }).then((res) => {
                   console.log(res.result.completion)
@@ -384,7 +385,7 @@ Page({
           const { label } = res.result.msgR.result
           const { suggest } = res.result.msgR.result
           if (suggest === 'risky') {
-            that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', postId)
+            that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]：回答不予显示', postId)
           } else if (suggest === 'review') {
             console.log('可能包含' + matchLabel(label) + '信息')
             that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, postId)
@@ -407,22 +408,18 @@ Page({
     var d = new Date().getTime()
 
     question.doc(postId).get().then(res => {
-      console.log(res)
-      //console.log(res[0].data)
-      console.log(res.data)
-      console.log(res.data.title)
       const { title } = res.data
       const posterId = res.data._openid
-      wx.cloud.callFunction({
-        name: 'sendMsg',
-        data: {
-          receiver: posterId,
-          questionId: postId,
-          sender: 'AI',
-          commentBody: completion,
-          postTitle: title
-        }
-      })
+      // wx.cloud.callFunction({
+      //   name: 'sendMsg',
+      //   data: {
+      //     receiver: posterId,
+      //     questionId: postId,
+      //     sender: 'AI',
+      //     commentBody: completion,
+      //     postTitle: title
+      //   }
+      // })
       comment.add({
         data: {
           //时间
@@ -444,7 +441,7 @@ Page({
           image_upload: [],
 
           isAuthentic: true,
-          idTitle: 'ChatGLM_6B',
+          idTitle: 'ChatGLM_130B',
 
           warner: [],
           warnerDetail: [],
@@ -452,13 +449,18 @@ Page({
       }).then((res) => {
         question.doc(postId).update({
           data: {
+            answerTime: d,
+            commentNum: _.inc(1),
+            message: _.inc(1),
+
             commentNum: _.inc(1),
             commenter: [{
               nickName: 'AI',
               completion,
               commentId: res._id,
               liker: []
-            }]
+            }],
+            history: _.push(completion)
           }
         }).then(() => {
           wx.showToast({
@@ -573,7 +575,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-
+    app.globalData.questionIndex = -1
   },
 
   /**
