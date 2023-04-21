@@ -7,9 +7,22 @@ const crypto = require("crypto");
 const rp = require('request-promise')
 const { OPENID } = cloud.getWXContext()
 
-const apiKey = "d35e4df0c6d54e74b3bd35cf3e608b26";
+var apiKeyArr = [
+  "d35e4df0c6d54e74b3bd35cf3e608b26",
+  "02f25a84342f4b8ea32b261e8f347fdf",
+  "8726beccba9b40138560d682bee416c8"
+]
+
+var publicKeyArr = [
+  "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKBRzxjnRbvr+gaK56bQ9u23ZlEWL3d7g1zUC5SaZxipJj9l/DuQPgEFcczwFIv3lqkIgfAVNOkR1f0RYtjJTJsCAwEAAQ==",
+  "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJWTKkF+XsT2t6WF2cRyyndL5/uNXlE5l2dNCEU1tzfoqtm3qkLAhCHXxURdOjMdKyFJkVUWPjTGXO5nlsbO0YcCAwEAAQ==",
+  "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMTw0IaTxHQvDRKji7xu/7XkJEhojMyCJ6q8cXehmjSp+LGzObWSayttHun5YS21+/BbOp3bjHT3v4HS1Rl4KokCAwEAAQ=="
+]
+const randomNum = Math.floor(Math.random() * 3);
+
+const apiKey = apiKeyArr[randomNum];
 // 定义公钥
-const publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKBRzxjnRbvr+gaK56bQ9u23ZlEWL3d7g1zUC5SaZxipJj9l/DuQPgEFcczwFIv3lqkIgfAVNOkR1f0RYtjJTJsCAwEAAQ==";
+const publicKey = publicKeyArr[randomNum];
 
 const ChatGLM_6B_url = "https://maas.aminer.cn/api/paas/model/v2/open/engines/chatglm_qa_6b/chatglm_6b"
 const ChatGLM_130B_url = "https://maas.aminer.cn/api/paas/model/v1/open/engines/chatGLM/chatGLM"
@@ -58,8 +71,8 @@ async function getResponseFromAPI2(input, history) {
     console.log(tokenData.data);
     const chatData = await rp({
       method: "POST",
-      // uri: ChatGLM_130B_url,
-      uri: ChatGLM_6B_url,
+      uri: ChatGLM_130B_url,
+      // uri: ChatGLM_6B_url,
       headers: {
         Authorization: tokenData.data,
       },
@@ -92,10 +105,18 @@ async function getResponseFromAPI2(input, history) {
   }
 }
 
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   const { input, history } = event;
-  const completion = await getResponseFromAPI2(input, history);
+  let completion = await getResponseFromAPI2(input, history);
+
+  if (isEmpty(completion)) {
+    completion = '[当前接口提问人数过多！请稍后再试或重新提问]'
+  }
 
   return {
     completion,

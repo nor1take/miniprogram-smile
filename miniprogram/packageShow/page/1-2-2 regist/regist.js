@@ -1,4 +1,8 @@
 // packageShow/page/1-2-2 regist/regist.js
+const app = getApp()
+const db = wx.cloud.database()
+const _ = db.command
+const activity = db.collection('activity')
 Page({
 
   /**
@@ -23,17 +27,52 @@ Page({
 
 
   formSubmit: function (e) {
+    wx.showLoading({
+      title: '提交中',
+    })
     console.log(e.detail.value)
     const { name } = e.detail.value
     const { classNum } = e.detail.value
     const { id } = e.detail.value
 
     if (name == "" || classNum == "" || id == "") {
+      wx.hideLoading()
       wx.showToast({
         title: '请完善信息',
         icon: 'none'
       })
     } else {
+      activity.where({
+        _openid: '{openid}'
+      }).get().then((res) => {
+        console.log(res.data)
+        if (res.data.length != 0) {
+          wx.showToast({
+            title: '请勿重复提交！如有其他问题，请前往 意见反馈 联系开发者',
+            icon: 'none',
+            duration: 5000
+          })
+        } else {
+          activity.add({
+            data: {
+              id,
+              classNum,
+              name,
+              activityId: app.globalData.questionId
+            }
+          }).then(() => {
+            wx.showToast({
+              title: '提交成功',
+              icon: 'success',
+              duration: 2000
+            }).then(() => {
+              setTimeout(function () { wx.navigateBack() }, 2000)
+            })
+          })
+        }
+      }).catch(() => {
+
+      })
 
     }
   },

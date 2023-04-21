@@ -1444,9 +1444,10 @@ Page({
     if (that.data.tapAnswerButton) {
       question.doc(postId).get().then(res => {
         let history = []
-        if (res.data._openid == that.data.openId) {
+        if (res.data.history) {
           history = res.data.history
         }
+
 
         comment.add({
           data: {
@@ -1473,7 +1474,7 @@ Page({
               postNickName: app.globalData.nickName,
               commentAgainBody: '[正在根据该帖上下文进行回答...预计需要 10-15s]',
               isAuthentic: true,
-              idTitle: 'ChatGLM-130B',
+              idTitle: 'ChatGLM',
               postUnknown: false,
 
               image_upload: [],
@@ -1511,9 +1512,8 @@ Page({
       const commentId = that.data._commentId;
       comment.doc(commentId).get().then((res) => {
         let history = []
-
-        if (app.globalData.openId == res._openid && res.history) {
-          history = res.history
+        if (res.data.history) {
+          history = res.data.history
         }
 
         commentAgain.add({
@@ -1534,6 +1534,8 @@ Page({
         }).then((res) => {
           comment.doc(commentId).update({
             data: {
+              history: history,
+
               commentNum: _.inc(1),
               commenter: _.push([{
                 isUnknown: false,
@@ -1557,7 +1559,7 @@ Page({
                 postNickName: app.globalData.nickName,
                 commentAgainBody: '[正在根据该帖上下文进行回答...预计需要 10-15s]',
                 isAuthentic: true,
-                idTitle: 'ChatGLM-130B',
+                idTitle: 'ChatGLM',
                 postUnknown: false,
 
                 image_upload: [],
@@ -1623,6 +1625,10 @@ Page({
     const prompt = this.data._commentBody
     var d = new Date().getTime()
 
+    if (completion == {}) {
+      completion = ''
+    }
+
     question.doc(postId).update({
       data: {
         commentNum: _.inc(2),
@@ -1665,7 +1671,7 @@ Page({
                 postNickName: app.globalData.nickName,
                 commentAgainBody: completion,
                 isAuthentic: true,
-                idTitle: 'ChatGLM-130B',
+                idTitle: 'ChatGLM',
                 postUnknown: false,
 
                 image_upload: [],

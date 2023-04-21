@@ -117,7 +117,7 @@ Page({
 
     _unknown: false,
     tagId: 1,
-    tag: '#4 耳机分你一半',
+
     fileID: [],
 
     top: 48,
@@ -125,8 +125,9 @@ Page({
     right: 367,
     bottom: 80,
 
+    tag: '#5 五一你想/推荐去哪玩',
     tagsList: [
-      '#4 耳机分你一半',
+      '#5 五一你想/推荐去哪玩',
       '音乐',
       '学习',
       '#3 令你心动的offer',

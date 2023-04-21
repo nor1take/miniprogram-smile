@@ -318,7 +318,6 @@ Page({
                     commentId: '',
                     liker: []
                   }],
-                  history: [prompt],
                   message: 0,
 
                   collector: [],
@@ -406,6 +405,7 @@ Page({
   sendCompletion: function (completion, postId) {
     let that = this
     var d = new Date().getTime()
+    const prompt = this.commentData.commentContent
 
     question.doc(postId).get().then(res => {
       const { title } = res.data
@@ -441,10 +441,12 @@ Page({
           image_upload: [],
 
           isAuthentic: true,
-          idTitle: 'ChatGLM_130B',
+          idTitle: 'ChatGLM',
 
           warner: [],
           warnerDetail: [],
+
+          history: [prompt, completion]
         },
       }).then((res) => {
         question.doc(postId).update({
@@ -460,7 +462,7 @@ Page({
               commentId: res._id,
               liker: []
             }],
-            history: _.push(completion)
+            history: _.push([prompt, completion])
           }
         }).then(() => {
           wx.showToast({

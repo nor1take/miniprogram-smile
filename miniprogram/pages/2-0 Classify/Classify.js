@@ -14,7 +14,7 @@ Page({
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
       { id: 15, name: 'AI', questionList: [] },
-      { id: 14, name: '#4 耳机分你一半', questionList: [] },
+      { id: 14, name: '#5 五一你想/推荐去哪玩', questionList: [] },
       { id: 3, name: '音乐', questionList: [] },
       { id: 1, name: '学习', questionList: [] },
       { id: 13, name: '#3 令你心动的offer', questionList: [] },
@@ -31,8 +31,8 @@ Page({
     ],
 
     hasTheme: true,
-    themeTitle: '耳机分你一半',
-    themeBody: 'Music saves lives. 音乐拯救生命。\n\n耳机分你一半，与同好灵魂共振，分享音乐的美好，探索音乐的可能。',
+    themeTitle: '五一，你想/推荐去哪玩',
+    themeBody: '如题。\n\n[ AI 模块已接入国内清华 ChatGLM，更快响应，全天候开放，支持上下文。可以问问它的意见呢？]',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -64,7 +64,7 @@ Page({
       data: {
         // watched: _.inc(1)
         watcher: _.addToSet(app.globalData.openId),
-        tmp:_.addToSet(app.globalData.openId)
+        tmp: _.addToSet(app.globalData.openId)
       }
     })
   },
