@@ -18,6 +18,7 @@ exports.main = async (event, context) => {
   }).update({
     data: {
       askTime: 5
+      // isCheckSystemMsg: false
     }
   }).then((res) => {
     return res

@@ -452,9 +452,7 @@ Page({
         question.doc(postId).update({
           data: {
             answerTime: d,
-            commentNum: _.inc(1),
             message: _.inc(1),
-
             commentNum: _.inc(1),
             commenter: [{
               nickName: 'AI',

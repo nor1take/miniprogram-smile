@@ -16,8 +16,63 @@ Page({
     bottom: 80,
   },
 
+  getNicknameandImage: function () {
+    userInfo.where({
+      _openid: '{openid}'
+    }).get()
+      .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.navigateTo({
+            url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
+          })
+        } else {
+          this.setData({
+            nickName: res.data[0].nickName,
+            avatarUrl: res.data[0].avatarUrl,
+            isLogin: true,
+            isManager: res.data[0].isManager,
+            isAuthentic: res.data[0].isAuthentic,
+            idTitle: res.data[0].idTitle
+          })
+          app.globalData.isLogin = true,
+            app.globalData.isManager = res.data[0].isManager,
+            app.globalData.isAuthentic = res.data[0].isAuthentic,
+            app.globalData.idTitle = res.data[0].idTitle,
+            app.globalData.modifyNum = res.data[0].modifyNum,
+            app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+          if (res.data[0].isCheckSystemMsg) {
+            this.setData({
+              topWord: '置顶：使用帮助'
+            })
+          } else {
+            this.setData({
+              topWord: '有新的系统通知!!!'
+            })
+          }
+
+          app.globalData.nickName = res.data[0].nickName,
+            app.globalData.avatarUrl = res.data[0].avatarUrl,
+            console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+        }
+      })
+      .catch(() => {
+        console.log('用户未登录')
+        this.setData({
+          nickName: '',
+          avatarUrl: '',
+          isLogin: false,
+        })
+        app.globalData.isLogin = false,
+          wx.showToast({
+            icon: 'none',
+            title: '游客模式。左上角登录后体验 ‘发帖’ ‘评论’ 功能',
+            duration: 3500,
+          })
+      })
+  },
+
   postTap: function (e) {
-    const {id} = e.currentTarget.dataset    
+    const { id } = e.currentTarget.dataset
     app.globalData.questionId = id
 
     wx.navigateTo({
@@ -43,6 +98,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    this.getNicknameandImage()
     app.globalData.isCheckSystemMsg = true
     userInfo.where({
       _openid: '{openid}'
@@ -105,14 +161,14 @@ Page({
  */
   onShareAppMessage: function () {
     return {
-      title: '微校Smile - 系统通知·Note',
-      path: 'packageMy/pages/3-5 SystemMsg/SystemMsg'
+      title: '微校Smile - 本周热帖 TOP 3',
+      path: 'pages/0-0 Show/Show?id=' + 'top'
     }
   },
 
   onShareTimeline: function () {
     return {
-      title: '微校Smile - 系统通知·Note'
+      title: '微校Smile - 本周热帖 TOP 3'
     }
   }
 })

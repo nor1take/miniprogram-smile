@@ -13,8 +13,8 @@ Page({
     //记得修改 case 1 * 2 / else if (index === 1 {
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
-      { id: 15, name: 'AI', questionList: [] },
-      { id: 14, name: '#5 五一你想/推荐去哪玩', questionList: [] },
+      { id: 14, name: 'AI', questionList: [] },
+      { id: 15, name: '#6 旅行手记', questionList: [] },
       { id: 3, name: '音乐', questionList: [] },
       { id: 1, name: '学习', questionList: [] },
       { id: 13, name: '#3 令你心动的offer', questionList: [] },
@@ -31,8 +31,8 @@ Page({
     ],
 
     hasTheme: true,
-    themeTitle: '五一，你想/推荐去哪玩',
-    themeBody: '如题。\n\n[ AI 模块已接入国内清华 ChatGLM，更快响应，全天候开放，支持上下文。可以问问它的意见呢？]',
+    themeTitle: '#6 旅行手记',
+    themeBody: '每一次旅行都是一次灵感的碰撞。\n\n无论是风景还是人文，都值得用心去发现和记录。\n\n用文字或图片分享你的旅行见闻和感受，让更多人看见精彩。\n',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -49,6 +49,12 @@ Page({
   Ask: function () {
     wx.navigateTo({
       url: '../../packageShow/page/1-2 Ask/Ask',
+    })
+  },
+
+  AI: function () {
+    wx.navigateTo({
+      url: '../../packageShow/page/1-5 AI/AI',
     })
   },
 

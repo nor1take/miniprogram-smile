@@ -356,7 +356,13 @@ Page({
         wx.navigateTo({
           url: '../../packageShow/page/1-5 AI/AI',
         })
-      } else {
+      }
+      else if (id === 'top') {
+        wx.navigateTo({
+          url: '../../packageMy/pages/3-5 SystemMsg/SystemMsg',
+        })
+      }
+      else {
         app.globalData.questionId = id
         let d = new Date().getTime();
         console.log(d)

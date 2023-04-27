@@ -4,8 +4,15 @@
     <view slot="tab-content-{{index}}">
       <view style="width:100%; height: {{bottom}}px;"></view>
 
+      <block wx:if="{{index == 1}}">
+        <view class="background" style="padding: 32rpx;">
+          <image src="https://chatglm.cn/img/logo_alpha.1527ae36.svg" mode="aspectFit" style="height: 64rpx; margin-bottom: 32rpx;"></image>
+          <text class="body" style="margin:0;">ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。\n\n每人每天 5 次提问机会。</text>
+          <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx; background-color: #3485FF; display: flex;" bindtap="AI">前往 AI 板块</button>
+        </view>
+      </block>
       <block wx:if="{{index == 2 && hasTheme}}">
-        <view class="themeContainer">
+        <view class="background" style="padding: 32rpx;">
           <view class="themeTitle">{{themeTitle}}</view>
           <text class="themeBody">{{themeBody}}</text>
           <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx;" bindtap="Ask">参与活动</button>
