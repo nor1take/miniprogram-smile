@@ -161,14 +161,14 @@ Page({
  */
   onShareAppMessage: function () {
     return {
-      title: '微校Smile - 本周热帖 TOP 3',
+      title: '微校Smile - ' + this.data.systemMsg[0].title,
       path: 'pages/0-0 Show/Show?id=' + 'top'
     }
   },
 
   onShareTimeline: function () {
     return {
-      title: '微校Smile - 本周热帖 TOP 3'
+      title: '微校Smile - ' + this.data.systemMsg[0].title
     }
   }
 })

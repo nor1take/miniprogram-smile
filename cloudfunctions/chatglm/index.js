@@ -58,6 +58,8 @@ async function getResponseFromAPI2(input, history) {
   console.log(publicKey);
   const encrypted = rsaEncode(Date.now().toString(), publicKey);
   console.log(encrypted);
+
+  let chatData;
   try {
     const tokenData = await rp({
       method: "POST",
@@ -69,7 +71,7 @@ async function getResponseFromAPI2(input, history) {
       json: true,
     });
     console.log(tokenData.data);
-    const chatData = await rp({
+    chatData = await rp({
       method: "POST",
       uri: ChatGLM_130B_url,
       // uri: ChatGLM_6B_url,
@@ -101,7 +103,7 @@ async function getResponseFromAPI2(input, history) {
     return result.data.outputText
   } catch (err) {
     console.error(err);
-    return err;
+    return chatData.msg;
   }
 }
 

@@ -92,7 +92,7 @@
     </view>
   </view>
 </view>
-<view class="last" style="display: flex; justify-content: center; align-items: center;">仅展示前20条。前往 分类-ChatGPT 标签下查看全部发帖。</view>
+<view class="last" style="display: flex; justify-content: center; align-items: center;">仅展示前20条。前往 分类-AI 标签下查看全部发帖。</view>
 <view style="width: 100%; height: 500rpx;"></view>
 
 

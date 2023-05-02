@@ -1,6 +1,6 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<return top="{{top}}" topWord="我的关注"></return>
+<return top="{{top}}" topWord="我的收藏"></return>
 
 <tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
   <block wx:for="{{tabs}}" wx:key="id">

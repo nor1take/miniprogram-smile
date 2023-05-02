@@ -42,6 +42,9 @@ Page({
     var now = new Date().getTime();
     question
       .aggregate()
+      .match({
+        tag: _.neq('AI')
+      })
       .project({
         _id: 1,
         title: 1,

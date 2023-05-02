@@ -347,13 +347,15 @@ Page({
                     title: '危险：包含' + matchLabel(label) + '信息！',
                     icon: 'none'
                   })
-                } else if (suggest === 'review') {
+                }
+                else if (suggest === 'review') {
                   wx.hideLoading()
                   wx.showToast({
                     title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
-                } else {
+                }
+                else {
                   app.globalData.isAsk = true
                   var d = new Date().getTime();
                   if (systemMsgNum > 10 && app.globalData.isAuthentic && app.globalData.isManager) {

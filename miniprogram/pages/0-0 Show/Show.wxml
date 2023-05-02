@@ -10,13 +10,14 @@
 <view class="topBlock" style="width: 100%; height: {{top+32+8}}px;"></view>
 <view class="topContainer">
   <swiper class="swiperContainer" vertical autoplay circular interval='3000'>
-    <swiper-item class="swiperItem" bindtap="alwaysTop">
-      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
-    </swiper-item>
+
     <swiper-item class="swiperItem" bindtap="hot">
       <i class="iconfont icon-fire-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FA5151;"></i>
       <view style="margin-left: 16rpx; font-size: 30rpx;">热门</view>
+    </swiper-item>
+    <swiper-item class="swiperItem" bindtap="alwaysTop">
+      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
 
   </swiper>
@@ -31,34 +32,40 @@
 <block wx:if="{{questionList.length == 0}}">
   <view class="bottom" style="margin-top: 40%;">还没有人发帖哦~</view>
 </block>
-<view class="background" hover-class="hoverClass" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
-  <view style="display: flex; justify-content: space-between; align-items:center;">
-    <view class="word">
-      <view class="tag">
-        <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
-        <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
-        <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
-        {{item.tag}}
+
+<block wx:for="{{questionList}}" wx:key="_id">
+  <view class="background" hover-class="hoverClass" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+    <view style="display: flex; justify-content: space-between; align-items:center;">
+      <view class="word">
+        <view class="tag">
+          <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
+          <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
+          <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
+          {{item.tag}}
+        </view>
+        <view class="title">{{item.title}}</view>
+        <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+        <view class="last">
+          <block wx:if="{{sortWord === '最新回应' && item.Ayear!='' }}">
+            <text>{{filter.timeString(item.answerTime)}}</text>
+            回应 ·
+          </block>
+          <block wx:else>
+            <text>{{filter.timeString(item.time)}}</text> ·
+          </block>
+          <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
+          <text class="watched">{{item.collectNum}} 收藏</text> ·
+          <text class="watched">{{item.postLikeNum}} 赞</text>
+        </view>
       </view>
-      <view class="title">{{item.title}}</view>
-      <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
-      <view class="last">
-        <block wx:if="{{sortWord === '最新回应' && item.Ayear!='' }}">
-          <text>{{filter.timeString(item.answerTime)}}</text>
-          回应 ·
-        </block>
-        <block wx:else>
-          <text>{{filter.timeString(item.time)}}</text> ·
-        </block>
-        <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
-        <text class="watched">{{item.collectNum}} 收藏</text> ·
-        <text class="watched">{{item.postLikeNum}} 赞</text>
+      <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+        <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
       </view>
-    </view>
-    <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
-      <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
     </view>
   </view>
-</view>
+  <!-- <ad-custom wx:if="{{(index+1)%5==0}}" class="background" unit-id="adunit-64acaeb0e07bfabf"></ad-custom> -->
+</block>
+
+
 <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
 <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>

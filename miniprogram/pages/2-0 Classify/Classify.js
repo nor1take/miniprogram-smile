@@ -32,7 +32,7 @@ Page({
 
     hasTheme: true,
     themeTitle: '#6 旅行手记',
-    themeBody: '每一次旅行都是一次灵感的碰撞。\n\n无论是风景还是人文，都值得用心去发现和记录。\n\n用文字或图片分享你的旅行见闻和感受，让更多人看见精彩。\n',
+    themeBody: '每一次旅行，都值得用心去发现和记录。\n\n用文字或图片分享你的旅行见闻和感受，让更多人看见精彩。\n',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
