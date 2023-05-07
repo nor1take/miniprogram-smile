@@ -33,10 +33,10 @@
             <view class="title">{{item.title}}</view>
             <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
             <view class="last">
-              <text>{{filter.timeString(item.time)}}</text> ·
-              <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
-              <text class="watched">{{item.collectNum}} 收藏</text> ·
-              <text class="watched">{{item.postLikeNum}} 赞</text>
+              <text>{{filter.timeString(item.time)}}</text>
+              <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
+              <text wx:if="{{item.collectNum != 0}}" class="watched"> · {{item.collectNum}} 收藏</text>
+              <text wx:if="{{item.postLikeNum != 0}}" class="watched"> · {{item.postLikeNum}} 赞</text>
             </view>
           </view>
           <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">

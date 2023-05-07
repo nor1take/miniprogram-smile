@@ -75,6 +75,7 @@ Page({
           if (!app.globalData.isLogin) {
             userInfo.add({
               data: {
+                askTime: 5,
                 nickName: nickName,
                 avatarUrl: this.data.avatarUrl,
                 isManager: false,
@@ -141,6 +142,7 @@ Page({
               if (!app.globalData.isLogin) {
                 userInfo.add({
                   data: {
+                    askTime: 5,
                     nickName: nickName,
                     avatarUrl: res.fileID,
                     isManager: false,

@@ -125,6 +125,11 @@ Page({
       })
   },
   onLoad() {
+    wx.onMemoryWarning(function () {
+      console.log('onMemoryWarningReceive')
+    })
+
+
     if (app.globalData.openId == undefined || app.globalData.openId == '') {
       this.getNicknameandImage()
     }
