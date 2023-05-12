@@ -3,6 +3,7 @@ const app = getApp()
 const db = wx.cloud.database()
 const _ = db.command
 const question = db.collection('question')
+const userInfo = db.collection('userInfo')
 
 Page({
   /**
@@ -14,15 +15,15 @@ Page({
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
       { id: 14, name: 'AI', questionList: [] },
-      { id: 15, name: '#6 旅行手记', questionList: [] },
+      { id: 15, name: '#7 独处时你在想些什么', questionList: [] },
+      { id: 2, name: '生活', questionList: [] },
       { id: 3, name: '音乐', questionList: [] },
       { id: 1, name: '学习', questionList: [] },
       { id: 13, name: '#3 令你心动的offer', questionList: [] },
-      { id: 2, name: '生活', questionList: [] },
       { id: 4, name: '美食', questionList: [] },
-      { id: 5, name: '恋爱', questionList: [] },
       { id: 6, name: '游戏', questionList: [] },
       { id: 7, name: '组队', questionList: [] },
+      { id: 5, name: '恋爱', questionList: [] },
       { id: 8, name: '读书', questionList: [] },
       { id: 9, name: '闲置', questionList: [] },
       { id: 10, name: '摄影', questionList: [] },
@@ -31,8 +32,8 @@ Page({
     ],
 
     hasTheme: true,
-    themeTitle: '#6 旅行手记',
-    themeBody: '每一次旅行，都值得用心去发现和记录。\n\n用文字或图片分享你的旅行见闻和感受，让更多人看见精彩。\n',
+    themeTitle: '#7  一个人时，你在想些什么？',
+    themeBody: "主题 · 文案 · 策划：栀笙\n\n独处让人平静专注。没有人不渴望一段只属于自己的时间。\n\n每个人都有不一样的独处时刻。留意一下自己独处时的心绪，在这里尽情分享不一样的独处魅力～\n\n",
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -44,6 +45,14 @@ Page({
     left: 281,
     right: 367,
     bottom: 80,
+
+    isLogin: false,
+  },
+
+  Login: function () {
+    wx.navigateTo({
+      url: '../../packageLogin/pages/0-0 Login/Login',
+    })
   },
 
   Ask: function () {
@@ -324,14 +333,51 @@ Page({
     }
   },
 
+  getNicknameandImage: function () {
+    userInfo.where({
+      _openid: '{openid}'
+    }).get()
+      .then((res) => {
+        if (res.data[0].isForbidden) {
+          wx.navigateTo({
+            url: '../../../packageLogin/pages/0-1 Forbidden/Forbidden',
+          })
+        } else {
+          app.globalData.openId = res.data[0]._openid
+          app.globalData.isLogin = true
+          app.globalData.isManager = res.data[0].isManager
+          app.globalData.isAuthentic = res.data[0].isAuthentic
+          app.globalData.idTitle = res.data[0].idTitle
+          app.globalData.modifyNum = res.data[0].modifyNum
+          app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+
+          app.globalData.nickName = res.data[0].nickName
+          app.globalData.avatarUrl = res.data[0].avatarUrl
+          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+        }
+      })
+      .catch(() => {
+        console.log('err')
+      })
+  },
+
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
     this.updateList(this.data.activeTab)
-    if (app.globalData.isAsk) {
-      this.loadData(1, true)
+    if (app.globalData.isLogin) {
+      this.setData({
+        isLogin: true,
+      })
+      this.getNicknameandImage()
+
     }
+    if (app.globalData.isAsk) {
+      this.loadData(2, true)
+      app.globalData.isAsk = false
+    }
+
   },
 
   /**

@@ -1,35 +1,41 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 <return top="{{top}}" bottom="{{bottom}}" topWord="系统通知 · Note"></return>
 
-<view class="background" wx:for="{{systemMsg}}" wx:key="_id">
+<block wx:for="{{systemMsg}}" wx:key="_id">
 
-  <view class="word">
-    <view class="body">{{item.title}}</view>
-    <view class="title">{{item.body}}</view>
-  </view>
-
-  <block wx:if="{{item.postList[0].postId != ''}}">
-    <view wx:for="{{item.postList}}" wx:key="id" style="display: flex;">
-      <view bindtap="postTap" data-id="{{item.postId}}" class="postBackground">
-        <view class="postTitle">{{item.postTitle}}</view>
-      </view>
+  <view class="background">
+    <view class="word">
+      <view class="body {{index == 0 ? 'pink' : ''}}">{{item.title}}</view>
+      <view class="title {{index == 0 ? 'pink' : ''}}">{{item.body}}</view>
     </view>
-  </block>
 
-
-  <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
-    <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="id">
-      <block wx:if="{{item.image.length>2}}">
-        <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 175rpx; height: 175rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
-      </block>
-      <block wx:elif="{{item.image.length == 2}}">
-        <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 265rpx; height: 265rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
-      </block>
-      <block wx:else="">
-        <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
-      </block>
+    <block wx:if="{{item.postList[0].postId != ''}}">
+      <view wx:for="{{item.postList}}" wx:key="id" style="display: flex;">
+        <view bindtap="postTap" data-id="{{item.postId}}" class="postBackground">
+          <view class="postTitle">{{item.postTitle}}</view>
+        </view>
+      </view>
     </block>
+
+
+    <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
+      <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="id">
+        <block wx:if="{{item.image.length>2}}">
+          <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 175rpx; height: 175rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
+        </block>
+        <block wx:elif="{{item.image.length == 2}}">
+          <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 265rpx; height: 265rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
+        </block>
+        <block wx:else="">
+          <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+        </block>
+      </block>
+    </view>
+    <view wx:if="{{index != 0}}" class="last">{{filter.timeString(item.time, true)}}</view>
+    <view wx:else="" class="last pink">
+      <i class="iconfont icon-download-line" style="font-size: 30rpx; margin: 8rpx; color: #F50057;"></i>
+      置 顶 通 知
+    </view>
   </view>
-  <view class="last">{{filter.timeString(item.time, true)}}</view>
-</view>
+</block>
 <view class="bottom"></view>

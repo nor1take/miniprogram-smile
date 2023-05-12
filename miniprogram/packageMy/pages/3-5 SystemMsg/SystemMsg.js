@@ -34,12 +34,12 @@ Page({
             isAuthentic: res.data[0].isAuthentic,
             idTitle: res.data[0].idTitle
           })
-          app.globalData.isLogin = true,
-            app.globalData.isManager = res.data[0].isManager,
-            app.globalData.isAuthentic = res.data[0].isAuthentic,
-            app.globalData.idTitle = res.data[0].idTitle,
-            app.globalData.modifyNum = res.data[0].modifyNum,
-            app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+          app.globalData.isLogin = true
+          app.globalData.isManager = res.data[0].isManager
+          app.globalData.isAuthentic = res.data[0].isAuthentic
+          app.globalData.idTitle = res.data[0].idTitle
+          app.globalData.modifyNum = res.data[0].modifyNum
+          app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
           if (res.data[0].isCheckSystemMsg) {
             this.setData({
               topWord: '置顶：使用帮助'
@@ -50,9 +50,9 @@ Page({
             })
           }
 
-          app.globalData.nickName = res.data[0].nickName,
-            app.globalData.avatarUrl = res.data[0].avatarUrl,
-            console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+          app.globalData.nickName = res.data[0].nickName
+          app.globalData.avatarUrl = res.data[0].avatarUrl
+          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
         }
       })
       .catch(() => {

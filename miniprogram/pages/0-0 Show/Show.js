@@ -47,7 +47,7 @@ Page({
       { id: 5, title: '', body: '', commentNum: 0, watched: 0 },
     ],
 
-    topWord: '',
+    topWord: '有新的系统通知!!!',
   },
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
@@ -440,7 +440,7 @@ Page({
         // console.log(this.data.tabs[0].questionList[0])
       }
     }
-    else if (app.globalData.isAsk) {
+    if (app.globalData.isAsk) {
       this.getData()
       wx.pageScrollTo({
         scrollTop: 0,

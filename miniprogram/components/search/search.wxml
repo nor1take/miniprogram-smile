@@ -36,8 +36,8 @@
       处理举报
     </view>
 
-    <view wx:if="{{true}}" class="button" hover-class="hoverClass" bindtap="systemMsg" style="color: #FA5151;">
-      <i class="iconfont icon-ic_public_ring" style="font-size: 50rpx; margin-right: 32rpx; color: #FA5151;"></i>
+    <view wx:if="{{true}}" class="button" hover-class="hoverClass" bindtap="systemMsg" style="color: #F50057;">
+      <i class="iconfont icon-ic_public_ring" style="font-size: 50rpx; margin-right: 32rpx; color: #F50057;"></i>
       系统通知 · Note
     </view>
     <view class="feedback_button">
@@ -47,7 +47,7 @@
       </button>
     </view>
   </view>
-  <view class="version">版本号：v1.6.8</view>
+  <view class="version">版本号：v1.7.2</view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>
 <view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>

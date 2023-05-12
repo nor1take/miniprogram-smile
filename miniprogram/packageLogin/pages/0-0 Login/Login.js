@@ -87,6 +87,7 @@ Page({
             }).then(() => {
               wx.hideLoading()
               app.globalData.isModify = true
+              app.globalData.isLogin = true
               wx.navigateBack()
                 .catch(() => {
                   wx.navigateBack()
@@ -154,6 +155,7 @@ Page({
                 }).then(() => {
                   wx.hideLoading()
                   app.globalData.isModify = true
+                  app.globalData.isLogin = true
                   wx.navigateBack()
                     .catch(() => {
                       wx.switchTab({

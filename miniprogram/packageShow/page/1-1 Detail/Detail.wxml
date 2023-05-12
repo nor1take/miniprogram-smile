@@ -122,7 +122,7 @@
   <view class="FollowReplybutton-area">
     <block wx:if="{{isLogin}}">
       <block wx:if="{{item.isActivity}}">
-        <button class="FollowReplybutton" type="primary" size="mini" style="width: 180rpx;" bindtap="goToRegist">报 名</button>
+        <button class="FollowReplybutton" type="primary" size="mini" style="width: max-content;" bindtap="goToRegist">参与活动</button>
       </block>
       <block wx:else="">
         <view wx:if="{{WXS.isInArray(openId, item.collector)}}" class="button-area" style="color: #FCC300;" bindtap="collectCancel">

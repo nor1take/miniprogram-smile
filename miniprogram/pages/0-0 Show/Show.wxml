@@ -9,13 +9,16 @@
 <!-- <view style="width: 100%; height: {{top+32+8}}px;"></view> -->
 <view class="topBlock" style="width: 100%; height: {{top+32+8}}px;"></view>
 <view class="topContainer">
-  <swiper class="swiperContainer" vertical autoplay circular interval='3000'>
-
+  <swiper class="swiperContainer" vertical autoplay circular interval='5000'>
+    <swiper-item wx:if="{{topWord == '有新的系统通知!!!'}}" class="swiperItem" style="background-color: #F50057;" bindtap="alwaysTop">
+      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
+    </swiper-item>
     <swiper-item class="swiperItem" bindtap="hot">
       <i class="iconfont icon-fire-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FA5151;"></i>
       <view style="margin-left: 16rpx; font-size: 30rpx;">热门</view>
     </swiper-item>
-    <swiper-item class="swiperItem" bindtap="alwaysTop">
+    <swiper-item wx:if="{{topWord != '有新的系统通知!!!'}}" class="swiperItem" bindtap="alwaysTop">
       <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
       <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
@@ -32,6 +35,8 @@
 <block wx:if="{{questionList.length == 0}}">
   <view class="bottom" style="margin-top: 40%;">还没有人发帖哦~</view>
 </block>
+
+
 
 <block wx:for="{{questionList}}" wx:key="_id">
   <view class="background" hover-class="hoverClass" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">

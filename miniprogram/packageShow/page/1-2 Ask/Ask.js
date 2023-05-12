@@ -177,8 +177,7 @@ Page({
   },
   data: {
     tagsList: [
-      // '#5 五一你想/推荐去哪玩',
-      '#6 旅行手记',
+      '#7 独处时你在想些什么',
       '音乐',
       '学习',
       '#3 令你心动的offer',
@@ -193,7 +192,7 @@ Page({
       '我捡到…',
       '我丢了…',
     ],
-    tag: '#6 旅行手记',
+    tag: '#7 独处时你在想些什么',
     titleContent: false,
 
     tagId: 1,
@@ -406,33 +405,33 @@ Page({
                         })
                     })
                   } else {
-                    if (that.data._unknown && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
-                      that.setData({
-                        _unknown: false
-                      })
-                      let list = [
-                        '宋雨琦我老婆',
-                        'JamboGo',
-                        '超酷的小七',
-                        '椰椰脆脆',
-                        '小柯21',
-                        '芝士',
-                        'Clara-',
-                        '不吃长寿面',
-                        '晴羮雨读',
-                        '元老被封跑路',
-                        '是莫妮卡Monica呀',
-                        'Lu_xxL',
-                        '安之吾愿',
-                        '人生苦短我又太懒',
-                        '天蓝蓝bluebright',
-                        'Frienes1500-W',
-                      ]
-                      app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
-                      app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
-                      app.globalData.isAuthentic = false
-                      app.globalData.idTitle = ''
-                    }
+                    // if (that.data._unknown && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
+                    //   that.setData({
+                    //     _unknown: false
+                    //   })
+                    //   let list = [
+                    //     '宋雨琦我老婆',
+                    //     'JamboGo',
+                    //     '超酷的小七',
+                    //     '椰椰脆脆',
+                    //     '小柯21',
+                    //     '芝士',
+                    //     'Clara-',
+                    //     '不吃长寿面',
+                    //     '晴羮雨读',
+                    //     '元老被封跑路',
+                    //     '是莫妮卡Monica呀',
+                    //     'Lu_xxL',
+                    //     '安之吾愿',
+                    //     '人生苦短我又太懒',
+                    //     '天蓝蓝bluebright',
+                    //     'Frienes1500-W',
+                    //   ]
+                    //   app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
+                    //   app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+                    //   app.globalData.isAuthentic = false
+                    //   app.globalData.idTitle = ''
+                    // }
                     question.add({
                       data: {
                         //时间

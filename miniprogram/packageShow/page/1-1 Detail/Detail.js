@@ -262,7 +262,7 @@ Page({
   },
   goToRegist: function () {
     wx.navigateTo({
-      url: '../../../packageShow/page/1-2-2 regist/regist',
+      url: '../../../packageShow/page/1-2 Ask/Ask',
     })
   },
   fold: function () {
@@ -1803,16 +1803,16 @@ Page({
             isManager: res.data[0].isManager
           })
           app.globalData.openId = res.data[0]._openid
-          app.globalData.isLogin = true,
-            app.globalData.isManager = res.data[0].isManager,
-            app.globalData.isAuthentic = res.data[0].isAuthentic,
-            app.globalData.idTitle = res.data[0].idTitle,
-            app.globalData.modifyNum = res.data[0].modifyNum,
-            app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
+          app.globalData.isLogin = true
+          app.globalData.isManager = res.data[0].isManager
+          app.globalData.isAuthentic = res.data[0].isAuthentic
+          app.globalData.idTitle = res.data[0].idTitle
+          app.globalData.modifyNum = res.data[0].modifyNum
+          app.globalData.isCheckSystemMsg = res.data[0].isCheckSystemMsg
 
-          app.globalData.nickName = res.data[0].nickName,
-            app.globalData.avatarUrl = res.data[0].avatarUrl,
-            console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+          app.globalData.nickName = res.data[0].nickName
+          app.globalData.avatarUrl = res.data[0].avatarUrl
+          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
         }
       })
       .catch(() => {
@@ -1859,6 +1859,15 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    if (app.globalData.isAsk) {
+      wx.navigateBack()
+        .catch(() => {
+          wx.switchTab({
+            url: '../../../pages/0-0 Show/Show'
+          })
+        })
+      return
+    }
     if (!app.globalData.isLogin) {
       wx.showToast({
         icon: 'none',
@@ -1889,12 +1898,12 @@ Page({
   onUnload: function () {
     console.log(app.globalData.questionDelete)
     if (!app.globalData.questionDelete) {
-      app.globalData.questionSolved = this.data.questionList[0].solved,
-        app.globalData.questionCommentNum = this.data.questionList[0].commentNum,
-        app.globalData.questionWatcher = this.data.questionList[0].watcher,
-        app.globalData.questionWatched = this.data.questionList[0].watched,
-        app.globalData.questionCollect = this.data.collectNum,
-        app.globalData.questionLikeNum = this.data.postLikeNum
+      app.globalData.questionSolved = this.data.questionList[0].solved
+      app.globalData.questionCommentNum = this.data.questionList[0].commentNum
+      app.globalData.questionWatcher = this.data.questionList[0].watcher
+      app.globalData.questionWatched = this.data.questionList[0].watched
+      app.globalData.questionCollect = this.data.collectNum
+      app.globalData.questionLikeNum = this.data.postLikeNum
     }
     else {
       app.globalData.questionDelete = true

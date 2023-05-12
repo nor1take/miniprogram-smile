@@ -1,8 +1,13 @@
 /* pages/4-0 Hot/Hot.wxss */
-.background{
+@import "../../../assets/iconfont.wxss";
+.pink {
+  color: #F50057;
+}
+
+.background {
   border: 1rpx solid transparent;
   border-radius: 15rpx;
-  box-shadow:0 0 0rpx transparent;
+  box-shadow: 0 0 0rpx transparent;
   background-color: white;
   padding: 32rpx;
 }
@@ -33,7 +38,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .background{
+  .background {
     background-color: black;
   }
 
