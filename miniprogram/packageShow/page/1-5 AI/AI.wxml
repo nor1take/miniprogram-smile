@@ -63,16 +63,17 @@
       <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
     </view>
     <view class="last">
-      <!-- 帖子点赞 -->
+
       <view>{{filter.timeString(item.time)}}</view>
-      <view style="display: flex; flex-direction: row; align-items: center;">
+      <!-- 问题点赞按钮 -->
+      <!-- <view style="display: flex; flex-direction: row; align-items: center;">
         <view wx:if="{{WXS.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel" id="{{item._id}}" data-index="{{index}}">
           <i class="iconfont icon-ic_public_favor_filled" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
         </view>
         <view wx:else="" class="button-area" bindtap="postLikeAdd" id="{{item._id}}" data-index="{{index}}">
           <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
         </view>
-      </view>
+      </view> -->
     </view>
     <view wx:if="{{item.commenter[0].completion}}" class="body gptComment">
       <view style="display: flex;" bindtap="beWatched" id="{{item._id}}">
@@ -80,14 +81,15 @@
         <text wx:if="{{item.commenter[0].completion.length > 75}}" class="commentBody" user-select="{{true}}">{{filter.abbreviation(item.commenter[0].completion)}}\n\n[点击查看完整回答]</text>
         <text wx:else="" class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
       </view>
-      <view style="display: flex; justify-content: flex-end;" wx:if="{{item.commenter[0].commentId.length != 0}}">
+      <!-- 评论点赞按钮 -->
+      <!-- <view style="display: flex; justify-content: flex-end;" wx:if="{{item.commenter[0].commentId.length != 0}}">
         <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.commenter[0].liker)}}" id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
           <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
         </view>
         <view class="buttonLike" wx:else id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
           <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #ACACAC;"></i>
         </view>
-      </view>
+      </view> -->
 
     </view>
   </view>

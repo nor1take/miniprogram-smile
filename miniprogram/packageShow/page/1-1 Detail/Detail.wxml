@@ -105,9 +105,6 @@
         <block wx:else>
           <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
         </block>
-
-
-
       </block>
     </block>
 

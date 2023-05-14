@@ -22,7 +22,6 @@
       <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
       <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
-
   </swiper>
   <i class="iconfont icon-chatglm ailogo" style="color: #3485FF;" bindtap="goToAI"></i>
   <view class="sort" bindtap="sort">
@@ -32,6 +31,16 @@
     <view class="sortWord">{{sortWord}}</view>
   </view>
 </view>
+
+<swiper class="swiperContainer2" autoplay circular indicator-dots interval='6000'>
+  <block wx:for="{{boardList}}" wx:key="id">
+    <swiper-item class="swiperItem2" id="{{item.id}}" data-index="{{-1}}" bindtap="beWatched">
+      <image lazy-load style="width: 100%;" src="{{item.img}}" mode="widthFix"></image>
+    </swiper-item>
+  </block>
+</swiper>
+
+
 <block wx:if="{{questionList.length == 0}}">
   <view class="bottom" style="margin-top: 40%;">还没有人发帖哦~</view>
 </block>
@@ -68,7 +77,7 @@
       </view>
     </view>
   </view>
-  <!-- <ad-custom wx:if="{{(index+1)%5==0}}" class="background" unit-id="adunit-64acaeb0e07bfabf"></ad-custom> -->
+  <!-- <ad-custom wx:if="{{(index+1)%10==0}}" class="background" unit-id="adunit-64acaeb0e07bfabf"></ad-custom> -->
 </block>
 
 

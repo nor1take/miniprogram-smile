@@ -66,6 +66,23 @@ movable-view {
   color: white;
 }
 
+.swiperContainer2 {
+  /* border: 1rpx solid black; */
+  margin-left: 32rpx;
+  margin-right: 32rpx;
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
+  height: 300rpx;
+  border-radius: 40rpx;
+}
+
+.swiperItem2 {
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .topContainer {
   width: 100%;
   display: flex;

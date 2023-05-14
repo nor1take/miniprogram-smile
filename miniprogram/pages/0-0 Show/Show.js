@@ -47,10 +47,28 @@ Page({
       { id: 5, title: '', body: '', commentNum: 0, watched: 0 },
     ],
 
+    boardList: [{ img: '', id: '', }, { img: '', id: '', }, { img: '', id: '', }],
+
     topWord: '有新的系统通知!!!',
   },
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
+
+  goToBoardDetail: function (e) {
+    app.globalData.questionId = e.currentTarget.id
+    app.globalData.questionIndex = e.currentTarget.dataset.index
+
+  },
+
+  getBoardList: function () {
+    userInfo.doc('0bc57b0d63fe176e000f9eb35c23eec4').get().then((res) => {
+      const { boardList } = res.data
+      console.log(boardList)
+      this.setData({
+        boardList
+      })
+    })
+  },
 
   goToAI: function () {
     wx.navigateTo({
@@ -159,6 +177,7 @@ Page({
   },
   beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
+    if (app.globalData.questionId == '') return;
     app.globalData.questionIndex = e.currentTarget.dataset.index
 
     wx.navigateTo({
@@ -333,6 +352,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.getBoardList()
     ////记得及时注释！！！
     // wx.cloud.callFunction({
     //   name: 'update',
@@ -410,6 +430,7 @@ Page({
       console.log('getCurrentMessageNum')
       app.globalData.stayTime = 0
       this.getCurrentMessageNum()
+      this.getBoardList()
     }
 
     if (app.globalData.isModify) {
@@ -473,6 +494,7 @@ Page({
   onPullDownRefresh: function () {
     this.getData()
     this.getCurrentMessageNum()
+    this.getBoardList()
     setTimeout(function () { wx.stopPullDownRefresh() }, 500)
   },
 
