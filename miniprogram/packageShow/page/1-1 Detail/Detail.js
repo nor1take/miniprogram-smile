@@ -229,6 +229,8 @@ Page({
     isCollect: false,
 
     inputValue: '',
+    holderValue1: '试试点亮右侧的logo >>>',
+    holderValue2: '本次评论将会被 AI 回复',
 
     top: 48,
     left: 281,
@@ -241,13 +243,14 @@ Page({
     const { isAskChatGLM } = this.data
     if (isAskChatGLM) {
       wx.showToast({
-        title: '已取消让ChatGLM回答',
+        title: '已取消让 AI 回复评论',
         icon: 'none'
       })
     } else {
       wx.showToast({
-        title: '已选择让ChatGLM回答',
-        icon: 'none'
+        title: '已选择让 AI 回复评论',
+        icon: 'none',
+        duration: 4000
       })
     }
     this.setData({
@@ -1603,10 +1606,12 @@ Page({
           const { suggest } = res.result.msgR.result
           if (suggest === 'risky') {
             that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', commentId, postId)
-          } else if (suggest === 'review') {
+          }
+          else if (suggest === 'review') {
             console.log('可能包含' + matchLabel(label) + '信息')
             that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, commentId, postId)
-          } else {
+          }
+          else {
             that.sendCompletion(completion, commentId, postId)
           }
         } else {
@@ -1751,7 +1756,8 @@ Page({
                     title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
-                } else {
+                }
+                else {
                   that.sendContent(_commentBody)
                 }
               } else {

@@ -15,15 +15,15 @@ Page({
     tabs: [
       { id: 0, name: '自定义', questionList: [] },
       { id: 14, name: 'AI', questionList: [] },
-      { id: 15, name: '#7 独处时你在想些什么', questionList: [] },
+      { id: 15, name: '#9 童心保持计划', questionList: [] },
+      { id: 13, name: '#3 令你心动的offer', questionList: [] },
+      { id: 1, name: '学习', questionList: [] },
       { id: 2, name: '生活', questionList: [] },
       { id: 3, name: '音乐', questionList: [] },
-      { id: 1, name: '学习', questionList: [] },
-      { id: 13, name: '#3 令你心动的offer', questionList: [] },
       { id: 4, name: '美食', questionList: [] },
       { id: 6, name: '游戏', questionList: [] },
-      { id: 7, name: '组队', questionList: [] },
       { id: 5, name: '恋爱', questionList: [] },
+      { id: 7, name: '组队', questionList: [] },
       { id: 8, name: '读书', questionList: [] },
       { id: 9, name: '闲置', questionList: [] },
       { id: 10, name: '摄影', questionList: [] },
@@ -32,8 +32,11 @@ Page({
     ],
 
     hasTheme: true,
-    themeTitle: '#7  一个人时，你在想些什么？',
-    themeBody: "主题 · 文案 · 策划：栀笙\n\n独处让人平静专注。没有人不渴望一段只属于自己的时间。\n\n每个人都有不一样的独处时刻。留意一下自己独处时的心绪，在这里尽情分享不一样的独处魅力～\n\n",
+    themeIndex: 2,
+    themeTitle: '#9 童心保持计划',
+    themeBody: "已经是大学生了，还是会翻看小时候的动画片，读童话，时不时登陆摩尔庄园，喜欢玩偶，做事以好玩为第一准则…\n\n成长是件复杂又困难的事，希望我们都可以成为保护好自己童心的大人。\n\n分享童心童趣瞬间，再开心地做一回幼稚鬼吧。",
+    themeTitle2: '#3 令你心动的offer',
+    themeBody2: "考研/保研/留学/工作/…\n\n无论你是否已着手准备，还是仍然迷茫着，都希望你能在这里有所收获。\n\n说出你的疑惑，分享你的经验，最终拿到令你心动的offer。",
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -374,7 +377,7 @@ Page({
 
     }
     if (app.globalData.isAsk) {
-      this.loadData(2, true)
+      this.loadData(this.data.themeIndex, true)
       app.globalData.isAsk = false
     }
 

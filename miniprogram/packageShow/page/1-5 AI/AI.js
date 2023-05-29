@@ -62,9 +62,26 @@ Page({
     color3: '#F5AD01',
 
     isTesting: false,
-    testMsg: ''
+    testMsg: '',
+
+    glm: false
   },
   commentData: { commentContent: '' },
+
+  changeAPI: function () {
+    const { glm } = this.data
+    this.setData({
+      glm: !glm
+    })
+    let tip = 'ChatGLM'
+    if (glm) {
+      tip = '	姜子牙 Ziya'
+    }
+    wx.showToast({
+      title: '已切换至 ' + tip,
+      icon: 'none'
+    })
+  },
 
   postLikeAdd: function (e) {
     const { index } = e.currentTarget.dataset
@@ -275,20 +292,10 @@ Page({
                 icon: 'none'
               })
             } else {
-              userInfo.doc(userInfoId).update({
-                data: {
-                  askTime: askTime
-                }
-              })
-              wx.showToast({
-                title: '还有 ' + askTime + ' 次提问机会',
-                icon: 'none',
-                duration: 5000
-              })
               that.setData({
                 inputValue: ''
               })
-              app.globalData.isAsk = true
+
               var d = new Date().getTime();
 
               question.add({
@@ -344,18 +351,45 @@ Page({
                 }).then((res) => {
                   console.log(res)
                 })
-                wx.cloud.callFunction({
-                  name: 'chatglm',
-                  data: {
-                    input: prompt,
-                    history: [],
-                  }
-                }).then((res) => {
-                  console.log(res.result.completion)
-                  that.gptsentComment(res.result.completion, _id)
-                }).catch((err) => {
-                  console.log(err)
-                })
+                if (that.data.glm) {
+                  userInfo.doc(userInfoId).update({
+                    data: {
+                      askTime: askTime
+                    }
+                  })
+
+                  wx.showToast({
+                    title: '还有 ' + askTime + ' 次提问机会',
+                    icon: 'none',
+                    duration: 5000
+                  })
+                  wx.cloud.callFunction({
+                    name: 'chatglm',
+                    data: {
+                      input: prompt,
+                      history: [],
+                    }
+                  }).then((res) => {
+                    console.log(res.result.completion)
+                    that.gptsentComment(res.result.completion, _id)
+                  }).catch((err) => {
+                    console.log(err)
+                  })
+                } else {
+                  wx.cloud.callFunction({
+                    name: 'MindBot-Lite',
+                    data: {
+                      input: prompt,
+                      history: '',
+                    }
+                  }).then((res) => {
+                    console.log(res)
+                    console.log(res.result.completion)
+                    that.gptsentComment(res.result.completion, _id)
+                  }).catch((err) => {
+                    console.log(err)
+                  })
+                }
               })
             }
           })
@@ -420,6 +454,15 @@ Page({
       //     postTitle: title
       //   }
       // })
+      let image, idTitle
+      if (that.data.glm) {
+        image = 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/643e9b5d-5bb3223d-55291b27',
+          idTitle = 'ChatGLM'
+      } else {
+        image = 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/646708c1-78c1749e-2e010e69',
+          idTitle = '	姜子牙 Ziya'
+      }
+
       comment.add({
         data: {
           //时间
@@ -433,7 +476,7 @@ Page({
           body: completion,
           commentNum: 0,
           nickname: 'AI',
-          image: 'cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/643e9b5d-5bb3223d-55291b27',
+          image: image,
 
           commenter: [],
           liker: [],
@@ -441,7 +484,7 @@ Page({
           image_upload: [],
 
           isAuthentic: true,
-          idTitle: 'ChatGLM',
+          idTitle: idTitle,
 
           warner: [],
           warnerDetail: [],

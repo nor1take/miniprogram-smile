@@ -1,5 +1,9 @@
 @import "../../../assets/iconfont.wxss";
 
+.background2 {
+  background-color: #3d3d3d;
+}
+
 .title {
   font-size: 36rpx;
 }
@@ -91,11 +95,12 @@
 }
 
 .gptInput {
+  height: fit-content;
   color: white;
   padding: 32rpx;
 }
 
-.body{
+.body {
   padding: 0;
 }
 
@@ -124,7 +129,11 @@
     box-shadow: 0 0 10rpx #3d3d3d;
   }
 
-  .gptComment{
+  .gptComment {
     background-color: #3d3d3d;
+  }
+
+  .background2 {
+    background-color: #000;
   }
 }

@@ -176,23 +176,23 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
+    tag: '#9 童心保持计划',
     tagsList: [
-      '#7 独处时你在想些什么',
-      '音乐',
-      '学习',
+      '#9 童心保持计划',
       '#3 令你心动的offer',
+      '学习',
       '生活',
+      '音乐',
       '美食',
+      '游戏',
       '恋爱',
       '读书',
-      '游戏',
       '摄影',
       '闲置',
       '组队',
       '我捡到…',
       '我丢了…',
     ],
-    tag: '#7 独处时你在想些什么',
     titleContent: false,
 
     tagId: 1,
@@ -269,7 +269,8 @@ Page({
     wx.chooseMedia({
       count: 9,
       // sizeType: ['original', 'compressed'],
-      sizeType: ['compressed'],
+      // sizeType: ['compressed'],
+      sizeType: ['original'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
@@ -290,8 +291,44 @@ Page({
     } else {
       systemMsgNum++;
     }
+
     console.log(e.detail.value)
     const { value } = e.detail
+
+    if (value && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
+      let list = [
+        '宋雨琦我老婆',
+        'JamboGo',
+        '超酷的小七',
+        '椰椰脆脆',
+        '小柯21',
+        '芝士',
+        'Clara-',
+        '不吃长寿面',
+        '晴羮雨读',
+        '元老被封跑路',
+        '是莫妮卡Monica呀',
+        'Lu_xxL',
+        '安之吾愿',
+        '人生苦短我又太懒',
+        '天蓝蓝bluebright',
+        'Frienes1500-W',
+        'Arizonaguy',
+        '禾呈山夕',
+        '岁岁安澜',
+        '小姐姐周呀',
+        '椰子冻',
+      ]
+      app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
+      app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+      app.globalData.isAuthentic = false
+      app.globalData.idTitle = ''
+      wx.showToast({
+        title: app.globalData.nickName,
+        icon: 'none'
+      })
+    }
+
     this.setData({
       _unknown: value
     })
@@ -405,35 +442,6 @@ Page({
                         })
                     })
                   } else {
-                    if (that.data._unknown && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
-                      that.setData({
-                        _unknown: false
-                      })
-                      let list = [
-                        '宋雨琦我老婆',
-                        'JamboGo',
-                        '超酷的小七',
-                        '椰椰脆脆',
-                        '小柯21',
-                        '芝士',
-                        'Clara-',
-                        '不吃长寿面',
-                        '晴羮雨读',
-                        '元老被封跑路',
-                        '是莫妮卡Monica呀',
-                        'Lu_xxL',
-                        '安之吾愿',
-                        '人生苦短我又太懒',
-                        '天蓝蓝bluebright',
-                        'Frienes1500-W',
-                        'Arizonaguy',
-                        '禾呈山夕'
-                      ]
-                      app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
-                      app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
-                      app.globalData.isAuthentic = false
-                      app.globalData.idTitle = ''
-                    }
                     question.add({
                       data: {
                         //时间

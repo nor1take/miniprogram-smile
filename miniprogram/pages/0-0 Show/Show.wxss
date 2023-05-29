@@ -5,7 +5,7 @@
 }
 
 .ailogo {
-  background-color: #3d3d3d;
+  background-color: #F50057;
   font-size: 45rpx;
   margin-left: 32rpx;
   margin-right: 32rpx;

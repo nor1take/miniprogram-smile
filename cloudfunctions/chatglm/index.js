@@ -113,7 +113,13 @@ function isEmpty(obj) {
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const { input, history } = event;
+  let { input, history } = event;
+  if (history.length == 0) {
+    history = [
+      '北工大学生的门诊、急诊费用具体报销有哪些要求？',
+      '1. 2022年1月至11月发生的医疗费用，请于2022年12月9日（含当日）前进行报销；2. 本学期最后一次报销日为：2022年12月9日在一站式服务大厅办理；3. 2022年12月发生的医疗费用，请于新学期2023年3月份的报销日进行报销。特别提示：2022年12月的门诊、急诊等相关医疗费用报销截止日为2023年3月31日；逾期未报者，责任自负。',
+    ]
+  }
   let completion = await getResponseFromAPI2(input, history);
 
   if (isEmpty(completion)) {

@@ -274,7 +274,7 @@
   <view class="imageArea" bindtap="upload">
     <i wx:if="{{!isAskChatGLM}}" class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
   </view>
-  <textarea maxlength="2500" class="bottomInput" auto-height focus="{{answer?true:false}}" show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:if="{{tapAnswerButton}}" placeholder="在这里输入你的回应 :)" bindinput="input" bindkeyboardheightchange="focus" value="{{inputValue}}">
+  <textarea maxlength="2500" class="bottomInput" auto-height focus="{{answer?true:false}}" show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:if="{{tapAnswerButton}}" placeholder="{{isAskChatGLM?holderValue2:holderValue1}}" bindinput="input" bindkeyboardheightchange="focus" value="{{inputValue}}">
   </textarea>
 
   <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:elif="{{tapReplyButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">

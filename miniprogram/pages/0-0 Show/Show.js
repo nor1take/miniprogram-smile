@@ -1,5 +1,6 @@
 const app = getApp()
 const db = wx.cloud.database()
+const $ = db.command.aggregate
 const _ = db.command
 const question = db.collection('question')
 const commentAgain = db.collection('commentAgain')
@@ -29,6 +30,10 @@ Page({
     colorGreen: '#07C160',
     colorYellow: '#F9A826',
 
+    color1: '#DF3E3E',
+    color2: '#FE721D',
+    color3: '#F5AD01',
+
     top: 48,
     left: 281,
     right: 367,
@@ -50,9 +55,55 @@ Page({
     boardList: [{ img: '', id: '', }, { img: '', id: '', }, { img: '', id: '', }],
 
     topWord: '有新的系统通知!!!',
+
+    hotList: []
   },
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
+
+  getHotData() {
+    var now = new Date().getTime();
+    question
+      .aggregate()
+      .match({
+        tag: _.neq('AI')
+      })
+      .project({
+        _id: 1,
+        title: 1,
+        image: 1,
+        time: 1,
+
+        totalScores: $.divide([
+          $.sum([
+            $.multiply([$.log10(
+              $.sum(['$watched', $.size('$watcher')])
+            ), 1]),
+            $.multiply(['$collectNum', 8000]),
+            $.multiply(['$commentNum', 16000]),
+            $.multiply(['$postLikeNum', 32000]),
+          ]),
+          $.pow([
+            $.sum(
+              $.divide([$.subtract([now, '$time']), 2]),
+              $.divide([$.subtract([now, '$answerTime']), 2]),
+              1
+            ),
+            1.5
+          ])
+        ])
+      })
+      .sort({
+        totalScores: -1
+      })
+      .end()
+      .then((res) => {
+        console.log(res.list)
+        this.setData({
+          hotList: res.list
+        })
+      })
+  },
 
   goToBoardDetail: function (e) {
     app.globalData.questionId = e.currentTarget.id
@@ -353,20 +404,10 @@ Page({
    */
   onLoad: function (options) {
     this.getBoardList()
+    // this.getHotData()
     ////记得及时注释！！！
     // wx.cloud.callFunction({
     //   name: 'update',
-    // })
-
-    // wx.cloud.callFunction({
-    //   name: 'chatglm',
-    //   data: {
-    //     input: 'hello'
-    //   }
-    // }).then((res) => {
-    //   console.log(res)
-    // }).catch((err) => {
-    //   console.log(err)
     // })
 
     console.log('onLoad')

@@ -5,23 +5,31 @@
       <view style="width:100%; height: {{bottom}}px;"></view>
 
       <block wx:if="{{index == 1}}">
-        <view class="background" style="padding: 32rpx;">
-          <image src="https://chatglm.cn/img/logo_alpha.1527ae36.svg" mode="aspectFit" style="height: 64rpx; margin-bottom: 32rpx;"></image>
-          <text class="body" style="margin:0;">ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。\n\n每人每天 5 次提问机会。</text>
+        <view class="background background2" style="padding: 32rpx;">
+          <image src="https://chatglm.cn/img/logo_alpha.1527ae36.svg" mode="aspectFit" style="height: 64rpx;"></image>
+          <text class="body" style="margin:0;">ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。</text>
+          <image src="https://fengshenbang-lm.com/assets/header-logo.png" mode="aspectFit" style="height: 70rpx;"></image>
+          <text class="body" style="margin:0;">姜子牙通用大模型V1 是基于LLaMa的 130 亿参数的大规模预训练模型。</text>
           <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx; background-color: #3485FF; display: flex;" bindtap="AI">前往 AI 板块</button>
         </view>
       </block>
-      <block wx:if="{{index == 2 && hasTheme}}">
-
-        <view class="background" style="padding: 64rpx;">
-          <view class="themeTitle">{{themeTitle}}</view>
-          <text class="themeBody">{{themeBody}}</text>
+      <block wx:if="{{index == themeIndex && hasTheme}}">
+        <view class="background background2" style="padding: 32rpx; display: flex; align-items: center; flex-direction: column; justify-content: center;">
+          <view class="themeTitle" style="color: #fff;">{{themeTitle}}</view>
+          <text class="themeBody" style="color: #ddd;">{{themeBody}}</text>
           <block wx:if="{{isLogin}}">
             <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx;" bindtap="Ask">参与活动</button>
           </block>
           <block wx:else="">
             <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx;" bindtap="Login">登 录</button>
           </block>
+        </view>
+      </block>
+
+      <block wx:if="{{index == 3 && hasTheme}}">
+        <view class="background background2" style="padding: 32rpx; display: flex; align-items: center; flex-direction: column; justify-content: center;">
+          <view class="themeTitle" style="color: #fff;">{{themeTitle2}}</view>
+          <text class="themeBody" style="color: #ddd;">{{themeBody2}}</text>
         </view>
       </block>
       <block wx:if="{{item.questionList.length == 0}}">

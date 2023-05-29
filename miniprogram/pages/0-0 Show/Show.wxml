@@ -1,4 +1,5 @@
 <wxs src="../../util/filter.wxs" module="filter" />
+
 <search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
 <movable-area wx:if="{{isLogin}}">
   <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask" bindlongtap="goToTop">
@@ -23,7 +24,7 @@
       <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
     </swiper-item>
   </swiper>
-  <i class="iconfont icon-chatglm ailogo" style="color: #3485FF;" bindtap="goToAI"></i>
+  <i class="iconfont icon-AI ailogo" style="color: white;" bindtap="goToAI"></i>
   <view class="sort" bindtap="sort">
     <view class="sortImage">
       <i class="iconfont icon-sort-asc" style="font-size: 37rpx; color: #0C88B5;"></i>
@@ -33,11 +34,30 @@
 </view>
 
 <swiper class="swiperContainer2" autoplay circular indicator-dots interval='6000'>
+  <!-- <swiper-item class="swiperItem2" style="flex-direction: column;" id="{{item.id}}" data-index="{{-1}}" bindtap="beWatched">
+    <view class="background" hover-class="hoverClass" wx:for="{{hotList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+      <view wx:if="{{index+1 == 1}}" class="index" style="color: {{color1}};">{{index+1}}</view>
+      <view wx:elif="{{index+1 == 2}}" class="index" style="color: {{color2}};">{{index+1}}</view>
+      <view wx:elif="{{index+1 == 3}}" class="index" style="color: {{color3}};">{{index+1}}</view>
+      <view style="display: flex; justify-content: space-between; align-items:center;">
+        <view class="word">
+          <view class="title">{{item.title}}</view>
+          <view class="last">热度值：{{filter.int(item.totalScores)}}</view>
+        </view>
+        <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+          <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 10rpx;"></image>
+        </view>
+      </view>
+    </view>
+  </swiper-item> -->
   <block wx:for="{{boardList}}" wx:key="id">
     <swiper-item class="swiperItem2" id="{{item.id}}" data-index="{{-1}}" bindtap="beWatched">
       <image lazy-load style="width: 100%;" src="{{item.img}}" mode="widthFix"></image>
     </swiper-item>
   </block>
+  <!-- <swiper-item class="swiperItem2">
+    <ad-custom style="width: 100%;" unit-id="adunit-dfdd29bb49cce5e2"></ad-custom>
+  </swiper-item> -->
 </swiper>
 
 

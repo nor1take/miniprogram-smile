@@ -1,3 +1,11 @@
+page {
+  background-color: #7FFFF2;
+}
+
+.background2 {
+  background-color: #3d3d3d;
+}
+
 button {
   border: none;
 }
@@ -10,7 +18,7 @@ button::after {
   word-break: break-all;
 }
 
-.body{
+.body {
   word-break: break-all;
 }
 
@@ -73,4 +81,14 @@ button {
 
 .body {
   word-break: break-all;
+}
+
+@media (prefers-color-scheme: dark) {
+  .background2 {
+    background-color: #000;
+  }
+
+  page {
+    background-color: #3d3d3d;
+  }
 }
