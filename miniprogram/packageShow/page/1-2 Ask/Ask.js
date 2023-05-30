@@ -269,8 +269,8 @@ Page({
     wx.chooseMedia({
       count: 9,
       // sizeType: ['original', 'compressed'],
-      // sizeType: ['compressed'],
-      sizeType: ['original'],
+      sizeType: ['compressed'],
+      // sizeType: ['original'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
