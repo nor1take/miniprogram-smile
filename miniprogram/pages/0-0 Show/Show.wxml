@@ -9,29 +9,7 @@
 
 <!-- <view style="width: 100%; height: {{top+32+8}}px;"></view> -->
 <view class="topBlock" style="width: 100%; height: {{top+32+8}}px;"></view>
-<view class="topContainer">
-  <swiper class="swiperContainer" vertical autoplay circular interval='5000'>
-    <swiper-item wx:if="{{topWord == '有新的系统通知!!!'}}" class="swiperItem" style="background-color: #F50057;" bindtap="alwaysTop">
-      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
-    </swiper-item>
-    <swiper-item class="swiperItem" bindtap="hot">
-      <i class="iconfont icon-fire-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FA5151;"></i>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">热门</view>
-    </swiper-item>
-    <swiper-item wx:if="{{topWord != '有新的系统通知!!!'}}" class="swiperItem" bindtap="alwaysTop">
-      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 29rpx; color: #FCC300;"></i>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
-    </swiper-item>
-  </swiper>
-  <i class="iconfont icon-AI ailogo" style="color: white;" bindtap="goToAI"></i>
-  <view class="sort" bindtap="sort">
-    <view class="sortImage">
-      <i class="iconfont icon-sort-asc" style="font-size: 37rpx; color: #0C88B5;"></i>
-    </view>
-    <view class="sortWord">{{sortWord}}</view>
-  </view>
-</view>
+
 
 <swiper class="swiperContainer2" autoplay circular indicator-dots interval='6000'>
   <!-- <swiper-item class="swiperItem2" style="flex-direction: column;" id="{{item.id}}" data-index="{{-1}}" bindtap="beWatched">
@@ -59,6 +37,29 @@
     <ad-custom style="width: 100%;" unit-id="adunit-dfdd29bb49cce5e2"></ad-custom>
   </swiper-item> -->
 </swiper>
+
+<view class="topContainer">
+  <!-- <view class="sort" bindtap="sort">
+    <i class="iconfont icon-sort-asc ailogo" style="color: white; background-color: #0C88B5;"></i>
+    <view class="sortWord">{{sortWord}}</view>
+  </view> -->
+  <i class="iconfont icon-sort-asc ailogo" style="color: white; background-color: #0C88B5; margin-right: 16rpx;" bindtap="sort"></i>
+  <i class="iconfont icon-AI ailogo" style="color: white; margin-right: 16rpx" bindtap="goToAI"></i>
+  <swiper class="swiperContainer" vertical autoplay circular interval='5000'>
+    <swiper-item wx:if="{{topWord == '有新的系统通知!!!'}}" class="swiperItem" style="background-color: #F50057;" bindtap="alwaysTop">
+      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 16rpx; color: #FCC300;"></i>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
+    </swiper-item>
+    <swiper-item class="swiperItem" wx:for="{{hotList}}" bindtap="hot">
+      <i class="iconfont icon-fire-line" style="font-size: 40rpx; margin-left: 16rpx; color: #FA5151;"></i>
+      <view style="margin-left: 16rpx; font-size: 28rpx; padding-right: 16rpx;">TOP {{index+1}}「{{item.title}}」</view>
+    </swiper-item>
+    <swiper-item wx:if="{{topWord != '有新的系统通知!!!'}}" class="swiperItem" bindtap="alwaysTop">
+      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 16rpx; color: #FCC300;"></i>
+      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
+    </swiper-item>
+  </swiper>
+</view>
 
 
 <block wx:if="{{questionList.length == 0}}">

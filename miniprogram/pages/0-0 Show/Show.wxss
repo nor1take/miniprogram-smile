@@ -7,8 +7,6 @@
 .ailogo {
   background-color: #F50057;
   font-size: 45rpx;
-  margin-left: 32rpx;
-  margin-right: 32rpx;
   padding: 16rpx;
   border-radius: 30rpx;
 }
@@ -53,7 +51,6 @@ movable-view {
 .swiperContainer {
   width: 100%;
   /* border: 1rpx solid black; */
-  margin-left: 32rpx;
   border-radius: 30rpx;
   height: 80rpx;
 }
@@ -68,12 +65,11 @@ movable-view {
 
 .swiperContainer2 {
   /* border: 1rpx solid black; */
-  margin-left: 32rpx;
-  margin-right: 32rpx;
-  margin-top: 16rpx;
-  margin-bottom: 16rpx;
-  height: 300rpx;
+  margin: 32rpx;
+  height: 400rpx;
   border-radius: 40rpx;
+  margin-bottom: 16rpx;
+  margin-top: 16rpx;
 }
 
 .swiperItem2 {
@@ -84,30 +80,19 @@ movable-view {
 }
 
 .topContainer {
-  width: 100%;
+  margin: 32rpx;
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
   /* border: 1rpx solid black;  */
-  margin-top: 16rpx;
 }
 
 .sort {
-  margin-right: 32rpx;
-
-  height: fit-content;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.sortImage {
-  width: 37rpx;
-  height: 37rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 5rpx;
 }
 
 .sortWord {
@@ -132,6 +117,7 @@ movable-view {
   .ailogo {
     background-color: black;
   }
+
   .topBlock {
     background-color: #3d3d3d;
   }

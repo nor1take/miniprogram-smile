@@ -404,7 +404,7 @@ Page({
    */
   onLoad: function (options) {
     this.getBoardList()
-    // this.getHotData()
+    this.getHotData()
     ////记得及时注释！！！
     // wx.cloud.callFunction({
     //   name: 'update',

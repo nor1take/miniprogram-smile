@@ -12,7 +12,7 @@ exports.main = async (event, context) => {
     _id: _.exists(true)
   }).update({
     data: {
-      isCheckSystemMsg: false
+      isCheckSystemMsg: true
     }
   }).then((res) => {
     return res;
