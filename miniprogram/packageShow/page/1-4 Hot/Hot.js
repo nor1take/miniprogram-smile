@@ -49,7 +49,7 @@ Page({
         _id: 1,
         title: 1,
         image: 1,
-        time: 1,
+        // time: 1,
 
         totalScores: $.divide([
           $.sum([

@@ -266,6 +266,7 @@ Page({
   goToRegist: function () {
     wx.navigateTo({
       url: '../../../packageShow/page/1-2 Ask/Ask',
+      // url: '../../../packageShow/page/1-2-2 regist/regist',
     })
   },
   fold: function () {
@@ -396,8 +397,8 @@ Page({
     console.log('上传图片')
     wx.chooseMedia({
       count: 9,
-      // sizeType: ['original', 'compressed'],
-      sizeType: ['compressed'],
+      sizeType: ['original', 'compressed'],
+      // sizeType: ['compressed'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
@@ -2027,6 +2028,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
+      imageUrl: this.data.questionList[0].image[0],
       title: this.data.questionList[0].title,
       path: 'pages/0-0 Show/Show?id=' + app.globalData.questionId
     }

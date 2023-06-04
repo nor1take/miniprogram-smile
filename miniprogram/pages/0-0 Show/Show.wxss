@@ -11,6 +11,13 @@
   border-radius: 30rpx;
 }
 
+.sortlogo {
+  background-color: #0C88B5;
+  font-size: 45rpx;
+  padding: 16rpx;
+  border-radius: 30rpx;
+}
+
 movable-area {
   z-index: 1;
   width: 91%;
@@ -115,6 +122,10 @@ movable-view {
 ******************************************************************/
 @media (prefers-color-scheme: dark) {
   .ailogo {
+    background-color: black;
+  }
+
+  .sortlogo {
     background-color: black;
   }
 

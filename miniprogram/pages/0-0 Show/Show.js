@@ -54,7 +54,7 @@ Page({
 
     boardList: [{ img: '', id: '', }, { img: '', id: '', }, { img: '', id: '', }],
 
-    topWord: '有新的系统通知!!!',
+    topWord: '置顶：使用帮助',
 
     hotList: []
   },
@@ -71,8 +71,6 @@ Page({
       .project({
         _id: 1,
         title: 1,
-        image: 1,
-        time: 1,
 
         totalScores: $.divide([
           $.sum([

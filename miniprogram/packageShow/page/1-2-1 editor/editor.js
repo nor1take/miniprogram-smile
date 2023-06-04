@@ -463,8 +463,8 @@ Page({
     const that = this
     wx.chooseMedia({
       count: 1,
-      // sizeType: ['original', 'compressed'],
-      sizeType: ['compressed'],
+      sizeType: ['original', 'compressed'],
+      // sizeType: ['compressed'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',

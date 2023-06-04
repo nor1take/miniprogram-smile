@@ -81,7 +81,7 @@ function checkAndUploadManyImages(tempFiles, page) {
           filePath: tempFilePath, // 小程序临时文件路径
           success: res => {
             const { fileID } = res
-            console.log('fileID', fileID)
+            console.log(fileID)
             page.data.fileID.push(fileID)
             page.setData({
               fileID: page.data.fileID,
@@ -268,9 +268,9 @@ Page({
   upload: function (e) {
     wx.chooseMedia({
       count: 9,
-      // sizeType: ['original', 'compressed'],
+      sizeType: ['original', 'compressed'],
       // sizeType: ['compressed'],
-      sizeType: ['original'],
+      // sizeType: ['original'],
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
       camera: 'back',
