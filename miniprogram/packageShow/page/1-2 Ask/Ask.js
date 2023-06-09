@@ -295,40 +295,40 @@ Page({
     console.log(e.detail.value)
     const { value } = e.detail
 
-    // if (value && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
-    //   let list = [
-    //     '宋雨琦我老婆',
-    //     'JamboGo',
-    //     '超酷的小七',
-    //     '椰椰脆脆',
-    //     '小柯21',
-    //     '芝士',
-    //     'Clara-',
-    //     '不吃长寿面',
-    //     '晴羮雨读',
-    //     '元老被封跑路',
-    //     '是莫妮卡Monica呀',
-    //     'Lu_xxL',
-    //     '安之吾愿',
-    //     '人生苦短我又太懒',
-    //     '天蓝蓝bluebright',
-    //     'Frienes1500-W',
-    //     'Arizonaguy',
-    //     '禾呈山夕',
-    //     '岁岁安澜',
-    //     '小姐姐周呀',
-    //     '椰子冻',
-    //     'momo'
-    //   ]
-    //   app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
-    //   app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
-    //   app.globalData.isAuthentic = false
-    //   app.globalData.idTitle = ''
-    //   wx.showToast({
-    //     title: app.globalData.nickName,
-    //     icon: 'none'
-    //   })
-    // }
+    if (value && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
+      let list = [
+        '宋雨琦我老婆',
+        'JamboGo',
+        '超酷的小七',
+        '椰椰脆脆',
+        '小柯21',
+        '芝士',
+        'Clara-',
+        '不吃长寿面',
+        '晴羮雨读',
+        '元老被封跑路',
+        '是莫妮卡Monica呀',
+        'Lu_xxL',
+        '安之吾愿',
+        '人生苦短我又太懒',
+        '天蓝蓝bluebright',
+        'Frienes1500-W',
+        'Arizonaguy',
+        '禾呈山夕',
+        '岁岁安澜',
+        '小姐姐周呀',
+        '椰子冻',
+        'momo'
+      ]
+      app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
+      app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+      app.globalData.isAuthentic = false
+      app.globalData.idTitle = ''
+      wx.showToast({
+        title: app.globalData.nickName,
+        icon: 'none'
+      })
+    }
 
     this.setData({
       _unknown: value

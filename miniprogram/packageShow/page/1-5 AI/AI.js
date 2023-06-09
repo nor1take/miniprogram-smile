@@ -64,7 +64,7 @@ Page({
     isTesting: false,
     testMsg: '',
 
-    glm: false
+    glm: true
   },
   commentData: { commentContent: '' },
 

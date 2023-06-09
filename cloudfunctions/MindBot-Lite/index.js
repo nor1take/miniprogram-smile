@@ -50,7 +50,7 @@ async function getResponseFromAPI(input, previousAnswer) {
 
   } catch (err) {
     console.error(err);
-    return result.msg
+    return "[错误: 姜子牙Ziya 暂时不可用，请点击输入框左侧图标切换模型]"
   }
 }
 

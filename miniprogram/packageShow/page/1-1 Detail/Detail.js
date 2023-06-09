@@ -2036,6 +2036,7 @@ Page({
 
   onShareTimeline: function () {
     return {
+      imageUrl: this.data.questionList[0].image[0],
       title: this.data.questionList[0].title,
       query: 'id=' + app.globalData.questionId
     }
