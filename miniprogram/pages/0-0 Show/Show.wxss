@@ -11,6 +11,14 @@
   border-radius: 30rpx;
 }
 
+.add_class {
+  font-size: 50rpx;
+}
+
+.add_hoverClass {
+  font-size: 45rpx;
+}
+
 .sortlogo {
   background-color: #0C88B5;
   font-size: 45rpx;

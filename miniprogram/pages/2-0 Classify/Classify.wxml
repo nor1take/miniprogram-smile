@@ -26,12 +26,12 @@
         </view>
       </block>
 
-      <block wx:if="{{index == 3 && hasTheme}}">
+      <!-- <block wx:if="{{index == 3 && hasTheme}}">
         <view class="background background2" style="padding: 32rpx; display: flex; align-items: center; flex-direction: column; justify-content: center;">
           <view class="themeTitle" style="color: #fff;">{{themeTitle2}}</view>
           <text class="themeBody" style="color: #ddd;">{{themeBody2}}</text>
         </view>
-      </block>
+      </block> -->
       <block wx:if="{{item.questionList.length == 0}}">
         <view class="bottom" style="margin-top: 40%;">这里暂时还没有帖子哦~</view>
       </block>

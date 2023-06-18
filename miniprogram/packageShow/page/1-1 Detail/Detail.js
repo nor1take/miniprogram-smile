@@ -522,7 +522,7 @@ Page({
       })
     } else {
       wx.showToast({
-        title: '收藏 +1',
+        title: '前往“我的收藏”里查看',
         icon: 'none'
       })
       const { questionList } = this.data
@@ -568,7 +568,10 @@ Page({
       }
     })
   },
+
+
   postLikeAdd: function () {
+    wx.vibrateLong();  
     console.log(app.globalData.openId)
     if (app.globalData.openId == undefined) {
       wx.showToast({
@@ -576,10 +579,6 @@ Page({
         icon: 'none'
       })
     } else {
-      wx.showToast({
-        title: '赞 +1',
-        icon: 'none'
-      })
       const { questionList } = this.data
       let { postLikeNum } = this.data
 

@@ -33,7 +33,7 @@
         </block>
         {{item.tag}}
       </view>
-      <i class="iconfont icon-more-fill" style="font-size: 25px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap"></i>
+      <view class="iconfont icon-more-fill" hover-class="hoverClass" style="font-size: 25px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap"></view>
     </view>
     <view class="middle" wx:if="{{!item.unknown}}">
       <avatar avatarUrl="{{item.avatarUrl}}" length="55"></avatar>
@@ -89,7 +89,7 @@
           <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
           </text>
           <text wx:if="{{item.image.length > 0}}">
-            [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 富文本形式呈现↓</text>
+            [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
         </text>
       </block>
 
@@ -100,7 +100,7 @@
             <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
           </block>
 
-          <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 化简↑</text>
+          <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
         </block>
         <block wx:else>
           <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
@@ -136,7 +136,7 @@
       <button class="FollowReplybutton" type="primary" size="mini" style="width: 180rpx;" bindtap="goToLogin">登 录</button>
     </block>
     <view wx:if="{{WXS.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
-      <i class="iconfont icon-ic_public_favor_filled" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+      <i class="iconfont icon-ic_public_favor_filled heartBeat" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
       {{postLikeNum === 0 ? '赞' : postLikeNum}}
     </view>
     <view wx:else="" class="button-area" bindtap="postLikeAdd">
@@ -195,7 +195,7 @@
       <view class="buttonArea">
         <view class="LikeCommentbutton-area">
           <!-- 点赞按钮 -->
-          <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
+          <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel" animation="{{animation}}">
             <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
             {{item.liker.length}}
           </view>

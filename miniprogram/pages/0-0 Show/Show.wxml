@@ -3,7 +3,7 @@
 <search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
 <movable-area wx:if="{{isLogin}}">
   <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask" bindlongtap="goToTop">
-    <i class="iconfont icon-ic_public_add" style="font-size: 50rpx;"></i>
+    <view class="iconfont icon-ic_public_add add_class" hover-class="add_hoverClass"></view>
   </movable-view>
 </movable-area>
 
