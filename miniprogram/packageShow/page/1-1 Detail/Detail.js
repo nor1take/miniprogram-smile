@@ -571,7 +571,7 @@ Page({
 
 
   postLikeAdd: function () {
-    wx.vibrateLong();  
+    // wx.vibrateLong();  
     console.log(app.globalData.openId)
     if (app.globalData.openId == undefined) {
       wx.showToast({

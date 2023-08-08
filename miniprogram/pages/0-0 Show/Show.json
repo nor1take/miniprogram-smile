@@ -1,7 +1,7 @@
 {
   "usingComponents": {
-    "tabs":"../../components/tabs/tabs",
-    "search":"../../components/search/search"
+    "tabs": "../../components/tabs/tabs",
+    "search": "../../components/search/search"
   },
-  "enablePullDownRefresh":true
+  "enablePullDownRefresh": true
 }

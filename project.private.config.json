@@ -1,5 +1,7 @@
 {
-  "setting": {},
+  "setting": {
+    "skylineRenderEnable": true
+  },
   "condition": {
     "miniprogram": {
       "list": [

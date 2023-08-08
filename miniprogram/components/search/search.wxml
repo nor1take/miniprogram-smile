@@ -47,7 +47,7 @@
       </button>
     </view>
   </view>
-  <view class="version">版本号：v1.9.4</view>
+  <view class="version">版本号：v1.9.7</view>
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>
 <view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>
@@ -58,7 +58,8 @@
 <view class="container" style="width: 100%; position: fixed; top:{{top}}px; z-index: 2;">
   <view class="container" style="width: {{left}}px;">
     <view bindtap="menu">
-      <i class="iconfont icon-menu-line" style="font-size: 25px; margin-left: 32rpx;"></i>
+      <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="height: 30px; width: 30px; border-radius: 40px; margin-left: 32rpx;"></image>
+      <!-- <i class="iconfont icon-menu-line" style="font-size: 25px; margin-left: 32rpx;"></i> -->
     </view>
     <view class="searchInput" bindtap="search"></view>
   </view>

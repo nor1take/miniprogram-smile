@@ -52,7 +52,7 @@ Page({
       { id: 5, title: '', body: '', commentNum: 0, watched: 0 },
     ],
 
-    boardList: [{ img: '', id: '', }, { img: '', id: '', }, { img: '', id: '', }],
+    boardList: [{ img: '', id: '', }],
 
     topWord: '置顶：使用帮助',
 
