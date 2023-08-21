@@ -1,4 +1,48 @@
 /* 长宽、布局（位置、margin、padding）、特性（本身[边界]、内部）、其他 */
+@import "./assets/iconfont.wxss";
+
+.bigTip {
+  margin: 64rpx;
+  height: 50%;
+  position: absolute;
+
+  font-size: xx-large;
+  font-weight: bolder;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.followinfo {
+  color: white;
+  padding: 16rpx;
+  font-weight: lighter;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3d3d3d;
+  font-size: small;
+}
+
+.mainContent {
+  display: flex;
+}
+
+.left {
+  margin-right: 16rpx;
+}
+
+.right {
+  width: 100%;
+}
+
 page {
   background-color: #F3F3F3;
 }
@@ -11,35 +55,40 @@ button {
   margin: 32rpx;
   margin-top: 16rpx;
   margin-bottom: 16rpx;
+  padding: 32rpx;
 
   border: 1rpx solid transparent;
-  border-radius: 40rpx;
+  border-radius: 16rpx;
 
   background-color: white;
+  /* border: 1rpx solid #dddddd; */
   box-shadow: 0 0 10rpx #dddddd;
 }
 
 .tag {
-  width: fit-content;
-
-  margin: 32rpx;
+  /* border: 1rpx solid black; */
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #7B7B7B;
+}
 
-  /* border: 1rpx solid black; */
+.tagText {
+  height: 30rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: left;
+
+  font-size: 24rpx;
+  color: #0A59F7;
 }
 
 .point {
+  /* border: 1rpx solid black; */
   width: 30rpx;
   height: 30rpx;
-
-  margin-top: 5rpx;
-  margin-right: 10rpx;
 
   border-radius: 30rpx;
 
@@ -52,21 +101,29 @@ button {
   font-weight: bolder;
 }
 
+.content {
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
+  /* border: 1rpx solid black; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .title {
   width: fit-content;
   display: flex;
-
-
-  margin: 32rpx;
-  margin-bottom: 16rpx;
-
+  margin: 16rpx;
+  margin-left: 0;
+  margin-right: 0;
   font-size: 32rpx;
   font-weight: bold;
 }
 
 .body {
-  margin: 32rpx;
-  margin-top: 16rpx;
+  margin: 16rpx;
+  margin-left: 0;
+  margin-right: 0;
   display: flex;
   font-size: 28rpx;
   color: #7B7B7B;
@@ -75,9 +132,12 @@ button {
 }
 
 .last {
-  margin: 32rpx;
+  /* border: 1rpx solid black; */
+  margin-left: 0;
   font-size: 24rpx;
   color: #ACACAC;
+  display: flex;
+  align-items: center;
 }
 
 .watched {
@@ -85,20 +145,90 @@ button {
   color: #ACACAC;
 }
 
-.bottom {
-  width: 100%;
-  height: 60rpx;
+.comment {
+  margin-top: 32rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid #dddddd;
+  font-size: 28rpx;
+  color: #3d3d3d;
+  line-height: 1.5;
+}
 
+.bottom {
+  font-weight: normal;
+  width: 100%;
+  margin-top: 32rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 28rpx;
   color: #ACACAC;
+  line-height: 1.5;
 }
 
 .hoverClass {
   background-color: #F3F3F3;
   box-shadow: 0 0 0rpx #DDDDDD;
+}
+
+.authentic {
+  color: #07C160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topBlock {
+  width: 100%;
+  position: fixed;
+  z-index: 2;
+  background-color: white;
+}
+
+.topBlock2 {
+  width: 100%;
+}
+
+movable-area {
+  z-index: 1;
+  width: 91%;
+  height: 81%;
+
+  border-radius: 100rpx;
+
+  position: fixed;
+  bottom: 16rpx;
+  left: 32rpx;
+
+  /* background-color: blanchedalmond; */
+  overflow: visible;
+  pointer-events: none;
+}
+
+movable-view {
+  width: 100rpx;
+  height: 100rpx;
+
+  /* border: 1rpx solid transparent; */
+  border-radius: 100rpx;
+
+  background-color: black;
+  /* opacity: 0.77; */
+  box-shadow: 0 0 20rpx #7B7B7B;
+  color: white;
+  font-size: 25rpx;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: auto;
+  backdrop-filter: blur(5px);
+}
+
+.add_class {
+  color: white;
+  font-size: 50rpx;
 }
 
 /******************************************************************
@@ -107,6 +237,15 @@ button {
 @media (prefers-color-scheme: dark) {
   page {
     background-color: #3d3d3d;
+  }
+
+  .add_class {
+    color: black;
+    font-size: 50rpx;
+  }
+
+  .topBlock {
+    background-color: black;
   }
 
   .background {
@@ -130,5 +269,28 @@ button {
   .hoverClass {
     background-color: #7b7b7b;
     box-shadow: 0 0 0rpx black;
+  }
+
+  .comment {
+    margin-top: 32rpx;
+    padding-left: 16rpx;
+    border-left: 6rpx solid #7b7b7b;
+    font-size: 28rpx;
+    color: #dddddd;
+    line-height: 1.5;
+  }
+
+  .followinfo {
+    background-color: #acacac;
+  }
+
+  movable-view {
+    background-color: white;
+    box-shadow: 0 0 20rpx black;
+    color: black;
+  }
+
+  .tagText {
+    color: #00B0FF;
   }
 }

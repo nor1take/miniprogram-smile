@@ -6,6 +6,7 @@ const comment = db.collection('comment')
 const traceId = db.collection('traceId')
 const systemMsg = db.collection('systemMsg')
 const userInfo = db.collection('userInfo')
+const topic = db.collection('topic')
 
 var systemMsgNum = 0
 
@@ -50,7 +51,7 @@ function matchLabel(labelNum) {
  * @param {*page = this} page 
  */
 function checkAndUploadManyImages(tempFiles, page) {
-  console.log(tempFiles)
+  //console.log(tempFiles)
   wx.showLoading({
     title: '上传中',
     mask: true
@@ -71,7 +72,7 @@ function checkAndUploadManyImages(tempFiles, page) {
         scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       },
       success: json => {
-        console.log(json)
+        //console.log(json)
         const { traceId } = json.result.imageR
         /**
          * 2、将traceId作为图片的云存储路径
@@ -81,7 +82,7 @@ function checkAndUploadManyImages(tempFiles, page) {
           filePath: tempFilePath, // 小程序临时文件路径
           success: res => {
             const { fileID } = res
-            console.log(fileID)
+            //console.log(fileID)
             page.data.fileID.push(fileID)
             page.setData({
               fileID: page.data.fileID,
@@ -93,7 +94,7 @@ function checkAndUploadManyImages(tempFiles, page) {
             })
           },
           fail: err => {
-            console.error('uploadFile err：', err)
+            //console.error('uploadFile err：', err)
             wx.hideLoading()
             wx.showToast({
               icon: 'error',
@@ -103,7 +104,7 @@ function checkAndUploadManyImages(tempFiles, page) {
         })
       },
       fail: err => {
-        console.log('checkContent err：', err)
+        //console.log('checkContent err：', err)
       }
     })
 
@@ -136,11 +137,11 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
         wx.cloud.deleteFile({
           fileList: common,
           success: res => {
-            console.log(res)
+            //console.log(res)
             resolve();
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
             reject(err);
           }
         })
@@ -152,11 +153,11 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
           fileId: _.in(common)
         }).remove({
           success: res => {
-            console.log(res)
+            //console.log(res)
             resolve();
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
             reject(err);
           }
         })
@@ -213,7 +214,7 @@ Page({
 
   goToRichtext: function () {
     wx.navigateTo({
-      url: '../1-2-1 editor/editor',
+      url: '../1-2-1 editor/editor?tag=' + this.data.tag,
     })
   },
 
@@ -229,17 +230,17 @@ Page({
         titleContent: true
       })
     }
-    // console.log('title',this.data.titleContent)
+    // //console.log('title',this.data.titleContent)
   },
   //固定标签
   tagTap: function (e) {
-    console.log(e)
-    const { tagname } = e.detail
-    console.log('tagname', tagname)
+    //console.log(e)
+    const { tag } = e.detail
+    //console.log('tag', tag)
     this.setData({
-      tag: tagname
+      tag
     })
-    if (this.data.tagId != 1 && this.data.tagsList.includes(tagname)) {
+    if (this.data.tagId != 1 && this.data.tagsList.includes(tag)) {
       this.setData({
         tagId: 1
       })
@@ -249,7 +250,7 @@ Page({
   //自定义标签
   tagInput: function (e) {
     const { value } = e.detail
-    console.log('taginput', value)
+    //console.log('taginput', value)
     this.setData({
       tag: value,
       tagId: 0
@@ -281,7 +282,7 @@ Page({
         checkAndUploadManyImages(res.tempFiles, this)
       },
       fail: err => {
-        console.log(err)
+        //console.log(err)
       },
     })
   },
@@ -295,43 +296,8 @@ Page({
       systemMsgNum++;
     }
 
-    console.log(e.detail.value)
+    //console.log(e.detail.value)
     const { value } = e.detail
-
-    if (value && app.globalData.openId == 'oJ-6m5axZUm5_3cDLwmUjyA0Jwvs') {
-      let list = [
-        '宋雨琦我老婆',
-        'JamboGo',
-        '超酷的小七',
-        '椰椰脆脆',
-        '小柯21',
-        '芝士',
-        'Clara-',
-        '不吃长寿面',
-        '晴羮雨读',
-        '元老被封跑路',
-        '是莫妮卡Monica呀',
-        'Lu_xxL',
-        '安之吾愿',
-        '人生苦短我又太懒',
-        '天蓝蓝bluebright',
-        'Frienes1500-W',
-        'Arizonaguy',
-        '禾呈山夕',
-        '岁岁安澜',
-        '小姐姐周呀',
-        '椰子冻',
-        'momo'
-      ]
-      app.globalData.nickName = list[Math.floor(Math.random() * list.length)]
-      app.globalData.avatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
-      app.globalData.isAuthentic = false
-      app.globalData.idTitle = ''
-      wx.showToast({
-        title: app.globalData.nickName,
-        icon: 'none'
-      })
-    }
 
     this.setData({
       _unknown: value
@@ -349,10 +315,12 @@ Page({
     const { body } = e.detail.value;
     const { tag } = that.data;
 
+    //console.log(tag)
+
     wx.requestSubscribeMessage({
       tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
       complete(res1) {
-        console.log(res1)
+        //console.log(res1)
         wx.showLoading({
           title: '审核中',
           mask: true
@@ -378,7 +346,7 @@ Page({
                   scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
                 }
               }).then((res) => {
-                console.log(res)
+                //console.log(res)
                 const { label } = res.result.msgR.result
                 const { suggest } = res.result.msgR.result
                 if (suggest === 'risky') {
@@ -420,12 +388,12 @@ Page({
                       const { _id } = res
                       traceId.orderBy('CreateTime', 'desc').get()
                         .then((res) => {
-                          console.log(res)
+                          //console.log(res)
                           /**
                            * 2、删除上传图片列表中违规图片
                            */
                           deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                            console.log('deleteInvalidImages', res)
+                            //console.log('deleteInvalidImages', res)
                             /**
                              * 3、更新图片列表
                              */
@@ -440,12 +408,14 @@ Page({
                               })
                               setTimeout(function () { wx.navigateBack(); }, 1500);
                             }).catch((err) => {
-                              console.log(err)
+                              //console.log(err)
                             })
                           })
                         })
                     })
                   } else {
+
+
                     question.add({
                       data: {
                         //时间
@@ -496,19 +466,66 @@ Page({
                       /**
                        * 1、拿到全部的traceId集合（违规图片集合）
                        */
-                      const { _id } = res
+                      //console.log(res)
+                      let { _id } = res
+
+                      topic.where({
+                        tag: tag
+                      }).update({
+                        data: {
+                          updatetime: d,
+                          posts: _.push({
+                            each: [{
+                              _id: _id,
+                              _openid: app.globalData.openId,
+                              nickName: app.globalData.nickName,
+                              time: d,
+                              title: title,
+                              unknown: that.data._unknown
+                            }],
+                            position: 0
+                          }),
+                          num: _.inc(1),
+                        }
+                      })
+                        .catch(err => {
+                          //console.log(err)
+                          topic.add({
+                            data: {
+                              updatetime: d,
+                              posts: [{
+                                _id: _id,
+                                _openid: app.globalData.openId,
+                                nickName: app.globalData.nickName,
+                                time: d,
+                                title: title,
+                                unknown: that.data._unknown
+                              }],
+                              num: 1,
+                            }
+                          })
+                        })
 
                       traceId.orderBy('CreateTime', 'desc').get()
                         .then((res) => {
-                          console.log(res)
+                          //console.log(res)
                           /**
                            * 2、删除上传图片列表中违规图片
                            */
                           deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                            console.log('deleteInvalidImages', res)
+                            //console.log('deleteInvalidImages', res)
                             /**
                              * 3、更新图片列表
                              */
+                            if (res && res.length > 0) {
+                              topic.where({
+                                tag: tag
+                              }).update({
+                                data: {
+                                  image: res[0]
+                                }
+                              })
+                            }
                             question.doc(_id).update({
                               data: {
                                 image: res
@@ -520,7 +537,7 @@ Page({
                               })
                               setTimeout(function () { wx.navigateBack(); }, 1500);
                             }).catch((err) => {
-                              console.log(err)
+                              //console.log(err)
                             })
                           })
                         })
@@ -537,14 +554,14 @@ Page({
 
   //点击图片删除
   imageTap: function (e) {
-    console.log(e)
+    //console.log(e)
     const { index } = e.currentTarget.dataset
     const { id } = e.currentTarget
     wx.showActionSheet({
       itemList: ['删除'],
       itemColor: '#FA5151',
       success: res => {
-        console.log(res.tapIndex)
+        //console.log(res.tapIndex)
         this.data.fileID.splice(index, 1)
         wx.showToast({
           title: '删除成功',
@@ -556,35 +573,65 @@ Page({
         wx.cloud.deleteFile({
           fileList: [id],
           success: res => {
-            console.log('成功删除', res)
+            //console.log('成功删除', res)
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
           }
         })
       },
       fail(res) {
-        console.log(res.errMsg)
+        //console.log(res.errMsg)
       }
     })
   },
 
+  getTopic() {
+    topic.where({
+      tag: _.neq('AI')
+    })
+      .orderBy('updatetime', 'desc')
+      .orderBy('num', 'desc')
+      .get().then((res) => {
+        //console.log(res.data)
+        const tagsList = res.data.map(item => item.tag);
+        this.setData({
+          tagsList,
+        })
+        if (this.data.activeTag != -1) {
+          this.setData({
+            tag: tagsList[0]
+          })
+        }
+      })
+  },
+
   onLoad: function (options) {
-    systemMsgNum = 0;
+    const { tag } = options
+    //console.log(tag)
+    if (tag) {
+      this.setData({
+        activeTag: -1,
+        value: tag,
+        tag: tag
+      })
+      //console.log('>>> ' + this.data.tag)
+    }
     this.getRightTop()
+    this.getTopic()
   },
 
   focus: function () {
     this.setData({
       focus: true
     })
-    console.log('focus')
+    //console.log('focus')
   },
   onReady: function () {
     setTimeout(this.focus, 250)
   },
   onUnload: function () {
-    console.log('onUnload')
+    //console.log('onUnload')
     wx.clearStorageSync()
   }
 })

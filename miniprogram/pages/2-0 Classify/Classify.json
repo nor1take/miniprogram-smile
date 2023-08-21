@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "tabs": "../../components/scroll-view-tabs/scroll-view-tabs"
+    "tabs": "../../components/tabs/tabs"
   }
 }

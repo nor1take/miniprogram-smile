@@ -12,7 +12,8 @@ Component({
     top: { type: Number, value: 0 },
     scrollTop: { type: Number, value: 0 },
     activeTab: { type: Number, value: 0 },
-    refresherTriggered:{type:Boolean,value:false}
+    refresherTriggered: { type: Boolean, value: false },
+    refresherEnabled: { type: Boolean, value: true },
   },
 
   /**
@@ -28,18 +29,18 @@ Component({
   methods: {
     tabsTap: function (e) {
       const { index } = e.currentTarget.dataset;
-      this.setData({activeTab: index})
+      this.setData({ activeTab: index })
       this.triggerEvent('tabclick', { index })
     },
     swiperChange: function (e) {
       const index = e.detail.current;
-      this.setData({activeTab: index})
+      this.setData({ activeTab: index })
       this.triggerEvent('change', { index })
     },
-    reachBottom:function(){
+    reachBottom: function () {
       this.triggerEvent('reachBottom')
     },
-    refresh:function(){
+    refresh: function () {
       this.triggerEvent('refresh')
     }
   }

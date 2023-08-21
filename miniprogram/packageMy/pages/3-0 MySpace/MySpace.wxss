@@ -1,1 +1,109 @@
 /* packageMy/pages/3-0 MySpace/MySpace.wxss */
+.spaceTop {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+
+  background: linear-gradient(to top, rgba(61, 61, 61, 1), rgba(61, 61, 61, 0));
+}
+
+.userInfo {
+  height: 32px;
+  background-color: #3d3d3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userImg {
+  height: 125rpx;
+  width: 125rpx;
+  border-radius: 100rpx;
+
+  margin: 16rpx;
+}
+
+.commentBackground {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 15rpx;
+  background-color: white;
+  margin: 32rpx;
+  padding: 32rpx;
+}
+
+.postBackground {
+  border-left: 8rpx solid #dddddd;
+  padding: 16rpx;
+}
+
+.stickyBlock {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: #3d3d3d;
+}
+
+.postTitle {
+  color: #acacac;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.nickname {
+  color: white;
+  font-weight: bolder;
+}
+
+
+
+button {
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+button {
+  border-radius: 16rpx;
+  padding: 16rpx;
+  margin: 0;
+  margin-left: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  font-size: 14px;
+}
+
+
+
+@media (prefers-color-scheme: dark) {
+  .commentBackground {
+    background-color: black;
+  }
+
+  .postBackground {
+    border-left: 8rpx solid #181818;
+    background-color: #3d3d3d;
+  }
+
+  .stickyBlock {
+    background-color: #acacac;
+  }
+
+  .spaceTop {
+    background: linear-gradient(to top, rgba(172, 172, 172, 1), rgba(172, 172, 172, 0));
+  }
+
+  .userInfo {
+    background-color: #acacac;
+  }
+
+
+}

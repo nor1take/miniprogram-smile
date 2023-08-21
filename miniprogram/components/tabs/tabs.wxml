@@ -1,5 +1,5 @@
 <!--components/tabs/tabs.wxml-->
-<view class="tabs" style="top: {{top+32}}px; z-index: 1;">
+<view class="tabs {{top!=0 ? 'top' : ''}}" style="top: {{top+32}}px;">
   <block wx:for="{{tabs}}" wx:key="id">
     <view data-index="{{index}}" class="tabsContent {{ activeTab === index ? 'active' : ''}}" bindtap="tabsTap">
       {{item.name}}
@@ -7,16 +7,10 @@
   </block>
 </view>
 
-<swiper style="width: 100%; height: 100%; position: absolute;" current="{{activeTab}}" bindchange="swiperChange">
+<swiper style="width: 100%; height: 100%; position: absolute; z-index: 0;" current="{{activeTab}}" bindchange="swiperChange">
   <swiper-item wx:for="{{tabs}}" wx:key="id">
-    <scroll-view 
-    style="width: 100%; height: 100%;" 
-    scroll-y="{{true}}"
-    enhanced="{{true}}"
-    fast-deceleration="{{true}}"
-    refresher-enabled 
-    scroll-top='{{scrollTop}}' 
-    refresher-triggered="{{refresherTriggered}}" bindscrolltolower="reachBottom" bindrefresherrefresh="refresh">
+    <scroll-view style="width: 100%; height: 100%;" type="list" scroll-y enhanced enable-passive fast-deceleration refresher-enabled='{{refresherEnabled}}' scroll-top='{{scrollTop}}' refresher-triggered="{{refresherTriggered}}" bindscrolltolower="reachBottom" bindrefresherrefresh="refresh">
+      <view wx:if="{{top!=0}}" class="topBlock" style="margin: 32rpx; height: {{top+32+32}}px; "></view>
       <slot name="tab-content-{{index}}"></slot>
     </scroll-view>
   </swiper-item>

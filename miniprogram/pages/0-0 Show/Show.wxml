@@ -1,87 +1,133 @@
 <wxs src="../../util/filter.wxs" module="filter" />
 
 <search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
-<movable-area wx:if="{{isLogin}}">
-  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="Ask" bindlongtap="goToTop">
-    <view class="iconfont icon-ic_public_add add_class" hover-class="add_hoverClass"></view>
+<movable-area>
+  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="goToAsk">
+    <i class="iconfont icon-ic_public_add add_class"></i>
   </movable-view>
 </movable-area>
 
-<!-- <view style="width: 100%; height: {{top+32+8}}px;"></view> -->
-<view class="topBlock" style="width: 100%; height: {{top+32+8}}px;"></view>
+<tabs top='{{top}}' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherTriggered='{{refresherTriggered}}' scroll-top='{{scrollTop}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+  <view slot="tab-content-0">
 
+    <block wx:if="{{followingPostList && followingPostList.length > 0}}">
+      <block wx:for="{{followingPostList}}" wx:key="_id">
+        <view class="background followingbkg" hover-class="hoverClass">
+          <view class="mainContent">
+            <view class="left" style="margin-right:32rpx ">
+              <avatar avatarUrl="{{item.avatarUrl}}" fromShow="{{true}}" length="80" openid="{{item._openid}}"></avatar>
+            </view>
+            <view class="right" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+              <view style="height: 80rpx; display: flex; flex-direction: column; justify-content: space-between;">
+                <view style="display: flex; justify-content: space-between; align-items: center;">
+                  <view style="font-weight: bold; font-size: 32rpx;">{{item.nickName}}</view>
+                  <view class="last">{{filter.timeString(item.time)}}</view>
+                </view>
+                <view class="tagText"># {{item.tag}}</view>
+              </view>
+              <view class="title">{{item.title}}</view>
+              <text class="body followingbody" style="font-size: 32rpx;" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</text>
+              <view class="imageArea" wx:if="{{item.image}}">
+                <block wx:for="{{item.image}}" wx:key="*this">
+                  <image wx:if="{{index<3}}" src="{{item}}" style="width: 100%; margin-bottom: 16rpx;" mode="aspectFill"></image>
+                </block>
+              </view>
 
-<swiper class="swiperContainer2" autoplay circular indicator-dots interval='6000'>
-  <block wx:for="{{boardList}}" wx:key="id">
-    <swiper-item class="swiperItem2" id="{{item.id}}" data-index="{{-1}}" bindtap="beWatched">
-      <image lazy-load style="width: 100%;" src="{{item.img}}" mode="widthFix"></image>
-    </swiper-item>
-  </block>
-</swiper>
-
-<view class="topContainer">
-  <!-- <view class="sort" bindtap="sort">
-    <i class="iconfont icon-sort-asc ailogo" style="color: white; background-color: #0C88B5;"></i>
-    <view class="sortWord">{{sortWord}}</view>
-  </view> -->
-  <i class="iconfont icon-sort-asc sortlogo" style="color: white; margin-right: 16rpx;" bindtap="sort"></i>
-  <i class="iconfont icon-AI ailogo" style="color: white; margin-right: 16rpx" bindtap="goToAI"></i>
-  <swiper class="swiperContainer" vertical autoplay circular interval='5000'>
-    <swiper-item wx:if="{{topWord == '有新的系统通知!!!'}}" class="swiperItem" style="background-color: #F50057;" bindtap="alwaysTop">
-      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 16rpx; color: #FCC300;"></i>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
-    </swiper-item>
-    <swiper-item class="swiperItem" wx:for="{{hotList}}" wx:key="_id" bindtap="hot">
-      <i class="iconfont icon-fire-line" style="font-size: 40rpx; margin-left: 16rpx; color: #FA5151;"></i>
-      <view style="margin-left: 16rpx; font-size: 28rpx; padding-right: 16rpx;">TOP {{index+1}}「{{item.title}}」</view>
-    </swiper-item>
-    <swiper-item wx:if="{{topWord != '有新的系统通知!!!'}}" class="swiperItem" bindtap="alwaysTop">
-      <i class="iconfont icon-download-line" style="font-size: 40rpx; margin-left: 16rpx; color: #FCC300;"></i>
-      <view style="margin-left: 16rpx; font-size: 30rpx;">{{topWord}}</view>
-    </swiper-item>
-  </swiper>
-</view>
-
-
-<block wx:if="{{questionList.length == 0}}">
-  <view class="bottom" style="margin-top: 40%;">还没有人发帖哦~</view>
-</block>
-
-
-
-<block wx:for="{{questionList}}" wx:key="_id">
-  <view class="background" hover-class="hoverClass" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
-    <view style="display: flex; justify-content: space-between; align-items:center;">
-      <view class="word">
-        <view class="tag">
-          <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
-          <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
-          <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
-          {{item.tag}}
+              <view class="last" style="justify-content: space-between; width: 100%;">
+                <view class="iconArea">
+                  <i class="iconfont icon-a-ic_public_password_visible1 lasticon"></i>
+                  <text class="watched">{{item.watched + item.watcher.length}}</text>
+                </view>
+                <view class="iconArea">
+                  <i class="iconfont icon-a-ic_public_message1 lasticon"></i>
+                  <text class="watched">{{item.commentNum}}</text>
+                </view>
+                <view class="iconArea">
+                  <i class="iconfont icon-star-line lasticon"></i>
+                  <text class="watched">{{item.collectNum}}</text>
+                </view>
+                <view class="iconArea">
+                  <i class="iconfont icon-ic_public_favor lasticon"></i>
+                  <text class="watched">{{item.postLikeNum}}</text>
+                </view>
+              </view>
+              <view class="comment" wx:if="{{item.comments.length > 0}}">
+                <i class="iconfont icon-question-answer-line" style="font-size: 30rpx; color: #7b7b7b; margin-right: 16rpx;"></i><text style="font-weight: bolder;">{{item.comments[0].nickname}}：</text><text>{{filter.abbreviation(item.comments[0].body)}}</text>
+              </view>
+            </view>
+          </view>
         </view>
-        <view class="title">{{item.title}}</view>
-        <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
-        <view class="last">
-          <block wx:if="{{sortWord === '最新回应' && item.Ayear!='' }}">
-            <text>{{filter.timeString(item.answerTime)}}</text>
-            回应
-          </block>
-          <block wx:else>
-            <text>{{filter.timeString(item.time)}}</text>
-          </block>
+        <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+        <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
+      </block>
+    </block>
+    <block wx:else="">
+      <view wx:if="{{isLogin}}" class="bigTip">
+        <view>你还没有关注任何人</view>
+        <view class="bottom"> 在任何地方点击头像可进入Ta的个人主页，点击“关注”按钮即可关注。</view>
+      </view>
+      <view wx:else="" class="bigTip">
+        <view>你还没有登录</view>
+        <view class="bottom">点击首页左上角头像，在左侧菜单中再次点击头像，第一次修改完头像和昵称即可实现登录。</view>
+      </view>
+
+    </block>
+
+  </view>
+  <view slot="tab-content-1">
+    <block wx:for="{{newList}}" wx:key="_id">
+      <view class="background" hover-class="hoverClass" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+        <view class="tag" style="display: flex; align-items: center;">
+          <view class="tagText"># {{item.tag}}</view>
+          <view class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</view>
+          <view class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></view>
+          <view class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</view>
+
+        </view>
+        <view class="content">
+          <view class="word">
+            <view class="title">{{item.title}}</view>
+            <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+          </view>
+          <view class="image" style="margin-left: 16rpx; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+            <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 14rpx;"></image>
+          </view>
+        </view>
+
+        <text class="last">
+          <text>{{filter.timeString(item.time)}}</text>
           <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
           <text wx:if="{{item.collectNum != 0}}" class="watched"> · {{item.collectNum}} 收藏</text>
           <text wx:if="{{item.postLikeNum != 0}}" class="watched"> · {{item.postLikeNum}} 赞</text>
+        </text>
+
+        <view class="comment" wx:if="{{item.comments.length > 0}}">
+          <i class="iconfont icon-question-answer-line" style="font-size: 30rpx; color: #7b7b7b; margin-right: 16rpx;"></i><text style="font-weight: bolder;">{{item.comments[0].nickname}}：</text><text>{{filter.abbreviation(item.comments[0].body)}}</text>
         </view>
       </view>
-      <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
-        <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
+      <ad-custom wx:if="{{(index+1)%10==0}}" style="margin: 16rpx; margin-left: 32rpx; margin-right: 32rpx;  border-bottom: 1rpx solid #dddddd;" unit-id="adunit-64acaeb0e07bfabf"></ad-custom>
+    </block>
+    <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
+  </view>
+  <view slot="tab-content-2">
+    <view class="hotbackground" hover-class="hoverClass" wx:for="{{hotList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+      <view wx:if="{{index+1 == 1}}" class="index" style="color: {{color1}};">{{index+1}}</view>
+      <view wx:elif="{{index+1 == 2}}" class="index" style="color: {{color2}};">{{index+1}}</view>
+      <view wx:elif="{{index+1 == 3}}" class="index" style="color: {{color3}};">{{index+1}}</view>
+      <view wx:else class="index">{{index+1}}</view>
+      <view style="display: flex; justify-content: space-between; align-items:center;">
+        <view class="word">
+          <view class="hottitle">{{item.title}}</view>
+        </view>
+        <view class="image" style="margin-left: 16rpx; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+          <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 10rpx;"></image>
+        </view>
+      </view>
+      <view class="comment" wx:if="{{item.comments.length > 0}}">
+        <i class="iconfont icon-question-answer-line" style="font-size: 30rpx; color: #7b7b7b; margin-right: 16rpx;"></i><text style="font-weight: bolder;">{{item.comments[0].nickname}}：</text><text>{{filter.abbreviation(item.comments[0].body)}}</text>
       </view>
     </view>
+    <view class="bottom">- 热门帖子 TOP 20 -</view>
   </view>
-  <ad-custom wx:if="{{(index+1)%10==0}}" class="background" unit-id="adunit-64acaeb0e07bfabf"></ad-custom>
-</block>
-
-
-<view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
-<view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
+</tabs>

@@ -1,0 +1,73 @@
+<wxs src="../../../util/filter.wxs" module="filter" />
+<movable-area wx:if="{{topic[0].tag != 'AI'}}">
+  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="goToAsk">
+    <view class="iconfont icon-ic_public_add add_class" hover-class="add_hoverClass"></view>
+  </movable-view>
+</movable-area>
+
+<view class="container">
+  <image class="imgBkg" src="{{tagimg}}" mode="aspectFill"></image>
+  <view class="topicTop cover">
+  </view>
+
+  <view class="stickyBlock" wx:if="{{isSticky}}" style="height: {{top+32}}px; z-index: 5;"></view>
+
+  <view id="sticky-element" class="tagName" style="position: sticky; top:{{top}}px; z-index: 5;">
+    <i class="iconfont icon-back" style="margin-right: 32rpx;" bindtap="return"></i>
+    {{tag}}
+  </view>
+  <view class="followinfo" style="justify-content: flex-start;">
+    帖子数 {{topic[0].num? topic[0].num:0}} · 关注数 {{topic[0].collector? topic[0].collector.length:0}}
+    <button wx:if="{{filter.isInArray(openId, topic[0].collector)}}" type="default" size="mini" style="color: #acacac;" bind:tap="collectCancel">已关注</button>
+    <button wx:else="" type="primary" size="mini" bind:tap="collectAdd">关注</button>
+    <button wx:if="{{topic[0].tag == 'AI'}}" type="primary" size="mini" style="width: fit-content; background-color: #3485FF;" bindtap="goToAI">前往 AI 板块</button>
+  </view>
+
+
+  <tabs top='0' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherEnabled='{{false}}' scrollTop='{{scrollTop}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+    <block wx:for="{{tabs}}" wx:key="id">
+      <view class="topicBottom" slot="tab-content-{{index}}">
+        <block wx:for="{{item.questionList}}" wx:key="_id">
+          <view class="background" hover-class="hoverClass" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+            <view class="tag" style="display: flex; align-items: center;">
+              <view style="display: flex; align-items: center;" wx:if="{{!item.unknown}}">
+                <image src="{{item.avatarUrl}}" class="avatar" mode="aspectFill"></image>
+                <view class="last" style="font-weight: bolder; margin-left: 16rpx;">{{item.nickName}}</view>
+              </view>
+              <view class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</view>
+              <view class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></view>
+              <view class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</view>
+
+            </view>
+            <view class="content">
+              <view class="word">
+                <view class="title">{{item.title}}</view>
+                <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+              </view>
+              <view class="image" style="margin-left: 16rpx; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+                <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 14rpx;"></image>
+              </view>
+            </view>
+            <text class="last">
+              <text>{{filter.timeString(item.time)}}</text>
+              <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
+              <text wx:if="{{item.collectNum != 0}}" class="watched"> · {{item.collectNum}} 收藏</text>
+              <text wx:if="{{item.postLikeNum != 0}}" class="watched"> · {{item.postLikeNum}} 赞</text>
+            </text>
+            <view class="comment" wx:if="{{item.comments.length > 0}}">
+              <i class="iconfont icon-question-answer-line" style="font-size: 30rpx; color: #7b7b7b; margin-right: 16rpx;"></i><text style="font-weight: bolder;">{{item.comments[0].nickname}}：</text><text>{{filter.abbreviation(item.comments[0].body)}}</text>
+            </view>
+
+          </view>
+          <ad-custom wx:if="{{(index+1)%10==0}}" style="margin: 16rpx; margin-left: 32rpx; margin-right: 32rpx;  border-bottom: 1rpx solid #dddddd;" unit-id="adunit-64acaeb0e07bfabf"></ad-custom>
+        </block>
+        <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+        <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
+
+      </view>
+    </block>
+
+
+  </tabs>
+
+</view>

@@ -40,11 +40,12 @@ Component({
     modify: function () {
       wx.navigateTo({
         url: '../../packageLogin/pages/0-0 Login/Login',
+        // url: '../../packageMy/pages/3-0 MySpace/MySpace'
       })
     },
 
     menu: function () {
-      console.log('menu')
+      //console.log('menu')
       var animation = wx.createAnimation({
         duration: 400,
         timingFunction: 'ease',
@@ -64,7 +65,7 @@ Component({
       })
     },
     back: function () {
-      console.log('back')
+      //console.log('back')
       var animation = wx.createAnimation({
         duration: 400,
         timingFunction: 'ease',
@@ -83,26 +84,24 @@ Component({
         menu: false
       })
     },
-    myAsk: function () {
+
+    mySpace: function () {
       wx.navigateTo({
-        url: '../../packageMy/pages/3-1 MyAsk/MyAsk',
+        url: '../../packageMy/pages/3-0 MySpace/MySpace',
       })
     },
+
     myCollect: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-2 MyCollect/MyCollect',
       })
     },
-    myComment: function () {
-      wx.navigateTo({
-        url: '../../packageMy/pages/3-3 MyComment/MyComment',
-      })
-    },
-    help: function () {
-      wx.navigateTo({
-        url: '../../packageMy/pages/0-1 TopPost/TopPost',
-      })
-    },
+
+    // help: function () {
+    //   wx.navigateTo({
+    //     url: '../../packageMy/pages/0-1 TopPost/TopPost',
+    //   })
+    // },
     warn: function () {
       wx.navigateTo({
         url: '../../packageMy/pages/3-4 WarnPosts/WarnPosts',

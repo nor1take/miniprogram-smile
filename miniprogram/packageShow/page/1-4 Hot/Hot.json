@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "return":"../../../components/return-noTab/return-noTab"
-  },
-  "enablePullDownRefresh":true
-}

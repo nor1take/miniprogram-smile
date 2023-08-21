@@ -1,16 +1,16 @@
 <block wx:if="{{!isScroll}}">
   <view class="tags">
     <block wx:for="{{tagsList}}" wx:key='id'>
-      <view class="{{activeTag == index ? 'selectedItem' : 'item'}}" bindtap="tagTap" data-index="{{index}}" data-tagName='{{item}}'>{{item}}</view>
+      <view class="{{activeTag == index ? 'selectedItem' : 'item'}}" bindtap="tagTap" data-index="{{index}}" data-tag='{{item}}'>{{item}}</view>
     </block>
-    <input class="{{activeTag == -1 ? 'selectedItem' : 'item'}}" bindfocus="tapDIY" bindinput="input" placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" />
+    <input value="{{value}}" class="{{activeTag == -1 ? 'selectedItem' : 'item'}}" bindfocus="tapDIY" bindinput="input" placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" />
   </view>
 </block>
 <block wx:else>
   <scroll-view class="tabs" scroll-x="true" scroll-with-animation enhanced show-scrollbar="{{false}}">
     <block wx:for="{{tagsList}}" wx:key='id'>
-      <view class="{{activeTag == index ? 'selectedItem' : 'item'}}" bindtap="tagTap" data-index="{{index}}" data-tagName='{{item}}'>{{item}}</view>
+      <view class="{{activeTag == index ? 'selectedItem' : 'item'}}" bindtap="tagTap" data-index="{{index}}" data-tag='{{item}}'>{{item}}</view>
     </block>
   </scroll-view>
-  <input class="{{activeTag == -1 ? 'selectedItem' : 'item'}}" bindfocus="tapDIY" bindinput="input" placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" />
+  <input value="{{value}}" class="{{activeTag == -1 ? 'selectedItem' : 'item'}}" bindfocus="tapDIY" bindinput="input" placeholder-class="diy" confirm-type="done" placeholder="+自定义标签" />
 </block>

@@ -1,3 +1,21 @@
+var isInArray = function (v, a) {
+  if (a) {
+    for (var i = 0; i < a.length; i++) {
+      if (v == a[i]) return true
+    }
+  }
+  return false
+}
+
+var isInArray2 = function (v, a) {
+  if (a) {
+    for (var i = 0; i < a.length; i++) {
+      if (v == a[i].openid) return true
+    }
+  }
+  return false
+}
+
 var abbreviation = function (value) {
   if (value.length > 75) {
     return value.slice(0, 75) + '...'
@@ -66,5 +84,7 @@ var timeString = function (time, isFull = false) {
 module.exports = {
   abbreviation: abbreviation,
   timeString: timeString,
-  int: int
+  int: int,
+  isInArray: isInArray,
+  isInArray2: isInArray2
 }

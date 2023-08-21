@@ -5,7 +5,7 @@
 <tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
 
   <view slot="tab-content-0">
-    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+
 
     <view class="background" hover-class="hoverClass" wx:for="{{tabs[0].questionList}}" wx:key="_id" id="{{item._id}}" bindtap="gotoDetail">
       <view style="display: flex; justify-content: space-between; align-items:center">
@@ -32,7 +32,7 @@
   </view>
 
   <view slot="tab-content-1">
-    <view style="height: {{top+32+32}}px; width: 100%;"></view>
+
     <block wx:for="{{tabs[1].questionList}}" wx:key="_id">
       <view class="messageBackground" bindtap="gotoDetail" id="{{item.questionId}}">
         <view class="last">

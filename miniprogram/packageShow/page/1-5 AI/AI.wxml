@@ -1,114 +1,56 @@
-<wxs module="WXS">
-  var isInArray = function (v, a) {
-    if (a) {
-      for (var i = 0; i < a.length; i++) {
-        if (v == a[i]) return true
-      }
-    }
-    return false
-  }
-  module.exports = {
-    isInArray: isInArray
-  };
-</wxs>
-<return top="{{top}}" bottom="{{bottom}}" topWord="AI"></return>
+<return top="{{top}}" bottom="{{bottom}}" color="white" topWord="AI"></return>
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<!-- <scroll-view class="tabs" scroll-x="true" scroll-with-animation enhanced show-scrollbar="{{false}}"> -->
-<view class="background background2" style="padding: 32rpx; ">
-  <image src="https://chatglm.cn/img/logo_alpha.1527ae36.svg" mode="aspectFit" style="height: 64rpx;"></image>
-  <text class="body" style="margin:8rpx;">ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。\n* 提问 ChatGLM：5 次/天</text>
-  <image src="https://fengshenbang-lm.com/assets/header-logo.png" mode="aspectFit" style="height: 70rpx;"></image>
-  <text class="body" style="margin:8rpx;">姜子牙Ziya 是国内CCNL研究院正式开源的封神榜第99个通用大模型。\n* 提问 Ziya：不限\n\n* 点击问题输入框左侧 LOGO 即可切换模型。\n\n* 支持多轮对话。在评论区追问前，请确保评论输入框右侧 LOGO 为点亮状态。</text>
-</view>
-<swiper class="swiperContainer" indicator-dots autoplay circular interval='5000' style="height: {{screenHeight*4/5}}px;">
-  <swiper-item>
-    <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/8d14e8f0-e267-4b8b-a9f2-a79120808f5a/chatgpt.jpg?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
-      <view class="hotLabel" style="color: white;">热门提问 TOP 3</view>
-      <block>
-        <view class="background hotQ" wx:for="{{hotPostList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
-          <view style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
-            <view wx:if="{{index+1 == 1}}" style="color: {{color1}}; font-weight: bolder;">{{index+1}}</view>
-            <view wx:elif="{{index+1 == 2}}" style="color: {{color2}}; font-weight: bolder;">{{index+1}}</view>
-            <view wx:elif="{{index+1 == 3}}" style="color: {{color3}}; font-weight: bolder;">{{index+1}}</view>
-            <view class="title hotTitle">{{item.title}}</view>
-          </view>
-        </view>
-      </block>
-    </view>
-  </swiper-item>
-  <swiper-item>
-    <view class="background hotQcontainer" style=" background-image: url(https://openaicom.imgix.net/c51f2c96-3595-48ae-9fb6-165563fbb086/chat-plugins.png?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=0%2C0%2C2048%2C2048&w=2000);">
-      <view class="hotLabel" style="color: white;">热门回答 TOP 3</view>
-      <block>
-        <view class="background hotQ" wx:for="{{hotCommentList}}" wx:key="_id" id="{{item.questionId}}" data-index="{{index}}" bindtap="beWatched">
-          <view wx:if="{{index+1 == 1}}" style="color: {{color1}}; font-weight: bolder;">{{index+1}}</view>
-          <view wx:elif="{{index+1 == 2}}" style="color: {{color2}}; font-weight: bolder;">{{index+1}}</view>
-          <view wx:elif="{{index+1 == 3}}" style="color: {{color3}}; font-weight: bolder;">{{index+1}}</view>
-          <view class="title hotTitle" style="font-size: 28rpx;">“{{filter.abbreviation(item.body)}}”</view>
-        </view>
-      </block>
-    </view>
-  </swiper-item>
-</swiper>
+<view style="width: 100%; height: 100%; position: absolute;">
+  <view style="height: 100%; margin: 32rpx; display: flex; flex-direction: column;">
+    <!-- <i class="iconfont icon-a-logo_white74c0b874" style="font-size: 100rpx; color: white;"></i> -->
+    <i class="iconfont icon-a-logo_alphadeab58a2" style="font-size: 100rpx; color: white;"></i>
 
-<view class="hotLabel">最新提问</view>
+    <text class="body" style="margin: 0;">
+      本小程序使用的问答、多轮对话和代码生成功能的中英双语模型是 ChatGLM。
 
-<view class="background" wx:for="{{newPostList}}" wx:key="_id">
-  <view>
-    <view class="word">
-      <view class="tag">
-        <image src="{{item.avatarUrl}}" style="width: 55rpx; height: 55rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
-        {{item.nickName}}
+      ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。
+
+      提问 ChatGLM：5 次/天
+
+      * 支持多轮对话。在评论区追问前，请确保评论输入框右侧 LOGO 为点亮状态。
+    </text>
+  </view>
+
+  <view class="hotLabel">最新提问</view>
+
+  <view class="background" wx:for="{{newPostList}}" wx:key="_id">
+    <view>
+      <view class="last">{{filter.timeString(item.time)}}</view>
+      <view class="body gptComment ask">
+        <view style="width: 55rpx; height: 55rpx; border-radius: 10rpx; ">
+          <image style="width: 100%; height: 100%; border-radius: 10rpx;" src="{{item.avatarUrl}}"></image>
+        </view>
+        <text class="commentBody">{{item.title}}</text>
       </view>
-      <view class="title">{{item.title}}</view>
-      <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
-    </view>
-    <view class="last">
 
-      <view>{{filter.timeString(item.time)}}</view>
-      <!-- 问题点赞按钮 -->
-      <!-- <view style="display: flex; flex-direction: row; align-items: center;">
-        <view wx:if="{{WXS.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel" id="{{item._id}}" data-index="{{index}}">
-          <i class="iconfont icon-ic_public_favor_filled" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-        </view>
-        <view wx:else="" class="button-area" bindtap="postLikeAdd" id="{{item._id}}" data-index="{{index}}">
-          <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-        </view>
-      </view> -->
-    </view>
-    <view wx:if="{{item.commenter[0].completion}}" class="body gptComment">
-      <view style="display: flex;" bindtap="beWatched" id="{{item._id}}">
-        <i class="iconfont icon-AI" style="font-size: 60rpx; color: #3485FF;"></i>
-        <text wx:if="{{item.commenter[0].completion.length > 75}}" class="commentBody" user-select="{{true}}">{{filter.abbreviation(item.commenter[0].completion)}}\n\n[点击查看完整回答]</text>
-        <text wx:else="" class="commentBody" user-select="{{true}}">{{item.commenter[0].completion}}</text>
+      <view wx:if="{{item.commenter[0].completion}}" class="body gptComment answer" style="display: flex;" bindtap="beWatched" id="{{item._id}}">
+        <i class="iconfont icon-AI"></i>
+        <text wx:if="{{item.commenter[0].completion.length > 75}}" class="commentBody" style="padding-top: 16rpx;" user-select="{{true}}">{{filter.abbreviation(item.commenter[0].completion)}}\n\n[点击查看完整回答]</text>
+        <text wx:else="" class="commentBody" style="padding-top: 16rpx;" user-select="{{true}}">{{item.commenter[0].completion}}</text>
       </view>
-      <!-- 评论点赞按钮 -->
-      <!-- <view style="display: flex; justify-content: flex-end;" wx:if="{{item.commenter[0].commentId.length != 0}}">
-        <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.commenter[0].liker)}}" id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel">
-          <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
-        </view>
-        <view class="buttonLike" wx:else id="{{item.commenter[0].commentId}}" data-postid="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
-          <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #ACACAC;"></i>
-        </view>
-      </view> -->
-
     </view>
   </view>
-</view>
-<view class="last" style="display: flex; justify-content: center; align-items: center;">仅展示前20条。前往 分类-AI 标签下查看全部发帖。</view>
-<view style="width: 100%; height: 500rpx;"></view>
+  <view class="last" style="display: flex; justify-content: center; align-items: center;">仅展示前 20 条</view>
+  <view style="width: 100%; height: 500rpx;"></view>
 
 
-<view class="gptBG background" style="bottom: {{keyboardHeight}}px;">
-  <i wx:if="{{glm}}" class="iconfont icon-chatglm" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i>
-  <image wx:else="" src="cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/646708c1-78c1749e-2e010e69" mode="widthFix" style="width: 120rpx; height: 120rpx;" bindtap="changeAPI"></image>
-  <!-- <i wx:else="" class="iconfont icon-AI" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i> -->
-  <block wx:if="{{isTesting}}">
-    <textarea class="gptInput" placeholder-style="color:white;" maxlength="300" placeholder="此处输入你的问题 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
-    <i class="iconfont icon-ic_public_email_send" style="font-size: 60rpx; color: white;" bindtap="send"></i>
-  </block>
-  <block wx:else="">
-    <textarea class="gptInput" placeholder-style="color:white" disabled placeholder="{{testMsg}}" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}"></textarea>
-  </block>
+  <view class="gptBG background" style="bottom: {{keyboardHeight}}px;">
+    <i wx:if="{{glm}}" class="iconfont icon-chatglm" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i>
+    <image wx:else="" src="cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/646708c1-78c1749e-2e010e69" mode="widthFix" style="width: 120rpx; height: 120rpx;" bindtap="changeAPI"></image>
+    <!-- <i wx:else="" class="iconfont icon-AI" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i> -->
+    <block wx:if="{{isTesting}}">
+      <textarea class="gptInput" placeholder-style="color:white;" maxlength="300" placeholder="此处输入你的问题 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
+      <i class="iconfont icon-ic_public_email_send" style="font-size: 60rpx; color: white;" bindtap="send"></i>
+    </block>
+    <block wx:else="">
+      <textarea class="gptInput" placeholder-style="color:white" disabled placeholder="{{testMsg}}" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}"></textarea>
+    </block>
+  </view>
+
 </view>

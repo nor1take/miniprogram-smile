@@ -7,6 +7,8 @@ Component({
     top: { type: Number, value: 0, },
     bottom: { type: Number, value: 0 },
     topWord: { type: String, value: '' },
+    color: { type: String, value: '' },
+    bkgColor: { type: String, value: '' },
   },
 
   /**

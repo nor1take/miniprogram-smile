@@ -1,1 +1,75 @@
-<text>sss</text>
+<wxs src="../../../util/filter.wxs" module="filter" />
+<view style="  width: 100%;  height: 100%;  position: absolute;">
+  <block wx:for="{{user}}" wx:key="_id" wx:if="{{index==0}}">
+    <image src="{{item.avatarUrl == '' ? defaultAvatarUrl : item.avatarUrl}}" style="width: 100%; height: 100%; z-index: -1; filter: blur(16px); position: fixed;" mode="aspectFill"></image>
+    <view class="spaceTop" style="height: {{bottom+32}}px;">
+      <image class="userImg" src="{{item.avatarUrl == '' ? defaultAvatarUrl : item.avatarUrl}}" bindtap="imageTap" data-src="{{item.avatarUrl == '' ? defaultAvatarUrl : item.avatarUrl}}"></image>
+    </view>
+
+    <view class="stickyBlock" wx:if="{{isSticky}}" style="height: {{top+32}}px; z-index: 5;"></view>
+    <view id="sticky-element" class="userInfo" style="position: sticky; top:{{top}}px; z-index: 5;">
+      <view class="nickname">{{item.nickName == '' ? '未登录' : item.nickName}}</view>
+      <view class="authentic" wx:if="{{item.isAuthentic}}">
+        <i class="iconfont icon-ic_public_security_filled" style="margin-right: 8rpx; margin-left: 8rpx; color: #07C160;"></i>
+        <view>[{{item.idTitle}}]</view>
+      </view>
+    </view>
+    <view class="followinfo">关注 {{item.following? item.following.length:0}} · 粉丝 {{item.collector? item.collector.length:0}}
+      <block wx:if="{{!isSelf}}">
+        <button wx:if="{{filter.isInArray2(openId, item.collector)}}" type="default" size="mini" style="color: #acacac;" bind:tap="collectCancel">已关注</button>
+        <button wx:else="" type="primary" size="mini" bind:tap="collectAdd">关注</button>
+      </block>
+    </view>
+
+  </block>
+
+  <tabs top='0' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherEnabled='{{false}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+    <view slot="tab-content-0">
+      <block wx:for="{{postList}}" wx:key="_id">
+        <view wx:if="{{!(!isSelf && item.unknown)}}" class="background" hover-class="hoverClass" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
+          <view class="tag" style="display: flex; align-items: center;">
+            <view class="tagText"># {{item.tag}}</view>
+            <view class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</view>
+            <view class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></view>
+            <view class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</view>
+
+          </view>
+          <view class="content">
+            <view class="word">
+              <view class="title">{{item.title}}</view>
+              <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
+            </view>
+            <view class="image" style="margin-left: 16rpx; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
+              <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 14rpx;"></image>
+            </view>
+          </view>
+          <text class="last">
+            <text>{{filter.timeString(item.time)}}</text>
+            <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
+            <text wx:if="{{item.collectNum != 0}}" class="watched"> · {{item.collectNum}} 收藏</text>
+            <text wx:if="{{item.postLikeNum != 0}}" class="watched"> · {{item.postLikeNum}} 赞</text>
+          </text>
+          <view class="comment" wx:if="{{item.comments.length > 0}}">
+            <i class="iconfont icon-question-answer-line" style="font-size: 30rpx; color: #7b7b7b; margin-right: 16rpx;"></i><text style="font-weight: bolder;">{{item.comments[0].nickname}}：</text><text>{{filter.abbreviation(item.comments[0].body)}}</text>
+          </view>
+
+        </view>
+        <ad-custom wx:if="{{(index+1)%10==0}}" style="margin: 16rpx; margin-left: 32rpx; margin-right: 32rpx;  border-bottom: 1rpx solid #dddddd;" unit-id="adunit-64acaeb0e07bfabf"></ad-custom>
+      </block>
+    </view>
+    <view slot="tab-content-1">
+      <block wx:if="{{commentList.length == 0}}">
+        <view class="bottom" style="margin-top: 40%;">还没有回应过别人的帖子哦~</view>
+      </block>
+      <text class="commentBackground" hover-class="hoverClass" wx:for="{{commentList}}" wx:key="_id" id="{{item.questionId}}" data-index="{{index}}" bindtap="beWatched">
+        <text class="last">在<text style="color: #0C88B5;">「{{item.questionTitle}}」</text>帖子下，回应道：
+        </text>
+        <text class="body">{{filter.abbreviation(item.body)}}<text wx:if="{{item.image_upload[0]}}">[图片评论]</text>
+        </text>
+        <text class="last">{{filter.timeString(item.time)}}</text>
+      </text>
+      <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+      <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
+    </view>
+  </tabs>
+</view>

@@ -1,265 +1,389 @@
-<wxs module="WXS">
-  var isInArray = function (v, a) {
-    if (a) {
-      for (var i = 0; i < a.length; i++) {
-        if (v == a[i]) return true
-      }
-    }
-    return false
-  }
-  module.exports = {
-    isInArray: isInArray
-  };
-</wxs>
 <wxs src="../../../util/filter.wxs" module="filter" />
 
 <return top="{{top}}" bottom="{{bottom}}"></return>
 
-<!-- isReady -->
-<!-- <view wx:if="{{!loading}}" class="loading">正在加载...</view> -->
 
-<!--1 主体 -->
-<!--1-1 问题 -->
-<view class="background" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}">
-  <view class="word">
-    <view class="top" style="display: flex; justify-content: space-between; align-items:center;">
-      <view class="tag" bindtap="colorfulPoint">
-        <block wx:if="{{item.solved}}">
-          <text class="point" style="background-color: {{colorGreen}};">{{item.commentNum}}</text>
-        </block>
-        <block wx:else>
-          <text class="point" style="background-color: {{colorGray}};" wx:if="{{item.commentNum==0}}"></text>
-          <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum>0}}">{{item.commentNum}}</text>
-        </block>
-        {{item.tag}}
+<block wx:if="{{questionList[0].tag == 'AI'}}">
+  <view class="background aibkg" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}">
+    <view class="ask mainContent">
+      <view class="left">
+        <avatar avatarUrl="{{item.avatarUrl}}" length="60" openid="{{item._openid}}"></avatar>
       </view>
-      <view class="iconfont icon-more-fill" hover-class="hoverClass" style="font-size: 25px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap"></view>
-    </view>
-    <view class="middle" wx:if="{{!item.unknown}}">
-      <avatar avatarUrl="{{item.avatarUrl}}" length="55"></avatar>
-      <view class="nickName">{{item.nickName}}
-        <block wx:if="{{item.isAuthentic}}">
-          <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>
-          <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
-            <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
-          </block>
-          <block wx:else="">
-            <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
-          </block>
-        </block>
+      <view class="right">
+        <view class="commentTop">
+          <view class="middle">
+            <view class="nickName">{{item.nickName}}</view>
+          </view>
+          <i class="iconfont icon-more-fill" style="font-size: 20px; color: #acacac;" bindtap="threePointTap"></i>
+        </view>
+
+        <text class="body" user-select="true">{{item.title}}</text>
+
+        <view class="lastArea">
+          <view class="last">
+            {{filter.timeString(item.time, true)}} · {{item.watched + item.watcher.length}} 浏览
+          </view>
+          <!--1-2-3 收藏/回应按钮 -->
+          <view class="FollowReplybutton-area">
+            <block wx:if="{{isLogin}}">
+              <block wx:if="{{item.isActivity}}">
+                <button class="FollowReplybutton" type="primary" size="mini" style="width: max-content;" bindtap="goToRegist">参与活动</button>
+              </block>
+              <block wx:else="">
+                <view wx:if="{{filter.isInArray(openId, item.collector)}}" class="button-area" style="color: #FCC300;" bindtap="collectCancel">
+                  <i class="iconfont icon-ic_public_highlight_filled" style="color: #FCC300; font-size: 50rpx; margin-right: 16rpx;"></i>
+                  {{collectNum === 0 ? '收藏' : collectNum}}
+                </view>
+                <view wx:else class="button-area" bindtap="collectAdd">
+                  <i class="iconfont icon-ic_public_highlight" style="font-size: 50rpx; margin-right: 16rpx;"></i>
+                  {{collectNum === 0 ? '收藏' : collectNum}}
+                </view>
+              </block>
+            </block>
+
+            <view wx:if="{{filter.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
+              <i class="iconfont icon-ic_public_favor_filled heartBeat" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+              {{postLikeNum === 0 ? '赞' : postLikeNum}}
+            </view>
+            <view wx:else="" class="button-area" bindtap="postLikeAdd">
+              <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+              {{postLikeNum === 0 ? '赞' : postLikeNum}}
+            </view>
+          </view>
+        </view>
       </view>
     </view>
-    <text class="title" user-select="true">{{item.title}}</text>
 
-    <block wx:if="{{!item.isHTML}}">
-      <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
-        <text class="body" user-select="true" bindtap="fold">
-          <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
-          </text>
-          <text wx:if="{{item.image.length > 0}}">
-            [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
-        </text>
-      </block>
+    <!--1-2 评论 -->
+    <block wx:for="{{commentList}}" wx:key="_id">
+      <view class="commentBackground aibkg {{item.nickname == 'AI' ? 'answer' : 'ask'}}" id="{{item._id}}">
+        <view class="mainContent">
+          <view class="left">
+            <avatar avatarUrl="{{item.image}}" length="60" openid="{{item._openid}}"></avatar>
+          </view>
+          <view class="right">
+            <!-- 一、头像 昵称 右上角[...] -->
+            <view class="commentTop">
+              <view class="userInfo nickName">
+                <view>{{item.nickname}} </view>
+              </view>
+              <i class="iconfont icon-more-fill" style="font-size: 40rpx; color: #acacac;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></i>
+            </view>
 
-      <block wx:else>
-        <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
-          <text class="body" user-select="true">
-            <text wx:if="{{item.body.length > 0}}">{{item.body}}
-            </text>
-          </text>
-          <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
+            <view class="commentBodyContainer" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
+              <!-- 二、评论文字和图片-->
+              <text class="commentBody" user-select="true">{{item.body}}</text>
+              <view wx:if="{{item.image_upload[0]}}">
+                <block wx:for="{{item.image_upload}}" wx:for-item="imageItem" wx:key="*this">
+                  <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image_upload}}" data-class="评论图片" show-menu-by-longpress="true" mode="widthFix" style="width: 100%; margin-top: 8rpx;" bindtap="imageTap"></image>
+                </block>
+              </view>
+            </view>
+
+            <!-- 三、评论时间 点赞按钮 评论按钮-->
+            <view class="commentLast">
+              <view class="commentTime">
+                <text>{{filter.timeString(item.time)}}</text>
+              </view>
+              <view class="buttonArea">
+                <view class="LikeCommentbutton-area">
+                  <!-- 点赞按钮 -->
+                  <view class="buttonLike" wx:if="{{filter.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel" animation="{{animation}}">
+                    <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
+                    {{item.liker.length}}
+                  </view>
+
+                  <view class="buttonLike" wx:else id="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
+                    <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none;"></i>
+                    {{item.liker.length}}
+                  </view>
+
+                  <!-- 评论按钮 -->
+                  <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
+                    <i class="iconfont icon-comment" style="font-size: 37rpx; margin: 8rpx;"></i>
+                    {{item.commentNum}}
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:for-index="idx" wx:key="_id">
+          <view class="commentAgainBackground aibkg {{commentAgain.newNickName == 'AI' ? 'answer' : 'ask'}}">
+            <view class="left">
+              <avatar avatarUrl="{{commentAgain.avatarUrl}}" length="50" openid="{{commentAgain.newOpenId}}"></avatar>
+            </view>
+            <view class="right">
+              <view class="first">
+                <block wx:if="{{commentAgain.isUnknown}}">
+                  <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
+                </block>
+                <block wx:else="">
+                  <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
+                  <block wx:if="{{commentAgain.isAuthentic}}">
+                    <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                    <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
+                      <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+                    </block>
+                    <block wx:else="">
+                      <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                    </block>
+                  </block>
+                </block>
+              </view>
+              <view class="second" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
+                回复
+                <text wx:if="{{commentAgain.postUnknown}}" class="commentAgainnickName"> @<text style="color: #c87d2f;">[匿名发帖用户]</text></text>
+                <text wx:else="" class="commentAgainnickName"> @{{commentAgain.postNickName}}</text>：
+                <text user-select="true">{{commentAgain.commentAgainBody}}</text>
+                <view wx:if="{{commentAgain.image_upload[0]}}">
+                  <block wx:for="{{commentAgain.image_upload}}" wx:for-item="imageItem" wx:key="*this">
+                    <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{commentAgain.image_upload}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%; margin-top: 8rpx;" bindtap="imageTap"></image>
+                  </block>
+                </view>
+              </view>
+            </view>
+          </view>
         </block>
-        <block wx:else>
-          <text class="body" user-select="true">{{item.body}}</text>
-        </block>
-
-        <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
-          <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="*this">
-            <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+      </view>
+    </block>
+    <view class="bottom" wx:if="{{!isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{isBottom}}">没有更多了~</view>
+  </view>
+</block>
+<block wx:else="">
+  <!--1 主体 -->
+  <!--1-1 问题 -->
+  <view class="background" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}">
+    <view class="word">
+      <view class="top">
+        <view class="tagText" bind:tap="goToTag" data-tag="{{item.tag}}"># {{item.tag}}</view>
+        <view class="iconfont icon-more-fill" hover-class="hoverClass" style="font-size: 25px; color: #acacac;" bindtap="threePointTap"></view>
+      </view>
+      <view class="middle" wx:if="{{!item.unknown}}">
+        <avatar avatarUrl="{{item.avatarUrl}}" color="{{item.solved ? colorGreen :(item.commentNum <= 0 ? colorGray : colorYellow)}}" length="60" openid="{{item._openid}}"></avatar>
+        <view class="nickName">{{item.nickName}}
+          <block wx:if="{{item.isAuthentic}}">
+            <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>
+            <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
+              <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
+            </block>
+            <block wx:else="">
+              <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+            </block>
           </block>
         </view>
-      </block>
-    </block>
+      </view>
+      <text class="title" user-select="true">{{item.title}}</text>
 
-
-
-    <block wx:else="">
-      <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
-        <text class="body" user-select="true" bindtap="fold">
-          <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
+      <block wx:if="{{!item.isHTML}}">
+        <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
+          <text class="body" user-select="true" bindtap="fold">
+            <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
+            </text>
+            <text wx:if="{{item.image.length > 0}}">
+              [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
           </text>
-          <text wx:if="{{item.image.length > 0}}">
-            [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
-        </text>
+        </block>
+
+        <block wx:else>
+          <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
+            <text class="body" user-select="true">
+              <text wx:if="{{item.body.length > 0}}">{{item.body}}
+              </text>
+            </text>
+            <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
+          </block>
+          <block wx:else>
+            <text class="body" user-select="true">{{item.body}}</text>
+          </block>
+
+          <view wx:if="{{item.image[0]}}" class="image">
+            <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="*this">
+              <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%;" bindtap="imageTap"></image>
+            </block>
+          </view>
+        </block>
       </block>
 
-      <block wx:else>
-        <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
 
-          <block wx:if="{{item.body.length > 0}}">
+      <block wx:else="">
+        <block wx:if="{{(item.body.length > 75 || item.image.length > 0) && isFold}}">
+          <text class="body" user-select="true" bindtap="fold">
+            <text wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}
+            </text>
+            <text wx:if="{{item.image.length > 0}}">
+              [图片补充 · {{item.image.length}} 张]</text><text style="font-weight: bold; color:#0C88B5;"> 展开↓</text>
+          </text>
+        </block>
+
+        <block wx:else>
+          <block wx:if="{{item.body.length > 75 || item.image.length > 0 }}">
+
+            <block wx:if="{{item.body.length > 0}}">
+              <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
+            </block>
+
+            <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
+          </block>
+          <block wx:else>
             <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
           </block>
-
-          <text class="body" style="font-weight: bold; color:#0C88B5;" bindtap="fold"> 收起↑</text>
-        </block>
-        <block wx:else>
-          <rich-text class="body" user-select="true" nodes="{{item.html}}"></rich-text>
         </block>
       </block>
-    </block>
 
-
-    <view class="last">
-      <text>{{filter.timeString(item.time, true)}}</text> ·
-      <text class="watched">{{item.watched + item.watcher.length}} 浏览</text>
-    </view>
-  </view>
-
-  <!--1-2-3 收藏/回应按钮 -->
-  <view class="FollowReplybutton-area">
-    <block wx:if="{{isLogin}}">
-      <block wx:if="{{item.isActivity}}">
-        <button class="FollowReplybutton" type="primary" size="mini" style="width: max-content;" bindtap="goToRegist">参与活动</button>
-      </block>
-      <block wx:else="">
-        <view wx:if="{{WXS.isInArray(openId, item.collector)}}" class="button-area" style="color: #FCC300;" bindtap="collectCancel">
-          <i class="iconfont icon-ic_public_highlight_filled" style="color: #FCC300; font-size: 50rpx; margin-right: 16rpx;"></i>
-          {{collectNum === 0 ? '收藏' : collectNum}}
+      <view class="lastArea">
+        <view class="last">
+          {{filter.timeString(item.time, true)}} · {{item.watched + item.watcher.length}} 浏览
         </view>
-        <view wx:else class="button-area" bindtap="collectAdd">
-          <i class="iconfont icon-ic_public_highlight" style="font-size: 50rpx; margin-right: 16rpx;"></i>
-          {{collectNum === 0 ? '收藏' : collectNum}}
-        </view>
-      </block>
-    </block>
-    <block wx:else="">
-      <button class="FollowReplybutton" type="primary" size="mini" style="width: 180rpx;" bindtap="goToLogin">登 录</button>
-    </block>
-    <view wx:if="{{WXS.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
-      <i class="iconfont icon-ic_public_favor_filled heartBeat" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-      {{postLikeNum === 0 ? '赞' : postLikeNum}}
-    </view>
-    <view wx:else="" class="button-area" bindtap="postLikeAdd">
-      <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-      {{postLikeNum === 0 ? '赞' : postLikeNum}}
-    </view>
-  </view>
-  <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">
-    <view style="display: flex; align-items: center; justify-content: center; padding-top: 2rpx;">
-      <i class="iconfont icon-sort-asc" style="font-size: 30rpx; margin-right: 4rpx; color: #0C88B5;"></i>
-    </view>
-    {{sortWord}}
-  </view>
-  <!--1-2 评论 -->
-  <view class="commentBackground" wx:for="{{commentList}}" wx:key="_id" id="{{item._id}}">
-    <!-- 一、头像 昵称 右上角[...] -->
-    <view class="commentTop" style="display: flex; justify-content: space-between; align-items: center;">
-      <view class="userInfo">
-        <block wx:if="{{item.isUnknown}}">
-          <image src="{{defaultAvatarUrl}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
-          <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
-        </block>
-        <block wx:else="">
-          <image src="{{item.image}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
-          <view class="nickName">{{item.nickname}}
-            <block wx:if="{{item.isAuthentic}}">
-              <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>
-              <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
-                <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
-              </block>
-              <block wx:else="">
-                <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
-              </block>
-            </block>
-          </view>
-        </block>
-      </view>
-      <i class="iconfont icon-more-fill" style="font-size: 20px; margin-right: 32rpx; color: #acacac;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></i>
-    </view>
-
-    <view class="commentBodyContainer" hover-class="hoverClass" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
-      <!-- 二、评论文字和图片-->
-      <text class="commentBody" user-select="true">{{item.body}}</text>
-      <view wx:if="{{item.image_upload[0]}}">
-        <block wx:for="{{item.image_upload}}" wx:for-item="imageItem" wx:key="*this">
-          <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image_upload}}" data-class="评论图片" show-menu-by-longpress="true" mode="widthFix" style="width: 100%; margin-top: 8rpx;" bindtap="imageTap"></image>
-        </block>
-      </view>
-    </view>
-
-    <!-- 三、评论时间 点赞按钮 评论按钮-->
-    <view class="commentLast">
-      <view class="commentTime">
-        <text>{{filter.timeString(item.time)}}</text>
-      </view>
-      <view class="buttonArea">
-        <view class="LikeCommentbutton-area">
-          <!-- 点赞按钮 -->
-          <view class="buttonLike" wx:if="{{WXS.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel" animation="{{animation}}">
-            <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
-            {{item.liker.length}}
-          </view>
-
-          <view class="buttonLike" wx:else id="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
-            <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none;"></i>
-            {{item.liker.length}}
-          </view>
-
-          <!-- 评论按钮 -->
-          <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
-            <i class="iconfont icon-comment" style="font-size: 37rpx; margin: 8rpx;"></i>
-            {{item.commentNum}}
-          </view>
-        </view>
-      </view>
-    </view>
-    <!-- 评论的评论/评论的评论的评论 -->
-
-    <!-- <block wx:if="{{item.commenter.length>3}}">
-      <view class="">{{item.commenter[0]}}</view>
-      <view class="sort2">共 {{item.commenter.length}} 条评论</view>
-    </block>
-    <block wx:else=""></block> -->
-    <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:for-index="idx" wx:key="_id">
-      <view class="commentAgainBackground" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
-        <view class="first">
-          <block wx:if="{{commentAgain.isUnknown}}">
-            <image src="{{defaultAvatarUrl}}" style="width: 50rpx; height: 50rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
-            <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
+        <!--1-2-3 收藏/回应按钮 -->
+        <view class="FollowReplybutton-area">
+          <block wx:if="{{item.isActivity}}">
+            <button class="FollowReplybutton" type="primary" size="mini" style="width: max-content;" bindtap="goToRegist">参与活动</button>
           </block>
           <block wx:else="">
-            <image src="{{commentAgain.avatarUrl}}" style="width: 50rpx; height: 50rpx; border-radius: 30rpx; margin-right: 8rpx;"></image>
-            <text class="commentAgainnickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
-            <block wx:if="{{commentAgain.isAuthentic}}">
-              <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
-              <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
-                <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
-              </block>
-              <block wx:else="">
-                <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
-              </block>
-
-            </block>
+            <view wx:if="{{filter.isInArray(openId, item.collector)}}" class="button-area" style="color: #FCC300;" bindtap="collectCancel">
+              <i class="iconfont icon-ic_public_highlight_filled" style="color: #FCC300; font-size: 50rpx; margin-right: 16rpx;"></i>
+              {{collectNum === 0 ? '收藏' : collectNum}}
+            </view>
+            <view wx:else class="button-area" bindtap="collectAdd">
+              <i class="iconfont icon-ic_public_highlight" style="font-size: 50rpx; margin-right: 16rpx;"></i>
+              {{collectNum === 0 ? '收藏' : collectNum}}
+            </view>
           </block>
-          回复
-          <text wx:if="{{commentAgain.postUnknown}}" class="commentAgainnickName" style="margin-left: 8rpx；"> @<text style="color: #c87d2f;">[匿名发帖用户]</text></text>
-          <text wx:else="" class="commentAgainnickName" style="margin-left: 8rpx;">@{{commentAgain.postNickName}}</text>
-        </view>
-        <view class="second">
-          <text class="commentAgainBody" user-select="true">{{commentAgain.commentAgainBody}}</text>
-          <view wx:if="{{commentAgain.image_upload[0]}}">
-            <block wx:for="{{commentAgain.image_upload}}" wx:for-item="imageItem" wx:key="*this">
-              <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{commentAgain.image_upload}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%; margin-top: 8rpx;" bindtap="imageTap"></image>
-            </block>
+          <view wx:if="{{filter.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
+            <i class="iconfont icon-ic_public_favor_filled heartBeat" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+            {{postLikeNum === 0 ? '赞' : postLikeNum}}
+          </view>
+          <view wx:else="" class="button-area" bindtap="postLikeAdd">
+            <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
+            {{postLikeNum === 0 ? '赞' : postLikeNum}}
           </view>
         </view>
       </view>
-    </block>
+    </view>
 
+
+    <view wx:if="{{commentList.length>0}}" class="sort" bindtap="sort">
+      <i class="iconfont icon-sort-asc" style="margin: 8rpx; color: #0C88B5;"></i>
+      {{commentList.length + " 条回应 · "+sortWord}}
+    </view>
+    <!--1-2 评论 -->
+    <view class="commentBackground" wx:for="{{commentList}}" wx:key="_id" id="{{item._id}}">
+      <view class="mainContent">
+        <view class="left">
+          <image wx:if="{{item.isUnknown}}" src="{{defaultAvatarUrl}}" style="width: 60rpx; height: 60rpx; border-radius: 60rpx;"></image>
+          <avatar wx:else="" avatarUrl="{{item.image}}" length="60" openid="{{item._openid}}"></avatar>
+        </view>
+        <view class="right">
+          <!-- 一、头像 昵称 右上角[...] -->
+          <view class="commentTop">
+            <view class="userInfo nickName">
+              <view wx:if="{{item.isUnknown}}" style="color: #c87d2f;">[匿名发帖用户]</view>
+              <view wx:else="">{{item.nickname}}
+                <block wx:if="{{item.isAuthentic}}">
+                  <i class="iconfont icon-ic_public_security_filled" style="font-size: 20rpx; color: #07C160;"></i>
+                  <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
+                    <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
+                  </block>
+                  <block wx:else="">
+                    <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                  </block>
+                </block>
+              </view>
+            </view>
+            <i class="iconfont icon-more-fill" style="font-size: 40rpx; color: #acacac;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></i>
+          </view>
+
+
+          <view class="commentBodyContainer" hover-class="hoverClass" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
+            <!-- 二、评论文字和图片-->
+            <text class="commentBody" user-select="true">{{item.body}}</text>
+            <view wx:if="{{item.image_upload[0]}}">
+              <block wx:for="{{item.image_upload}}" wx:for-item="imageItem" wx:key="*this">
+                <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image_upload}}" data-class="评论图片" show-menu-by-longpress="true" mode="widthFix" style="width: 100%; margin-top: 8rpx;" bindtap="imageTap"></image>
+              </block>
+            </view>
+          </view>
+
+          <!-- 三、评论时间 点赞按钮 评论按钮-->
+          <view class="commentLast">
+            <view class="commentTime">
+              <text>{{filter.timeString(item.time)}}</text>
+            </view>
+            <view class="buttonArea">
+              <view class="LikeCommentbutton-area">
+                <!-- 点赞按钮 -->
+                <view class="buttonLike" wx:if="{{filter.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel" animation="{{animation}}">
+                  <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
+                  {{item.liker.length}}
+                </view>
+
+                <view class="buttonLike" wx:else id="{{item._id}}" data-index="{{index}}" bindtap="likeAdd">
+                  <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none;"></i>
+                  {{item.liker.length}}
+                </view>
+
+                <!-- 评论按钮 -->
+                <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
+                  <i class="iconfont icon-comment" style="font-size: 37rpx; margin: 8rpx;"></i>
+                  {{item.commentNum}}
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <block wx:for="{{item.commenter}}" wx:for-item="commentAgain" wx:for-index="idx" wx:key="_id">
+        <view class="commentAgainBackground">
+          <view class="left">
+            <image wx:if="{{commentAgain.isUnknown}}" src="{{defaultAvatarUrl}}" style="width: 50rpx; height: 50rpx; border-radius: 30rpx;"></image>
+            <avatar wx:else="" avatarUrl="{{commentAgain.avatarUrl}}" length="50" openid="{{commentAgain.newOpenId}}"></avatar>
+          </view>
+          <view class="right">
+            <view class="first">
+              <block wx:if="{{commentAgain.isUnknown}}">
+                <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
+              </block>
+              <block wx:else="">
+                <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
+                <block wx:if="{{commentAgain.isAuthentic}}">
+                  <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                  <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
+                    <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+                  </block>
+                  <block wx:else="">
+                    <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                  </block>
+                </block>
+              </block>
+            </view>
+            <view class="second" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
+              回复
+              <text wx:if="{{commentAgain.postUnknown}}" class="commentAgainnickName"> @<text style="color: #c87d2f;">[匿名发帖用户]</text></text>
+              <text wx:else="" class="commentAgainnickName"> @{{commentAgain.postNickName}}</text>：
+              <text user-select="true">{{commentAgain.commentAgainBody}}</text>
+              <view wx:if="{{commentAgain.image_upload[0]}}">
+                <block wx:for="{{commentAgain.image_upload}}" wx:for-item="imageItem" wx:key="*this">
+                  <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{commentAgain.image_upload}}" show-menu-by-longpress="true" mode="widthFix" style="width: 100%; margin-top: 8rpx;" bindtap="imageTap"></image>
+                </block>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+    </view>
+    <view class="bottom" wx:if="{{!isBottom && reachBottom}}">加载中...</view>
+    <view class="bottom" wx:if="{{isBottom}}">没有更多评论了~</view>
   </view>
-  <view class="bottom" wx:if="{{!isBottom && reachBottom}}">加载中...</view>
-  <view class="bottom" wx:if="{{isBottom}}">没有更多评论了~</view>
-</view>
+</block>
+
+
+
+
 <!--0-3 底部占位 -->
 <!-- <view style=" width: 100%; height: 139rpx; background-color: white;"></view> -->
 <view style=" width: 100%; height: 30%; position: absolute; margin: 64rpx;"></view>
@@ -270,7 +394,7 @@
   </block>
 </view>
 
-<view wx:if="{{isLogin}}" class="bottomInput-Container" style="bottom: {{height}}px;">
+<view class="bottomInput-Container" style="bottom: {{height}}px;">
   <view class="imageArea" bindtap="upload">
     <i wx:if="{{!isAskChatGLM}}" class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
   </view>
@@ -285,12 +409,18 @@
   <i wx:if="{{isAskChatGLM}}" class="iconfont icon-chatglm" style="font-size: 65rpx; margin-right: 16rpx; color: #3485FF;" bindtap="isAskChatGLM"></i>
   <i wx:else="" class="iconfont icon-chatglm" style="font-size: 65rpx; margin-right: 16rpx; color: #7b7b7b;" bindtap="isAskChatGLM"></i>
   <view class="sendButton">
-    <button style="font-weight: bold;" size="mini" type="primary" wx:if="{{inputContent}}" bindtap="sendComment">
-      发送
-    </button>
+    <block wx:if="{{isLogin}}">
 
-    <button style="font-weight: normal;" size="mini" type="primary" wx:if="{{!inputContent}}" disabled="true" bindtap="sendComment">
-      发送
-    </button>
+      <button style="font-weight: bold;" size="mini" type="primary" wx:if="{{inputContent}}" bindtap="sendComment">
+        发送
+      </button>
+
+      <button style="font-weight: normal;" size="mini" type="primary" wx:if="{{!inputContent}}" disabled="true" bindtap="sendComment">
+        发送
+      </button>
+    </block>
+    <block wx:else="">
+      <button type="primary" size="mini" bindtap="goToLogin">登录</button>
+    </block>
   </view>
 </view>

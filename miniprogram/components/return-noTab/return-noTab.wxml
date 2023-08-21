@@ -1,8 +1,9 @@
 <!-- 返回 -->
-<view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2;">
-  <i class="iconfont icon-back" style="font-size: 26px; margin-left: 16px; margin-right: 16px;" bindtap="return"></i>
+<view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2; color: {{color}};">
+  <i class="iconfont icon-back" style="font-size: 26px; margin-left: 16px; margin-right: 16px; font-weight: normal;" bindtap="return"></i>
   {{topWord}}
 </view>
 
 <!-- 顶部占位 -->
-<view style="height: {{bottom}}px; width: 100%;"></view>
+<view style="height: {{bottom+16}}px; width: 100%;"></view>
+<view style="height: {{bottom+16}}px; width: 100%; background-color: {{bkgColor}}; position: fixed; top: 0;"></view>

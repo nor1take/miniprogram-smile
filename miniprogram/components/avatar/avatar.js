@@ -6,6 +6,9 @@ Component({
   properties: {
     avatarUrl: { type: String, value: '' },
     length: { type: Number, value: 55 },
+    color: { type: String, value: 'transparent' },
+    openid: { type: String, value: '' },
+    fromShow: { type: Boolean, value: false }
   },
 
   /**
@@ -20,9 +23,21 @@ Component({
    */
   methods: {
     goToMySpace: function () {
-      wx.navigateTo({
-        url: '../../packageMy/pages/3-0 MySpace/MySpace',
-      })
+      if (this.data.fromShow) {
+        wx.navigateTo({
+          url: '../../packageMy/pages/3-0 MySpace/MySpace?openid=' + this.data.openid,
+        }).catch((err) => {
+          //console.log(err)
+        })
+      } else {
+        //console.log('跳转')
+        wx.navigateTo({
+          url: '../../../packageMy/pages/3-0 MySpace/MySpace?openid=' + this.data.openid,
+        }).catch((err) => {
+          //console.log(err)
+        })
+      }
+
     }
   }
 })

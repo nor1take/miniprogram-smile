@@ -1,66 +1,58 @@
 <!-- <icon type="search" color="#3d3d3d" style="position: fixed; top:{{top}}px; left: 16px; z-index: 2;" size="30" bindtap="search"></icon> -->
 <!-- 左侧菜单 -->
 <view class="coverMenu" style=" width:{{left}}px; left: -{{left}}px;" animation="{{menuAnimation}}">
+
   <view class="userInfo" style="margin-top: {{top}}px;" bindtap="modify">
-    <view class="image">
-      <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="height: 40px; width: 40px; border-radius: 40px;"></image>
+    <view class="image" style="height: 30px; width: 30px; border-radius: 30px;">
+      <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="width: 100%; height: 100%; border-radius: 100rpx;"></image>
     </view>
-    <view class="nickname">{{nickName == '' ? '未登录' : nickName}}
-      <block wx:if="{{isAuthentic}}">
-        <i class="iconfont icon-ic_public_security_filled" style="font-size: 25rpx; color: #07C160;"></i>
-        <text style="color: #07C160; margin-right: 8rpx; font-weight: normal;">[{{idTitle}}]</text>
-      </block>
+    <view class="nickname">{{nickName == '' ? '未登录' : nickName}}</view>
+    <view class="authentic" wx:if="{{isAuthentic}}">
+      <i class="iconfont icon-ic_public_security_filled" style="margin-right: 8rpx; color: #07C160;"></i>
+      <text>[{{idTitle}}]</text>
     </view>
+    <!-- <view class="follow">正在关注</view> -->
   </view>
   <view class="buttonArea">
-    <view class="button" hover-class="hoverClass" bindtap="myAsk">
-      <i class="iconfont icon-ic_public_copy" style="font-size: 50rpx; margin-right: 32rpx;"></i>
-      我的发帖
+    <view class="button" hover-class="hoverClass" bindtap="mySpace">
+      <i class="iconfont icon-a-ic_public_contacts1" style="font-size: 50rpx; margin-right: 64rpx;"></i>
+      个人主页
     </view>
     <view class="button" hover-class="hoverClass" bindtap="myCollect">
-      <i class="iconfont icon-star-line" style="font-size: 50rpx; margin-right: 32rpx;"></i>
-      我的收藏
-    </view>
-    <view class="button" hover-class="hoverClass" bindtap="myComment">
-      <i class="iconfont icon-question-answer-line" style="font-size: 50rpx; margin-right: 32rpx;"></i>
-      我的回应
-    </view>
-    <view style="margin: 32rpx; margin-top: 0; margin-bottom: 0; border-top: 1px solid #dddddd;"></view>
-    <view class="button" hover-class="hoverClass" bindtap="help">
-      <i class="iconfont icon-question-line" style="font-size: 50rpx; margin-right: 32rpx;"></i>
-      使用帮助
+      <i class="iconfont icon-star-line" style="font-size: 50rpx; margin-right: 64rpx;"></i>
+      收藏与赞
     </view>
 
     <view wx:if="{{isManager}}" class="button" hover-class="hoverClass" bindtap="warn">
-      <i class="iconfont icon-error-warning-line" style="font-size: 50rpx; margin-right: 32rpx;"></i>
+      <i class="iconfont icon-error-warning-line" style="font-size: 50rpx; margin-right: 64rpx;"></i>
       处理举报
     </view>
 
-    <view wx:if="{{true}}" class="button" hover-class="hoverClass" bindtap="systemMsg" style="color: #F50057;">
-      <i class="iconfont icon-ic_public_ring" style="font-size: 50rpx; margin-right: 32rpx; color: #F50057;"></i>
-      系统通知 · Note
+    <view wx:if="{{true}}" class="button" hover-class="hoverClass" bindtap="systemMsg">
+      <i class="iconfont icon-ic_public_ring" style="font-size: 50rpx; margin-right: 64rpx;"></i>
+      系统通知
     </view>
-    <view class="feedback_button">
-      <button class="feedbackButton" hover-class="hoverClass" plain="{{false}}" open-type="feedback">
-        <i class="iconfont icon-customer-service-2-line" style="font-size: 50rpx; margin-right: 32rpx; "></i>
+    <view class="button">
+      <button class="feedbackButton" plain="{{false}}" open-type="feedback">
+        <i class="iconfont icon-customer-service-2-line" style="font-size: 50rpx; margin-right: 64rpx; "></i>
         意见反馈
       </button>
     </view>
   </view>
-  <view class="version">版本号：v1.9.7</view>
+  <view class="version">版本号：v2.0.0</view>
+
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>
 <view class="coverRight" wx:if="{{menu}}" bindtap="back"></view>
 
 <!-- 顶部 -->
-<view class="topBlock" style="width: 100%; height: {{top+32+8}}px; position: fixed; z-index: 2; top:0"></view>
+<view class="topBlock" style="width: 100%; height: {{top+32}}px; position: fixed; z-index: 2; top:0"></view>
 
 <view class="container" style="width: 100%; position: fixed; top:{{top}}px; z-index: 2;">
   <view class="container" style="width: {{left}}px;">
-    <view bindtap="menu">
-      <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="height: 30px; width: 30px; border-radius: 40px; margin-left: 32rpx;"></image>
-      <!-- <i class="iconfont icon-menu-line" style="font-size: 25px; margin-left: 32rpx;"></i> -->
+    <view bindtap="menu" style="height: 30px; width: 30px;  border: 1rpx solid #dddddd;  padding: 1px;  border-radius: 30px; margin-left: 32rpx;">
+      <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="width: 100%; height: 100%; border-radius: 30px;"></image>
     </view>
-    <view class="searchInput" bindtap="search"></view>
+    <!-- <view class="searchInput" bindtap="search"></view> -->
   </view>
 </view>

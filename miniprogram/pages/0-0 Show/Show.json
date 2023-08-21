@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "tabs": "../../components/tabs/tabs",
-    "search": "../../components/search/search"
+    "search": "../../components/search/search",
+    "avatar": "../../components/avatar/avatar"
   },
-  "enablePullDownRefresh": true
+  "disableScroll": true
 }

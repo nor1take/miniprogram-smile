@@ -1,7 +1,61 @@
-@import "../../assets/iconfont.wxss";
+.imageArea {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 
-.topBlock {
-  background-color: #f3f3f3;
+.iconArea {
+  display: flex;
+  align-items: center;
+}
+
+.lasticon {
+  font-size: 30rpx;
+  margin: 16rpx;
+  margin-left: 0;
+}
+
+.followingbkg {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: 0 0 0 transparent;
+  margin-bottom: 16rpx;
+}
+
+.followingbody {
+  color: #3d3d3d;
+}
+
+.hotbackground {
+  border: 1rpx solid transparent;
+  border-radius: 15rpx;
+  box-shadow: 0 0 0rpx transparent;
+  background-color: white;
+  padding: 32rpx;
+  margin: 32rpx;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+}
+
+.index {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  font-size: 30rpx;
+  font-weight: bolder;
+  color: #7B7B7B;
+}
+
+.hottitle {
+  font-size: 36rpx;
+  margin-top: 32rpx;
+  margin-bottom: 32rpx;
 }
 
 .ailogo {
@@ -11,13 +65,7 @@
   border-radius: 30rpx;
 }
 
-.add_class {
-  font-size: 50rpx;
-}
 
-.add_hoverClass {
-  font-size: 45rpx;
-}
 
 .sortlogo {
   background-color: #0C88B5;
@@ -26,42 +74,6 @@
   border-radius: 30rpx;
 }
 
-movable-area {
-  z-index: 1;
-  width: 91%;
-  height: 81%;
-
-  border-radius: 100rpx;
-
-  position: fixed;
-  bottom: 16rpx;
-  left: 32rpx;
-
-  /* background-color: blanchedalmond; */
-  overflow: visible;
-  pointer-events: none;
-}
-
-movable-view {
-  width: 100rpx;
-  height: 100rpx;
-
-  border: 1rpx solid transparent;
-  border-radius: 100rpx;
-
-  background-color: black;
-  opacity: 0.77;
-  box-shadow: 0 0 20rpx #7B7B7B;
-  color: white;
-  font-size: 25rpx;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  pointer-events: auto;
-  backdrop-filter: blur(5px);
-}
 
 .swiperContainer {
   width: 100%;
@@ -137,18 +149,18 @@ movable-view {
     background-color: black;
   }
 
-  .topBlock {
-    background-color: #3d3d3d;
-  }
 
-  movable-view {
-    background-color: white;
-    box-shadow: 0 0 20rpx black;
-    color: black;
-  }
 
   .swiperItem {
     background-color: black;
     color: #dddddd;
+  }
+
+  .hotbackground {
+    background-color: black;
+  }
+
+  .followingbody {
+    color: #d2d2d2;
   }
 }

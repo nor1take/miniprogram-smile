@@ -1,11 +1,7 @@
 <wxs src="../../util/filter.wxs" module="filter" />
-<view class="topBlock" style="height: {{top+32+32}}px; width: 100%; position: fixed;z-index: 1;"></view>
-<view class="topWord" style="position: fixed; top:{{top}}px; z-index: 2;">
-  消息
-</view>
-<tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+<view class="topBlock" style="height: {{bottom+32}}px;"></view>
+<tabs top='{{top}}' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
   <view slot="tab-content-0">
-    <view style="height: {{top+32+32}}px; width: 100%;"></view>
     <block wx:if="{{tabs[0].questionList.length == 0}}">
       <view class="bottom" style="margin-top: 40%;">你还没有收到回应哦~</view>
     </block>
@@ -42,7 +38,6 @@
     <view class="bottom" wx:if="{{ activeTab===0 && isBottom}}">已经触底了~</view>
   </view>
   <view slot="tab-content-1">
-    <view style="height: {{top+32+32}}px; width: 100%;"></view>
     <block wx:if="{{tabs[1].questionList.length == 0}}">
       <view class="bottom" style="margin-top: 40%;">你还没有收到回应哦~</view>
     </block>
@@ -57,14 +52,13 @@
           <text class="nickName" wx:else="">@{{item.newNickName}}</text>
           <text>回应了你的评论：</text>
         </view>
-        <view class="title" style="font-weight: 500;">{{item.commentAgainBody}} <text wx:if="{{item.image_upload.length>0}}">[图片评论]</text></view>
+        <text class="title" style="font-weight: 500;">{{item.commentAgainBody}} <text wx:if="{{item.image_upload.length>0}}"> [图片评论]</text></text>
       </view>
     </block>
     <view class="bottom" wx:if="{{ activeTab===1 && !isBottom && reachBottom}}">加载中...</view>
     <view class="bottom" wx:if="{{ activeTab===1 && isBottom}}">已经触底了~</view>
   </view>
   <view slot="tab-content-2">
-    <view style="height: {{top+32+32}}px; width: 100%;"></view>
     <block wx:if="{{tabs[2].questionList.length == 0}}">
       <view class="bottom" style="margin-top: 40%;">你还没有收到点赞哦~</view>
     </block>
@@ -75,8 +69,8 @@
         </view>
         <view class="top">{{item.liker.length}} 个人赞了你的评论：</view>
         <view class="background" style="font-size: 30rpx;">
-          {{filter.abbreviation(item.body)}}
-          <text wx:if="{{item.image_upload.length!=0}}">[图片评论]</text>
+          <text>{{filter.abbreviation(item.body)}}<text wx:if="{{item.image_upload.length!=0}}"> [图片评论]</text>
+          </text>
         </view>
       </view>
     </block>

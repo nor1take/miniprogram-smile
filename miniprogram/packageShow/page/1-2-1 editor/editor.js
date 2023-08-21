@@ -5,6 +5,7 @@ const question = db.collection('question')
 const traceId = db.collection('traceId')
 const systemMsg = db.collection('systemMsg')
 const userInfo = db.collection('userInfo')
+const topic = db.collection('topic')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -67,11 +68,11 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
         wx.cloud.deleteFile({
           fileList: common,
           success: res => {
-            console.log(res)
+            //console.log(res)
             resolve();
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
             reject(err);
           }
         })
@@ -83,11 +84,11 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
           fileId: _.in(common)
         }).remove({
           success: res => {
-            console.log(res)
+            //console.log(res)
             resolve();
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
             reject(err);
           }
         })
@@ -108,7 +109,6 @@ Page({
   data: {
     formats: {},
     readOnly: false,
-    placeholder: '补充说明你的帖子…',
     editorHeight: 300,
     keyboardHeight: 0,
     isIOS: false,
@@ -148,7 +148,7 @@ Page({
   },
 
   switchChange: function (e) {
-    console.log(e.detail.value)
+    //console.log(e.detail.value)
     const { value } = e.detail
     this.setData({
       _unknown: value
@@ -156,9 +156,9 @@ Page({
   },
 
   tagTap: function (e) {
-    console.log(e)
+    //console.log(e)
     const { tagname } = e.detail
-    console.log('tagname', tagname)
+    //console.log('tagname', tagname)
     this.setData({
       tag: tagname
     })
@@ -170,7 +170,7 @@ Page({
   },
   tagInput: function (e) {
     const { value } = e.detail
-    console.log('taginput', value)
+    //console.log('taginput', value)
     this.setData({
       tag: value,
       tagId: 0
@@ -182,7 +182,7 @@ Page({
     wx.requestSubscribeMessage({
       tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
       complete(res1) {
-        console.log(res1)
+        //console.log(res1)
         wx.showLoading({
           title: '审核中',
           mask: true
@@ -212,7 +212,7 @@ Page({
                   scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
                 }
               }).then((res) => {
-                console.log(res)
+                //console.log(res)
                 const { label } = res.result.msgR.result
                 const { suggest } = res.result.msgR.result
                 if (suggest === 'risky') {
@@ -285,12 +285,12 @@ Page({
                     const { _id } = res
                     traceId.orderBy('CreateTime', 'desc').get()
                       .then((res) => {
-                        console.log(res)
+                        //console.log(res)
                         /**
                          * 2、删除上传图片列表中违规图片
                          */
                         deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                          console.log('deleteInvalidImages', res)
+                          //console.log('deleteInvalidImages', res)
                           /**
                            * 3、更新图片列表
                            */
@@ -309,7 +309,7 @@ Page({
                               })
                             }, 1500);
                           }).catch((err) => {
-                            console.log(err)
+                            //console.log(err)
                           })
                         })
                       })
@@ -346,19 +346,50 @@ Page({
       bottom: res.bottom,
       height: res.height
     })
-    console.log(res)
+    //console.log(res)
   },
 
   loseFocus: function (e) {
-    console.log(e.detail.html)
-    console.log(e.detail.text)
+    //console.log(e.detail.html)
+    //console.log(e.detail.text)
     this.setData({
       html: e.detail.html,
       text: e.detail.text
     })
   },
 
-  onLoad() {
+  getTopic() {
+    topic.where({
+      tag: _.neq('AI')
+    })
+      .orderBy('updatetime', 'desc')
+      .orderBy('num', 'desc')
+      .get().then((res) => {
+        //console.log(res.data)
+        const tagsList = res.data.map(item => item.tag);
+        this.setData({
+          tagsList,
+        })
+        if (this.data.activeTag != -1) {
+          this.setData({
+            tag: tagsList[0]
+          })
+        }
+      })
+  },
+
+  onLoad(options) {
+    const { tag } = options
+    //console.log(tag)
+    if (tag) {
+      this.setData({
+        activeTag: -1,
+        value: tag,
+        tag: tag
+      })
+      //console.log('>>> ' + this.data.tag)
+    }
+    this.getTopic()
     this.getRightTop()
     this.setData({
       theme: wx.getSystemInfoSync().theme || 'light'
@@ -384,10 +415,10 @@ Page({
     this.updatePosition(0)
   },
   onShow() {
-    console.log('onShow')
+    //console.log('onShow')
   },
   onHide() {
-    console.log('onHide')
+    //console.log('onHide')
   },
   updatePosition(keyboardHeight) {
     const toolbarHeight = 50
@@ -431,7 +462,7 @@ Page({
   format(e) {
     const { name, value } = e.target.dataset
     if (!name) return
-    // console.log('format', name, value)
+    // //console.log('format', name, value)
     this.editorCtx.format(name, value)
   },
   onStatusChange(e) {
@@ -441,14 +472,14 @@ Page({
   insertDivider() {
     this.editorCtx.insertDivider({
       success() {
-        console.log('insert divider success')
+        //console.log('insert divider success')
       }
     })
   },
   clear() {
     this.editorCtx.clear({
       success() {
-        console.log('clear success')
+        //console.log('clear success')
       }
     })
   },
@@ -478,7 +509,7 @@ Page({
         })
         //checkAndUploadManyImages(res.tempFiles, this)
         const { tempFilePath } = res.tempFiles[0]
-        console.log(tempFilePath)
+        //console.log(tempFilePath)
 
         wx.cloud.callFunction({
           name: 'checkContent',
@@ -490,7 +521,7 @@ Page({
             scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
           },
           success: json => {
-            console.log(json)
+            //console.log(json)
             const { traceId } = json.result.imageR
             /**
              * 2、将traceId作为图片的云存储路径
@@ -500,7 +531,7 @@ Page({
               filePath: tempFilePath, // 小程序临时文件路径
               success: res => {
                 const { fileID } = res
-                console.log('fileID', fileID)
+                //console.log('fileID', fileID)
                 that.data.fileID.push(fileID)
                 that.setData({
                   fileID: that.data.fileID,
@@ -509,7 +540,7 @@ Page({
                   src: fileID,
                   width: '100%',
                   success() {
-                    console.log('insert image success')
+                    //console.log('insert image success')
                   }
                 })
                 wx.hideLoading()
@@ -519,7 +550,7 @@ Page({
                 })
               },
               fail: err => {
-                console.error('uploadFile err：', err)
+                //console.error('uploadFile err：', err)
                 wx.hideLoading()
                 wx.showToast({
                   icon: 'error',
@@ -529,12 +560,12 @@ Page({
             })
           },
           fail: err => {
-            console.log('checkContent err：', err)
+            //console.log('checkContent err：', err)
           }
         })
       },
       fail: err => {
-        console.log(err)
+        //console.log(err)
       },
     })
   },

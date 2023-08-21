@@ -2,7 +2,7 @@
 
 .topBlock {
   background-color: white;
-  box-shadow: 0 0 10rpx #d2d2d2;
+  /* box-shadow: 0 0 10rpx #d2d2d2; */
 }
 
 .container {
@@ -41,10 +41,15 @@
   font-weight: bolder;
 }
 
+.Menucontainer {
+  padding-left: 32rpx;
+}
+
 .coverMenu {
   height: 100%;
   position: fixed;
   z-index: 4;
+
 
   border-top-right-radius: 40rpx;
   /* border-bottom-right-radius: 50rpx; */
@@ -72,28 +77,46 @@
 }
 
 .userInfo {
-  width: 100%;
+  margin: 64rpx;
+  margin-bottom: 0;
   /* border: 1rpx solid black; */
-  display: flex;
   align-items: center;
+  justify-content: left;
+
+  padding-bottom: 64rpx;
+  border-bottom: 1rpx solid #dddddd;
 }
 
 .image {
-  margin-left: 16rpx;
-  /* width: 40px;
-  height: 40px; */
+  border: 1rpx solid #dddddd;
+  padding: 1px;
+  border-radius: 40px;
+  margin: 32rpx;
+  margin-left: 0;
+  margin-top: 0;
 }
 
 .nickname {
-  margin-left: 16rpx;
-
   font-weight: bold;
   font-size: 17px;
   color: #181818;
 }
 
+.authentic {
+  display: flex;
+  align-items: center;
+  margin-top: 8rpx;
+  color: #07C160;
+  font-size: 12px;
+}
+
+.follow {
+  margin-top: 32rpx;
+  font-size: 14px;
+  color: #acacac;
+}
+
 .buttonArea {
-  margin-top: 16px;
   height: fit-content;
   /* border: 1rpx solid black; */
 }
@@ -101,16 +124,15 @@
 .button {
   /* border: 1rpx solid black; */
   padding: 32rpx;
+  padding-left: 64rpx;
   display: flex;
   align-items: center;
-  font-size: 32rpx;
-  font-weight: normal;
+  font-size: 16px;
 }
 
 .feedback_button {
-  /* border: 1rpx solid black; */
-  width: 100%;
 
+  width: 100%;
   display: flex;
   justify-content: flex-start;
 }
@@ -124,18 +146,16 @@ button::after {
 }
 
 .feedbackButton {
+  padding: 0;
   width: 100%;
   margin-left: 0;
 
   /* border: 1rpx solid #f3f3f3;  */
   background-color: #f3f3f3;
-
-  padding: 26rpx;
-  padding-left: 32rpx;
   display: flex;
   align-items: center;
 
-  font-size: 32rpx;
+  font-size: 16px;
   font-weight: normal;
 }
 
@@ -147,7 +167,7 @@ button::after {
   font-weight: lighter;
   font-size: smaller;
   color: #acacac;
-  margin: 32rpx;
+  margin: 64rpx;
 }
 
 @media (prefers-color-scheme: dark) {

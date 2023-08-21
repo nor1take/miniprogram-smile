@@ -2,41 +2,44 @@
 
 <!-- 表单 -->
 <form catchsubmit="formSubmit" catchreset="formReset">
-  <view class="titleContainer">
-    <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的帖子（必填）" name="title" bindinput="title">
+  <view class="background">
+    <view class="titleContainer">
+      <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="标题：用一句话描述你的帖子（必填）" name="title" bindinput="title">
         </textarea>
-  </view>
-  <view class="bodyContainer">
-    <textarea maxlength="2220" class="body" placeholder="补充说明你的帖子（选填）" placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body"></textarea>
-  </view>
-
-  <view class="imageUpload-area">
-    <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="*this">
-      <image src="{{item}}" mode="aspectFill" style="height: 214rpx; width: 214rpx;  margin-left: 16rpx; margin-top: 8rpx;" bindtap="imageTap" id="{{item}}" data-index="{{index}}">{{item}}</image>
-    </block>
-    <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload" style="margin-left: 16rpx;">
-      <i class="iconfont icon-ic_public_add" style="font-size: 80rpx;"></i>
     </view>
-    <view class="upload" wx:else bindtap="upload">
-      <i class="iconfont icon-ic_public_add" style="font-size: 80rpx;"></i>
+    <view class="bodyContainer">
+      <textarea maxlength="2220" class="body" placeholder="补充：说明你的帖子（选填）" auto-height placeholder-style="color:#ACACAC" show-confirm-bar='{{false}}' adjust-position='{{false}}' name="body"></textarea>
     </view>
-  </view>
-  <view class="tip">* 每次最多能上传 9 张图片。</view>
 
-  <view class="tip" style="display: flex; align-items: center; justify-content: flex-end; font-weight: bolder;" bindtap="goToRichtext">>>> 转到长文本编辑器</view>
-  <view class="tagsArea">
-    <view class="text">推荐标签</view>
-    <tags isScroll='{{false}}' tagsList='{{tagsList}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
-  </view>
+    <view class="imageUpload-area">
+      <block wx:if="{{fileID}}" wx:for="{{fileID}}" wx:key="*this">
+        <image class="upload" src="{{item}}" mode="aspectFill" bindtap="imageTap" id="{{item}}" data-index="{{index}}"></image>
+      </block>
+      <view class="upload" wx:if="{{fileID[0]}}" bindtap="upload">
+        <i class="iconfont icon-ic_public_add" style="font-size: 80rpx;"></i>
+      </view>
+      <view class="upload" wx:else bindtap="upload">
+        <i class="iconfont icon-ic_public_add" style="font-size: 80rpx;"></i>
+      </view>
+    </view>
+    <view class="tip" bindtap="goToRichtext">
+      <i class="iconfont icon-a-ic_public_arrow_left1" style="margin-right: 8rpx; font-weight: normal;"></i>
+      转到富文本编辑器
+    </view>
+    <view class="tagsArea">
+      <view class="text">推荐标签（左滑查看更多标签）</view>
+      <tags isScroll='{{true}}' tagsList='{{tagsList}}' activeTag='{{activeTag}}' value='{{value}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
+    </view>
 
-  <view class="switch">
-    <view class="switchContent">匿名发布</view>
-    <switch bindchange="switchChange" />
-  </view>
+    <view class="switch">
+      <view class="text">匿名发布</view>
+      <switch bindchange="switchChange" />
+    </view>
 
-  <view class="btn-area">
-    <button wx:if="{{titleContent && tag && tag.length != 0}}" size="default" type="primary" formType="submit">发布</button>
-    <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
+    <view class="btn-area">
+      <button wx:if="{{titleContent && tag && tag.length != 0}}" size="default" type="primary" formType="submit">发布</button>
+      <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
+    </view>
   </view>
 </form>
 <view style="width: 100%; height: 10%; position: absolute;"></view>

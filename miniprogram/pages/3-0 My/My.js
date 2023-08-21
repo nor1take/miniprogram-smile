@@ -40,26 +40,26 @@ Page({
   },
 
   gotoDetail: function (e) {
-    console.log(e.currentTarget.id)
+    //console.log(e.currentTarget.id)
     app.globalData.questionId = e.currentTarget.id
     question.doc(e.currentTarget.id).update({
       data: {
         // watched: _.inc(1)
         watcher: _.addToSet(app.globalData.openId)
       }
-    }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+    })
     wx.navigateTo({
       url: '../../packageShow/page/1-1 Detail/Detail',
     })
   },
   gotoDetail2: function (e) {
-    console.log(e.currentTarget.dataset.commentid)
+    //console.log(e.currentTarget.dataset.commentid)
     question.doc(e.currentTarget.id).update({
       data: {
         // watched: _.inc(1)
         watcher: _.addToSet(app.globalData.openId)
       }
-    }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+    })
     app.globalData.questionId = e.currentTarget.id
     const { commentid } = e.currentTarget.dataset
     var isWatched;
@@ -71,8 +71,8 @@ Page({
             isWatched: true
           }
         }).then(() => {
-          app.globalData.messageNum--,
-            console.log('成功')
+          app.globalData.messageNum--
+          //console.log('成功')
         })
       }
       wx.navigateTo({
@@ -81,14 +81,14 @@ Page({
     })
   },
   gotoDetail3: function (e) {
-    console.log(e.currentTarget.id)
+    //console.log(e.currentTarget.id)
     app.globalData.questionId = e.currentTarget.id
     question.doc(e.currentTarget.id).update({
       data: {
         // watched: _.inc(1)
         watcher: _.addToSet(app.globalData.openId)
       }
-    }).then(res => { console.log(res) }).catch(err => { console.log(err) })
+    })
     wx.navigateTo({
       url: '../../packageShow/page/1-1 Detail/Detail',
     })
@@ -103,6 +103,7 @@ Page({
     })
   },
   swiperChange: function (e) {
+    app.globalData.isClick = false
     const index = e.detail.index
     this.setData({
       activeTab: index,
@@ -219,7 +220,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    app.globalData.isClick = false
   },
 
   /**
@@ -242,7 +243,7 @@ Page({
     this.setData({
       reachBottom: true
     })
-    console.log('触底')
+    //console.log('触底')
     const { activeTab } = this.data
     const { questionList } = this.data.tabs[activeTab]
     const showNum = questionList.length

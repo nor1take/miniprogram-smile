@@ -3,24 +3,25 @@
   <button wx:if="{{title && title.length !=0 && tag && tag.length !=0}}" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};" bindtap="sendPost">发 布</button>
   <button wx:else disabled="true" size="default" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};">发 布</button>
 </view>
-<view class="switch">
-  <view class="switchContent">匿名发布</view>
-  <switch bindchange="switchChange" />
-</view>
-<view class="tagsArea">
-  <view class="text">推荐标签（左滑查看更多标签）</view>
-  <tags style="margin-top:{{bottom+16}}px" isScroll='{{true}}' tagsList='{{tagsList}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
-</view>
+<view class="background">
+  <view class="switch">
+    <view class="text">匿名发布</view>
+    <switch bindchange="switchChange" />
+  </view>
+  <view class="tagsArea">
+    <view class="text">推荐标签（左滑查看更多标签）</view>
+    <tags style="margin-top:{{bottom+16}}px" isScroll='{{true}}' tagsList='{{tagsList}}' activeTag='{{activeTag}}' value='{{value}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
+  </view>
 
-<view class="container">
-  <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="用一句话描述你的帖子（必填）" name="title" bindinput="title"></textarea>
 
-  <editor id="editor" class="ql-container" placeholder="{{placeholder}}" style="padding-bottom: {{toolBarHeight*2}}px;" bindstatuschange="onStatusChange" bindready="onEditorReady" bindblur="loseFocus">
+  <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="标题：用一句话描述你的帖子（必填）" name="title" bindinput="title"></textarea>
+
+  <editor id="editor" class="ql-container" placeholder="补充说明（支持富文本编辑）" placeholder-style="color:#ACACAC" bindstatuschange="onStatusChange" bindready="onEditorReady" bindblur="loseFocus">
   </editor>
 </view>
-
+<view style="width: 100%; height: 10%; position: absolute;"></view>
 <view>
-  <view class="toolbar" catchtouchend="format" hidden="{{false}}" style="bottom: {{isIOS ? keyboardHeight : 0}}px; height: {{toolBarHeight}}px;">
+  <view class="toolbar" catchtouchend="format" hidden="{{false}}" style="bottom: {{keyboardHeight}}px; height: {{toolBarHeight}}px;">
     <i class="iconfont icon-charutupian" catchtouchend="insertImage"></i>
     <!-- <i class="iconfont icon-fengexian" catchtouchend="insertDivider"></i> -->
     <i class="iconfont icon-format-header-2 {{formats.header === 2 ? 'ql-active' : ''}}" data-name="header" data-value="{{2}}"></i>

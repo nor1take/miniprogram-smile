@@ -52,11 +52,11 @@ Page({
 
           app.globalData.nickName = res.data[0].nickName
           app.globalData.avatarUrl = res.data[0].avatarUrl
-          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+          //console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
         }
       })
       .catch(() => {
-        console.log('用户未登录')
+        //console.log('用户未登录')
         this.setData({
           nickName: '',
           avatarUrl: '',
@@ -86,7 +86,7 @@ Page({
     })
   },
   imageTap: function (e) {
-    console.log(e.currentTarget.dataset.imagelist)
+    //console.log(e.currentTarget.dataset.imagelist)
     let { imagelist } = e.currentTarget.dataset
 
     wx.previewImage({

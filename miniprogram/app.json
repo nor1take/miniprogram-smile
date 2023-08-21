@@ -21,13 +21,13 @@
     "list": [
       {
         "pagePath": "pages/0-0 Show/Show",
-        "text": "实时",
+        "text": "首页",
         "iconPath": "icon/_question.png",
         "selectedIconPath": "@selectedQuestionIconPath"
       },
       {
         "pagePath": "pages/2-0 Classify/Classify",
-        "text": "分类",
+        "text": "话题",
         "iconPath": "icon/_class.png",
         "selectedIconPath": "@selectedClassIconPath"
       },
@@ -46,22 +46,19 @@
         "page/1-1 Detail/Detail",
         "page/1-2 Ask/Ask",
         "page/1-3 Search/Search",
-        "page/1-4 Hot/Hot",
         "page/1-2-1 editor/editor",
         "page/1-2-2 regist/regist",
-        "page/1-5 AI/AI"
+        "page/1-5 AI/AI",
+        "page/1-6 Topic/Topic"
       ]
     },
     {
       "root": "packageMy",
       "pages": [
-        "pages/0-1 TopPost/TopPost",
-        "pages/3-1 MyAsk/MyAsk",
+        "pages/3-0 MySpace/MySpace",
         "pages/3-2 MyCollect/MyCollect",
-        "pages/3-3 MyComment/MyComment",
         "pages/3-4 WarnPosts/WarnPosts",
-        "pages/3-5 SystemMsg/SystemMsg",
-        "pages/3-0 MySpace/MySpace"
+        "pages/3-5 SystemMsg/SystemMsg"
       ]
     },
     {

@@ -1,4 +1,0 @@
-/* pages/MyAsk/MyAsk.wxss */
-.body {
-  word-break: break-all;
-}

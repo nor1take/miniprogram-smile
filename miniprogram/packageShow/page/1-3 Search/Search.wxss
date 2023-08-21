@@ -1,32 +1,15 @@
 /* pages/Search/Search.wxss */
-.searchInput{
-  height:32px;
+.searchInput {
+  height: 32px;
 
-  border-radius: 50rpx;
-  background-color: #3d3d3d;
-  opacity: 0.85;
+  padding-left: 30rpx;
+  padding-right: 30rpx;
 
-  padding-left: 30rpx; padding-right: 30rpx;
-  
   font-size: 34rpx;
   color: white;
 }
-.background{
-  border: 1rpx solid #D2D2D2;
-  box-shadow:0 0 0rpx #DDDDDD;
-}
-/******************************************************************
-** 夜间模式
-******************************************************************/
-@media (prefers-color-scheme: dark)
-{
-  .searchInput{
-    background-color: black;
 
-    color: #DDDDDD;
-  }
-  .background{
-    border: 1rpx solid black;
-    box-shadow:0 0 0rpx black;
-  }
+.highlight {
+  background-color: yellow; /* 设置背景颜色 */
+  font-weight: bold; /* 设置字体加粗 */
 }

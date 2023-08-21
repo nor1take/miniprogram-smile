@@ -8,6 +8,7 @@ const commentAgain = db.collection('commentAgain')
 const traceId = db.collection('traceId')
 const userInfo = db.collection('userInfo')
 const deleteRecord = db.collection('deleteRecord')
+const topic = db.collection('topic')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -69,25 +70,25 @@ Page({
   commentData: { commentContent: '' },
 
   changeAPI: function () {
-    const { glm } = this.data
-    this.setData({
-      glm: !glm
-    })
-    let tip = 'ChatGLM'
-    if (glm) {
-      tip = '	姜子牙 Ziya'
-    }
-    wx.showToast({
-      title: '已切换至 ' + tip,
-      icon: 'none'
-    })
+    // const { glm } = this.data
+    // this.setData({
+    //   glm: !glm
+    // })
+    // let tip = 'ChatGLM'
+    // if (glm) {
+    //   tip = '	姜子牙 Ziya'
+    // }
+    // wx.showToast({
+    //   title: '已切换至 ' + tip,
+    //   icon: 'none'
+    // })
   },
 
   postLikeAdd: function (e) {
     const { index } = e.currentTarget.dataset
     const { id } = e.currentTarget
-    // console.log(app.globalData.openId)
-    // console.log(index, id)
+    // //console.log(app.globalData.openId)
+    // //console.log(index, id)
     if (app.globalData.openId == undefined) {
       wx.showToast({
         title: '登录后操作。点击左上角←返回主界面',
@@ -117,8 +118,8 @@ Page({
   postLikeCancel: function (e) {
     const { index } = e.currentTarget.dataset
     const { id } = e.currentTarget
-    // console.log(app.globalData.openId)
-    // console.log(index, id)
+    // //console.log(app.globalData.openId)
+    // //console.log(index, id)
     let { newPostList } = this.data
     let { postLikeNum } = newPostList[index]
 
@@ -166,9 +167,7 @@ Page({
         liker: _.pull(app.globalData.openId),
         likerNum: likerNum
       }
-    }).then(res => {
-      console.log('like Cancel', res)
-    }).catch(err => { console.log(err) })
+    })
 
   },
   likeAdd: function (e) {
@@ -193,9 +192,7 @@ Page({
         liker: _.addToSet(app.globalData.openId),
         likerNum: likerNum,
       }
-    }).then(res => {
-      console.log('like Add', res)
-    }).catch(err => { console.log(err) })
+    })
   },
 
   beWatched: function (e) {
@@ -214,13 +211,13 @@ Page({
   },
 
   loseFocus: function () {
-    console.log('失去焦点')
+    //console.log('失去焦点')
     this.setData({
       keyboardHeight: 32,
     })
   },
   focus: function (e) {
-    console.log(e.detail.height)
+    //console.log(e.detail.height)
     this.setData({
       keyboardHeight: e.detail.height
     })
@@ -230,7 +227,7 @@ Page({
     this.commentData = {
       commentContent: value
     }
-    console.log(this.commentData.commentContent)
+    //console.log(this.commentData.commentContent)
   },
 
   send: function () {
@@ -276,7 +273,7 @@ Page({
               scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
             }
           }).then((res) => {
-            console.log(res)
+            //console.log(res)
             const { label } = res.result.msgR.result
             const { suggest } = res.result.msgR.result
             if (suggest === 'risky') {
@@ -343,13 +340,35 @@ Page({
                 },
               }).then((res) => {
                 const { _id } = res
+
+
+                topic.where({
+                  tag: 'AI'
+                }).update({
+                  data: {
+                    updatetime: d,
+                    posts: _.push({
+                      each: [{
+                        _id: _id,
+                        _openid: app.globalData.openId,
+                        nickName: app.globalData.nickName,
+                        time: d,
+                        title: prompt,
+                        unknown: false
+                      }],
+                      position: 0
+                    }),
+                    num: _.inc(1),
+                  }
+                })
+
                 wx.hideLoading()
                 that.getNewData()
                 wx.pageScrollTo({
                   scrollTop: that.data.screenHeight,
                   duration: 1000
                 }).then((res) => {
-                  console.log(res)
+                  //console.log(res)
                 })
                 if (that.data.glm) {
                   userInfo.doc(userInfoId).update({
@@ -364,16 +383,16 @@ Page({
                     duration: 5000
                   })
                   wx.cloud.callFunction({
-                    name: 'chatglm',
+                    name: 'chatglm-pro',
                     data: {
                       input: prompt,
                       history: [],
                     }
                   }).then((res) => {
-                    console.log(res.result.completion)
+                    //console.log(res.result.completion)
                     that.gptsentComment(res.result.completion, _id)
                   }).catch((err) => {
-                    console.log(err)
+                    //console.log(err)
                   })
                 } else {
                   wx.cloud.callFunction({
@@ -383,11 +402,11 @@ Page({
                       history: '',
                     }
                   }).then((res) => {
-                    console.log(res)
-                    console.log(res.result.completion)
+                    //console.log(res)
+                    //console.log(res.result.completion)
                     that.gptsentComment(res.result.completion, _id)
                   }).catch((err) => {
-                    console.log(err)
+                    //console.log(err)
                   })
                 }
               })
@@ -413,14 +432,14 @@ Page({
         scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       },
       success(res) {
-        console.log(res)
+        //console.log(res)
         if (res.result.msgR) {
           const { label } = res.result.msgR.result
           const { suggest } = res.result.msgR.result
           if (suggest === 'risky') {
             that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]：回答不予显示', postId)
           } else if (suggest === 'review') {
-            console.log('可能包含' + matchLabel(label) + '信息')
+            //console.log('可能包含' + matchLabel(label) + '信息')
             that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, postId)
           } else {
             that.sendCompletion(completion, postId)
@@ -430,7 +449,7 @@ Page({
         }
       },
       fail(err) {
-        console.log('checkContent云函数调用失败', err)
+        //console.log('checkContent云函数调用失败', err)
       }
     })
   },
@@ -515,7 +534,7 @@ Page({
             scrollTop: that.data.screenHeight,
             duration: 1000
           }).then((res) => {
-            console.log(res)
+            //console.log(res)
           })
           that.getNewData()
         })
@@ -528,7 +547,7 @@ Page({
       tag: 'AI'
     }).orderBy('time', 'desc').get()
       .then((res) => {
-        // console.log(res.data)
+        // //console.log(res.data)
         this.setData({
           newPostList: res.data,
         })
@@ -543,7 +562,7 @@ Page({
       .orderBy('time', 'desc')
       .limit(3).get()
       .then((res) => {
-        // console.log(res.data)
+        // //console.log(res.data)
         this.setData({
           hotPostList: res.data,
           openId: app.globalData.openId
@@ -568,7 +587,7 @@ Page({
   isTesting: function () {
     userInfo.doc('0bc57b0d63fe176e000f9eb35c23eec4').get()
       .then(res => {
-        console.log(res.data.isTesting)
+        //console.log(res.data.isTesting)
         this.setData({
           isTesting: res.data.isTesting,
           testMsg: res.data.testMsg

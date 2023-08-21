@@ -1,8 +1,0 @@
-{
-  "usingComponents": {
-    "return":"../../../components/return-noTab/return-noTab"
-  },
-  "enablePullDownRefresh":true,
-  "backgroundColor": "#f3f3f3",
-  "backgroundTextStyle": "dark"
-}

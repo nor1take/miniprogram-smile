@@ -5,8 +5,8 @@
 
   <view class="background">
     <view class="word">
-      <view class="body {{index == 0 ? 'pink' : ''}}">{{item.title}}</view>
-      <view class="title {{index == 0 ? 'pink' : ''}}">{{item.body}}</view>
+      <view class="body">{{item.title}}</view>
+      <view class="title">{{item.body}}</view>
     </view>
 
     <block wx:if="{{item.postList[0].postId != ''}}">
@@ -18,7 +18,7 @@
     </block>
 
 
-    <view wx:if="{{item.image[0]}}" class="image" style="margin:32rpx;">
+    <view wx:if="{{item.image[0]}}" class="image">
       <block wx:for="{{item.image}}" wx:for-item="imageItem" wx:key="id">
         <block wx:if="{{item.image.length>2}}">
           <image src="{{imageItem}}" data-src="{{imageItem}}" data-imageList="{{item.image}}" show-menu-by-longpress="true" mode="aspectFill" style="width: 175rpx; height: 175rpx; margin-right: 8rpx;" bindtap="imageTap"></image>
@@ -31,11 +31,7 @@
         </block>
       </block>
     </view>
-    <view wx:if="{{index != 0}}" class="last">{{filter.timeString(item.time, true)}}</view>
-    <view wx:else="" class="last pink">
-      <i class="iconfont icon-download-line" style="font-size: 30rpx; margin: 8rpx; color: #F50057;"></i>
-      置 顶 通 知
-    </view>
+    <view class="last">{{filter.timeString(item.time, true)}}</view>
   </view>
 </block>
 <view class="bottom"></view>

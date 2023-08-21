@@ -7,6 +7,7 @@ const commentAgain = db.collection('commentAgain')
 const traceId = db.collection('traceId')
 const userInfo = db.collection('userInfo')
 const deleteRecord = db.collection('deleteRecord')
+const topic = db.collection('topic')
 
 function matchLabel(labelNum) {
   switch (labelNum) {
@@ -49,7 +50,7 @@ function matchLabel(labelNum) {
  * @param {*page = this} page 
  */
 function checkAndUploadManyImages(tempFiles, page) {
-  console.log(tempFiles)
+  //console.log(tempFiles)
   wx.showLoading({
     title: '上传中',
     mask: true
@@ -70,7 +71,7 @@ function checkAndUploadManyImages(tempFiles, page) {
         scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       },
       success: json => {
-        console.log(json)
+        //console.log(json)
         const { traceId } = json.result.imageR
         /**
          * 2、将traceId作为图片的云存储路径
@@ -80,7 +81,7 @@ function checkAndUploadManyImages(tempFiles, page) {
           filePath: tempFilePath, // 小程序临时文件路径
           success: res => {
             const { fileID } = res
-            console.log('fileID', fileID)
+            //console.log('fileID', fileID)
             page.data.fileID.push(fileID)
             page.setData({
               fileID: page.data.fileID,
@@ -92,7 +93,7 @@ function checkAndUploadManyImages(tempFiles, page) {
             })
           },
           fail: err => {
-            console.error('uploadFile err：', err)
+            //console.error('uploadFile err：', err)
             wx.hideLoading()
             wx.showToast({
               icon: 'error',
@@ -102,7 +103,7 @@ function checkAndUploadManyImages(tempFiles, page) {
         })
       },
       fail: err => {
-        console.log('checkContent err：', err)
+        //console.log('checkContent err：', err)
       }
     })
 
@@ -135,11 +136,11 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
         wx.cloud.deleteFile({
           fileList: common,
           success: res => {
-            console.log(res)
+            //console.log(res)
             resolve();
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
             reject(err);
           }
         })
@@ -151,11 +152,11 @@ async function deleteInvalidImages(fileIds, cloudFileIds) {
           fileId: _.in(common)
         }).remove({
           success: res => {
-            console.log(res)
+            //console.log(res)
             resolve();
           },
           fail: err => {
-            console.log(err)
+            //console.log(err)
             reject(err);
           }
         })
@@ -175,10 +176,10 @@ function deleteCommentCloudImage(list) {
     wx.cloud.deleteFile({
       fileList: arr,
       success: res => {
-        console.log('成功删除', res)
+        //console.log('成功删除', res)
       },
       fail: err => {
-        console.error(err)
+        //console.error(err)
       }
     })
   }
@@ -188,10 +189,10 @@ function deleteQuestionCloudImage(list) {
   wx.cloud.deleteFile({
     fileList: list[0].image,
     success: res => {
-      console.log('成功删除', res)
+      //console.log('成功删除', res)
     },
     fail: err => {
-      console.error(err)
+      //console.error(err)
     }
   })
 
@@ -229,7 +230,7 @@ Page({
     isCollect: false,
 
     inputValue: '',
-    holderValue1: '试试点亮右侧的logo >>>',
+    holderValue1: '在此处输入你的回应 :)',
     holderValue2: '本次评论将会被 AI 回复',
 
     top: 48,
@@ -258,11 +259,19 @@ Page({
     })
   },
 
+  goToTag: function (e) {
+    //console.log(e.currentTarget.dataset.tag)
+    wx.navigateTo({
+      url: '../../../packageShow/page/1-6 Topic/Topic?tag=' + e.currentTarget.dataset.tag,
+    })
+  },
+
   goToLogin: function () {
     wx.navigateTo({
       url: '../../../packageLogin/pages/0-0 Login/Login',
     })
   },
+
   goToRegist: function () {
     wx.navigateTo({
       url: '../../../packageShow/page/1-2 Ask/Ask',
@@ -358,7 +367,7 @@ Page({
         }
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
       })
   },
   sort: function () {
@@ -394,7 +403,7 @@ Page({
     this.setData({
       inputContent: true
     })
-    console.log('上传图片')
+    //console.log('上传图片')
     wx.chooseMedia({
       count: 9,
       sizeType: ['original', 'compressed'],
@@ -403,11 +412,11 @@ Page({
       sourceType: ['album', 'camera'],
       camera: 'back',
       success: res => {
-        console.log(res.tempFiles)
+        //console.log(res.tempFiles)
         checkAndUploadManyImages(res.tempFiles, this)
       },
       fail: err => {
-        console.log(err)
+        //console.log(err)
         this.setData({
           inputContent: false,
           tapAnswerButton: true,
@@ -419,14 +428,14 @@ Page({
   },
   //点击图片删除
   deleteImage: function (e) {
-    console.log('图片id', e.currentTarget.id)
+    //console.log('图片id', e.currentTarget.id)
     const { index } = e.currentTarget.dataset
     const { id } = e.currentTarget
     wx.showActionSheet({
       itemList: ['删除'],
       itemColor: '#FA5151',
       success: res => {
-        console.log(res.tapIndex)
+        //console.log(res.tapIndex)
         this.data.fileID.splice(index, 1)
         wx.showToast({
           title: '删除成功',
@@ -449,16 +458,16 @@ Page({
         wx.cloud.deleteFile({
           fileList: [id],
           success: res => {
-            console.log('成功删除', res)
+            //console.log('成功删除', res)
           },
           fail: err => {
             // handle error
-            console.log(err)
+            //console.log(err)
           }
         })
       },
       fail(res) {
-        console.log(res.errMsg)
+        //console.log(res.errMsg)
       }
     })
   },
@@ -472,8 +481,11 @@ Page({
         questionList: res.data,
         collectNum: res.data[0].collector.length,
         postLikeNum: res.data[0].liker.length,
-        openId: app.globalData.openId
+        openId: app.globalData.openId,
+        isAskChatGLM: res.data[0].tag == 'AI'
       })
+      app.globalData.otherOpenId = res.data[0]._openid
+      //console.log(app.globalData.otherOpenId)
 
       if (res.data[0].commentNum <= 1) {
         this.setData({
@@ -481,12 +493,12 @@ Page({
         })
       }
 
-      console.log('成功获取 问题', res.data[0]._openid)
+      //console.log('成功获取 问题', res.data[0]._openid)
 
       let length = res.data[0].watcher.length;
 
-      console.log('watcher[] = ', length, res.data[0].watcher)
-      console.log('watched = ', res.data[0].watched)
+      //console.log('watcher[] = ', length, res.data[0].watcher)
+      //console.log('watched = ', res.data[0].watched)
       if (length >= 2) {
         res.data[0].watched += length
         res.data[0].watcher = []
@@ -514,7 +526,7 @@ Page({
     })
   },
   collectAdd: function () {
-    console.log(app.globalData.openId)
+    //console.log(app.globalData.openId)
     if (app.globalData.openId == undefined) {
       wx.showToast({
         title: '登录后操作。点击左上角←返回主界面',
@@ -527,7 +539,7 @@ Page({
       })
       const { questionList } = this.data
       let { collectNum } = this.data
-      console.log('收藏 add', questionList[0].collector, app.globalData.questionId)
+      //console.log('收藏 add', questionList[0].collector, app.globalData.questionId)
       questionList[0].collector.push(app.globalData.openId)
       collectNum++;
       this.setData({
@@ -549,7 +561,7 @@ Page({
     })
     const { questionList } = this.data
     let { collectNum } = this.data
-    console.log('收藏 cancel', questionList[0].collector)
+    //console.log('收藏 cancel', questionList[0].collector)
     // questionList[0].collector.push(app.globalData.openId)
     let collectorIndex = questionList[0].collector.indexOf(app.globalData.openId)
     if (collectorIndex != -1) {
@@ -572,7 +584,7 @@ Page({
 
   postLikeAdd: function () {
     // wx.vibrateLong();  
-    console.log(app.globalData.openId)
+    //console.log(app.globalData.openId)
     if (app.globalData.openId == undefined) {
       wx.showToast({
         title: '登录后操作。点击左上角←返回主界面',
@@ -625,7 +637,7 @@ Page({
     //   /**desc 时间-新到旧 赞数-高到低；asc 旧到新 */
     // }).orderBy('time', 'desc').
     //   get().then(res => {
-    //     // console.log('成功获取 评论', res.data)
+    //     // //console.log('成功获取 评论', res.data)
     //     this.setData({
     //       commentList: res.data,
     //       openId: app.globalData.openId
@@ -634,9 +646,9 @@ Page({
   },
   likeCancel: function (e) {
     const commentId = e.target.id
-    console.log('取消点赞', e)
+    //console.log('取消点赞', e)
     const commentIndex = e.target.dataset.index
-    console.log(this.data.commentList)
+    //console.log(this.data.commentList)
     const { commentList } = this.data
     let likerIndex = commentList[commentIndex].liker.indexOf(app.globalData.openId)
     if (likerIndex != -1)
@@ -651,17 +663,15 @@ Page({
         liker: _.pull(app.globalData.openId),
         likerNum: likerNum
       }
-    }).then(res => {
-      console.log('like Cancel', res)
-    }).catch(err => { console.log(err) })
+    })
 
   },
   likeAdd: function (e) {
     var d = new Date().getTime();
-    console.log('点赞', e)
+    //console.log('点赞', e)
     const commentId = e.target.id
     const commentIndex = e.target.dataset.index
-    console.log(this.data.commentList)
+    //console.log(this.data.commentList)
     const { commentList } = this.data
     commentList[commentIndex].liker.push(app.globalData.openId)
     let likerNum = commentList[commentIndex].liker.length
@@ -675,9 +685,7 @@ Page({
         likerNum: likerNum,
         likeTime: d,
       }
-    }).then(res => {
-      console.log('like Add', res)
-    }).catch(err => { console.log(err) })
+    })
   },
 
   getData: function () {
@@ -687,8 +695,8 @@ Page({
 
   //0-4-1 评论的评论
   commentAgain: function (e) {
-    // console.log(e.currentTarget.dataset.openid)
-    // console.log(e.currentTarget.dataset.nickname)
+    // //console.log(e.currentTarget.dataset.openid)
+    // //console.log(e.currentTarget.dataset.nickname)
     const postUnknown = e.currentTarget.dataset.unknown
     if (postUnknown) {
       this.setData({
@@ -717,7 +725,7 @@ Page({
   },
 
   commentSShortTap: function (e) {
-    console.log(e.currentTarget)
+    //console.log(e.currentTarget)
     const postUnknown = e.currentTarget.dataset.unknown
     if (postUnknown) {
       this.setData({
@@ -747,21 +755,21 @@ Page({
   //0-4-2 评论的评论的评论
   commentSLongTap: function (e) {
     const { idx } = e.currentTarget.dataset
-    console.log('e.currentTarget.dataset.openid', e.currentTarget.dataset.openid)
+    //console.log('e.currentTarget.dataset.openid', e.currentTarget.dataset.openid)
     if (app.globalData.openId == e.currentTarget.dataset.openid || app.globalData.isManager) {
       wx.showActionSheet({
         itemList: ['删除'],
         itemColor: '#FA5151'
       }).then(() => {
-        console.log('点击删除')
+        //console.log('点击删除')
         wx.showToast({
           title: '删除中...',
           icon: 'none',
         })
-        console.log('this.data.commentList', this.data.commentList)
+        //console.log('this.data.commentList', this.data.commentList)
         const { index } = e.currentTarget.dataset
         const { commenter } = this.data.commentList[index]
-        console.log(index, idx)
+        //console.log(index, idx)
 
         if (index != -1) {
           const deletedComment = commenter.splice(idx, 1);
@@ -803,7 +811,7 @@ Page({
           })
         })
       }).catch(() => {
-        console.log('取消删除')
+        //console.log('取消删除')
       })
     }
     else {
@@ -840,18 +848,18 @@ Page({
               }
             },
             fail: err => {
-              console.log(err)
+              //console.log(err)
             }
           })
         })
         .catch(() => {
-          console.log('取消举报')
+          //console.log('取消举报')
         })
     }
   },
   // 0-4-3 回复评论的输入框失去焦点
   loseFocus: function (e) {
-    console.log('失去焦点')
+    //console.log('失去焦点')
     if (!this.data.inputContent) {
       this.setData({
         height: 0,
@@ -889,7 +897,7 @@ Page({
             })
           })
         }).catch((err) => {
-          console.log(err)
+          //console.log(err)
         })
       }
       else {
@@ -912,7 +920,7 @@ Page({
             })
           },
           fail(res) {
-            console.log(res.errMsg)
+            //console.log(res.errMsg)
           }
         })
       }
@@ -941,7 +949,7 @@ Page({
               confirmColor: '#FA5151',
               success(res) {
                 if (res.confirm) {
-                  console.log('用户点击确定')
+                  //console.log('用户点击确定')
                   app.globalData.questionDelete = true
                   wx.showLoading({
                     title: '删除中',
@@ -953,10 +961,34 @@ Page({
                         list: questionList[0]
                       }
                     }),
+
+                    topic.where({
+                      tag: questionList[0].tag
+                    }).get().then(res => {
+                      const topicData = res.data[0].posts;
+                      // 找到要删除的帖子索引
+                      const postIndex = topicData.findIndex(post => post._id === app.globalData.questionId);
+
+                      if (postIndex !== -1) {
+                        // 从 posts 数组中删除帖子
+                        topicData.splice(postIndex, 1);
+                      }
+
+                      topic.where({
+                        tag: questionList[0].tag
+                      }).update({
+                        data: {
+                          posts: topicData,
+                          num: _.inc(-1)
+                        }
+                      })
+                    }
+                    ),
+
                     question.where({
                       _id: app.globalData.questionId
                     }).get().then(res => {
-                      console.log(res.data)
+                      //console.log(res.data)
                       deleteQuestionCloudImage(res.data)
                     }),
                     comment.where({
@@ -991,13 +1023,13 @@ Page({
                     })
                   })
                 } else if (res.cancel) {
-                  console.log('用户点击取消')
+                  //console.log('用户点击取消')
                 }
               }
             })
           },
           fail(res) {
-            console.log(res.errMsg)
+            //console.log(res.errMsg)
           }
         })
       }
@@ -1007,7 +1039,7 @@ Page({
           itemList: ['举报'],
           itemColor: '#FA5151',
           success: res => {
-            console.log(res.tapIndex)
+            //console.log(res.tapIndex)
             wx.showModal({
               title: "举报理由",
               content: "该帖 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
@@ -1035,12 +1067,12 @@ Page({
                 }
               },
               fail: err => {
-                console.log(err)
+                //console.log(err)
               }
             })
           },
           fail(res) {
-            console.log(res.errMsg)
+            //console.log(res.errMsg)
           }
         })
       }
@@ -1062,13 +1094,13 @@ Page({
         icon: 'none'
       })
     } else {
-      console.log(e.currentTarget.dataset.index)
-      console.log(this.data.questionList[0].commenter)
+      //console.log(e.currentTarget.dataset.index)
+      //console.log(this.data.questionList[0].commenter)
 
       var commentList = [];
       comment.doc(e.currentTarget.id).get().then((res) => {
         commentList = res.data
-        console.log(res.data._openid)
+        //console.log(res.data._openid)
         if (app.globalData.openId == commentList._openid || app.globalData.isManager) {
           wx.showActionSheet({
             itemList: ['删除'],
@@ -1083,18 +1115,31 @@ Page({
               confirmColor: '#FA5151',
             }).then((res) => {
               if (res.confirm) {
-                console.log('用户点击确定')
+                //console.log('用户点击确定')
                 wx.showLoading({
                   title: '删除中',
                 })
                 let { commenter } = this.data.questionList[0]
-                let index = commenter.findIndex((value) => value.openId == this.data.openId);
-                if (index != -1) {
-                  commenter.splice(index, 1)
+                let { comments } = this.data.questionList[0]
+                if (comments) {
+
+                } else {
+                  comments = []
                 }
+
+                let index1 = commenter.findIndex((value) => value.openId == this.data.openId);
+                let index2 = comments.findIndex((value) => value._openid == this.data.openId);
+                if (index1 != -1) {
+                  commenter.splice(index1, 1)
+                }
+
+                if (index2 != -1) {
+                  comments.splice(index2, 1)
+                }
+                //console.log(comments)
                 Promise.all([
                   comment.doc(e.currentTarget.id).get().then(res => {
-                    console.log(res.data)
+                    //console.log(res.data)
                     deleteRecord.add({
                       data: {
                         AComment: true,
@@ -1106,15 +1151,16 @@ Page({
                   commentAgain.where({
                     commentId: e.currentTarget.id
                   }).get().then(res => {
-                    console.log(res.data)
+                    //console.log(res.data)
                     deleteCommentCloudImage(res.data)
                   }),
                   comment.doc(e.currentTarget.id).get().then((res) => {
-                    console.log(res.data.commenter.length)
+                    //console.log(res.data.commenter.length)
                     question.doc(app.globalData.questionId).update({
                       data: {
                         commentNum: _.inc(-(res.data.commenter.length + 1)),
-                        commenter: commenter
+                        commenter: commenter,
+                        comments: comments
                       }
                     })
                   })
@@ -1136,10 +1182,10 @@ Page({
                 })
               }
               else if (res.cancel) {
-                console.log('用户点击取消')
+                //console.log('用户点击取消')
               }
             })
-          }).catch(err => { console.log(err) })
+          })
         }
         //warn
         else {
@@ -1147,7 +1193,7 @@ Page({
             itemList: ['举报'],
             itemColor: '#FA5151',
             success: res => {
-              console.log(res.tapIndex)
+              //console.log(res.tapIndex)
               wx.showModal({
                 title: "举报理由",
                 content: "该评论 不友善/违法违规/色情低俗/网络暴力/不实信息/扰乱社区秩序…",
@@ -1155,7 +1201,7 @@ Page({
                 confirmText: "提交举报",
                 confirmColor: "#FA5151",
                 success: res => {
-                  console.log(res)
+                  //console.log(res)
                   if (res.confirm) {
                     comment.doc(e.currentTarget.id).update({
                       data: {
@@ -1177,12 +1223,12 @@ Page({
                   }
                 },
                 fail: err => {
-                  console.log(err)
+                  //console.log(err)
                 }
               })
             },
             fail(res) {
-              console.log(res.errMsg)
+              //console.log(res.errMsg)
             }
           })
         }
@@ -1197,7 +1243,7 @@ Page({
     })
   },
   imageTap: function (e) {
-    console.log(e.currentTarget.dataset.imagelist)
+    //console.log(e.currentTarget.dataset.imagelist)
     let { imagelist } = e.currentTarget.dataset
 
     wx.previewImage({
@@ -1309,7 +1355,9 @@ Page({
               commenter: _.push({
                 each: [{ nickName: app.globalData.nickName, openId: app.globalData.openId }],
                 position: position
-              }) //头插法
+              }), //头插法
+
+
             }
           })
         }
@@ -1318,6 +1366,21 @@ Page({
           question.doc(app.globalData.questionId).update({ data: { commentNum: _.inc(1) } })
           isUnknown = res.data.unknown
         }
+
+        let nickName = app.globalData.nickName
+        if (isUnknown) nickName = "匿名发帖用户"
+        question.doc(app.globalData.questionId).update({
+          data: {
+            comments: _.push({
+              each: [{
+                _openid: app.globalData.openId,
+                body: _commentBody,
+                nickname: nickName
+              }],
+              position: 0
+            }),
+          }
+        })
         comment.add({
           data: {
             //时间
@@ -1495,7 +1558,7 @@ Page({
         }).then((res) => {
           const commentId = res._id
           wx.cloud.callFunction({
-            name: 'chatglm',
+            name: 'chatglm-pro',
             data: {
               input: _commentBody,
               history: history,
@@ -1504,10 +1567,10 @@ Page({
             wx.hideLoading()
             that.sendEnd()
 
-            console.log(res.result.completion)
+            //console.log(res.result.completion)
             that.gptsentComment(res.result.completion, commentId, postId)
           }).catch((err) => {
-            console.log(err)
+            //console.log(err)
           })
         })
       })
@@ -1570,7 +1633,7 @@ Page({
             }
           }).then(() => {
             wx.cloud.callFunction({
-              name: 'chatglm',
+              name: 'chatglm-pro',
               data: {
                 input: _commentBody,
                 history: history,
@@ -1579,10 +1642,10 @@ Page({
               wx.hideLoading()
               that.sendEnd()
 
-              console.log(res.result.completion)
+              //console.log(res.result.completion)
               that.gptsentComment(res.result.completion, commentId, postId)
             }).catch((err) => {
-              console.log(err)
+              //console.log(err)
             })
           })
         })
@@ -1600,7 +1663,7 @@ Page({
         scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
       },
       success(res) {
-        console.log(res)
+        //console.log(res)
         if (res.result.msgR) {
           const { label } = res.result.msgR.result
           const { suggest } = res.result.msgR.result
@@ -1608,7 +1671,7 @@ Page({
             that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', commentId, postId)
           }
           else if (suggest === 'review') {
-            console.log('可能包含' + matchLabel(label) + '信息')
+            //console.log('可能包含' + matchLabel(label) + '信息')
             that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, commentId, postId)
           }
           else {
@@ -1619,7 +1682,7 @@ Page({
         }
       },
       fail(err) {
-        console.log('checkContent云函数调用失败', err)
+        //console.log('checkContent云函数调用失败', err)
       }
     })
   },
@@ -1740,7 +1803,7 @@ Page({
               scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
             },
             success(_res) {
-              console.log(_res)
+              //console.log(_res)
               if (_res.result.msgR) {
                 const { label } = _res.result.msgR.result
                 const { suggest } = _res.result.msgR.result
@@ -1765,7 +1828,7 @@ Page({
               }
             },
             fail(_res) {
-              console.log('checkContent云函数调用失败', _res)
+              //console.log('checkContent云函数调用失败', _res)
             }
           })
         }
@@ -1774,7 +1837,7 @@ Page({
 
   //0-2 获取键盘高度
   focus: function (e) {
-    console.log(e.detail.height)
+    //console.log(e.detail.height)
     this.setData({
       height: e.detail.height
     })
@@ -1818,11 +1881,11 @@ Page({
 
           app.globalData.nickName = res.data[0].nickName
           app.globalData.avatarUrl = res.data[0].avatarUrl
-          console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
+          //console.log('成功获取昵称、头像：', app.globalData.nickName, app.globalData.avatarUrl)
         }
       })
       .catch(() => {
-        console.log('用户未登录')
+        //console.log('用户未登录')
         let d = new Date().getTime();
         question.doc(app.globalData.questionId).update({
           data: {
@@ -1844,7 +1907,7 @@ Page({
       })
   },
   onLoad: function (options) {
-    console.log('onLoad')
+    //console.log('onLoad')
     const { id } = options
     if (id != undefined) {
       app.globalData.questionId = id
@@ -1858,22 +1921,12 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if (app.globalData.isAsk) {
-      wx.navigateBack()
-        .catch(() => {
-          wx.switchTab({
-            url: '../../../pages/0-0 Show/Show'
-          })
-        })
-      return
-    }
     if (!app.globalData.isLogin) {
       wx.showToast({
         icon: 'none',
@@ -1902,7 +1955,8 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.log(app.globalData.questionDelete)
+    app.globalData.otherOpenId = ''
+    //console.log(app.globalData.questionDelete)
     if (!app.globalData.questionDelete) {
       app.globalData.questionSolved = this.data.questionList[0].solved
       app.globalData.questionCommentNum = this.data.questionList[0].commentNum
@@ -1932,7 +1986,7 @@ Page({
     this.setData({
       reachBottom: true
     })
-    console.log('触底')
+    //console.log('触底')
     const { sortWord } = this.data
     const showNum = commentList.length
 

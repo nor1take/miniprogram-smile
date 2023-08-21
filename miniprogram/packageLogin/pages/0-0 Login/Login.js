@@ -52,7 +52,7 @@ Page({
    * @param {*} e 
    */
   login: function (e) {
-    console.log("login")
+    //console.log("login")
     if (app.globalData.modifyNum <= 0) {
       wx.showToast({
         title: '修改次数用尽',
@@ -96,13 +96,7 @@ Page({
                         url: '../../../pages/0-0 Show/Show'
                       })
                     })
-                  // wx.switchTab({
-                  //   url: '../../../pages/0-0 Show/Show'
-                  // })
                 })
-              // wx.switchTab({
-              //   url: '../../../pages/0-0 Show/Show'
-              // })
             })
           } else {
             app.globalData.modifyNum = app.globalData.modifyNum - 1;
@@ -167,7 +161,7 @@ Page({
                   // })
                 })
               } else {
-                console.log(res)
+                //console.log(res)
                 app.globalData.modifyNum = app.globalData.modifyNum - 1;
                 userInfo.where({
                   _openid: '{openid}'
@@ -199,7 +193,7 @@ Page({
               }
             },
             fail: err => {
-              console.error('[上传文件] 失败：', err)
+              //console.error('[上传文件] 失败：', err)
               wx.hideLoading()
               wx.showToast({
                 icon: 'none',
@@ -217,7 +211,7 @@ Page({
    * @param {*} e 
    */
   onChooseAvatar(e) {
-    console.log('onChooseAvatar', e)
+    //console.log('onChooseAvatar', e)
     const { avatarUrl } = e.detail
     this.setData({
       avatarUrl,
@@ -229,7 +223,7 @@ Page({
    * @param {*} e 
    */
   onNickNameReview(e) {
-    console.log('onNickNameReview', e)
+    //console.log('onNickNameReview', e)
     const { pass } = e.detail
     this.setData({
       pass
@@ -245,7 +239,7 @@ Page({
     }).get()
       .then((res) => {
         if (res.data.length) {
-          console.log('用户已登录：', res.data[0])
+          //console.log('用户已登录：', res.data[0])
           this.setData({
             avatarUrl: res.data[0].avatarUrl,
             nickName: res.data[0].nickName
@@ -253,7 +247,7 @@ Page({
         }
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
       })
   },
 })

@@ -62,11 +62,11 @@ Page({
             warnerDetail: [],
           }
         }).then((res) =>{
-          console.log(res)
+          //console.log(res)
         })
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
       })
   },
 
@@ -83,11 +83,11 @@ Page({
             warnerDetail: [],
           }
         }).then((res) =>{
-          console.log(res)
+          //console.log(res)
         })
       })
       .catch((err) => {
-        console.log(err)
+        //console.log(err)
       })
   },
 
@@ -117,7 +117,7 @@ Page({
         warner: _.neq([]),
       }).orderBy('warner', 'desc').get().then(res => {
         resolve()
-        console.log(res.data)
+        //console.log(res.data)
         this.questionListPostData = { questionListPost: res.data }
       })
     })
@@ -231,8 +231,8 @@ Page({
     this.setData({
       reachBottom: true
     })
-    console.log('触底')
-    console.log(this.showNumData.showNum)
+    //console.log('触底')
+    //console.log(this.showNumData.showNum)
     const questionListPost = this.data.tabs[0].questionList
     const questionListComment = this.data.tabs[1].questionList
 

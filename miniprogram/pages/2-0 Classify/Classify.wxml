@@ -1,65 +1,52 @@
 <wxs src="../../util/filter.wxs" module="filter" />
-<tabs top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
-  <block wx:for="{{tabs}}" wx:key="name">
-    <view slot="tab-content-{{index}}">
-      <view style="width:100%; height: {{bottom}}px;"></view>
 
-      <block wx:if="{{index == 1}}">
-        <view class="background background2" style="padding: 32rpx;">
-          <image src="https://chatglm.cn/img/logo_alpha.1527ae36.svg" mode="aspectFit" style="height: 64rpx;"></image>
-          <text class="body" style="margin:0;">ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。</text>
-          <image src="https://fengshenbang-lm.com/assets/header-logo.png" mode="aspectFit" style="height: 70rpx;"></image>
-          <text class="body" style="margin:0;">姜子牙通用大模型V1 是基于LLaMa的 130 亿参数的大规模预训练模型。</text>
-          <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx; background-color: #3485FF; display: flex;" bindtap="AI">前往 AI 板块</button>
-        </view>
-      </block>
-      <block wx:if="{{index == themeIndex && hasTheme}}">
-        <view class="background background2" style="padding: 32rpx; display: flex; align-items: center; flex-direction: column; justify-content: center;">
-          <view class="themeTitle" style="color: #fff;">{{themeTitle}}</view>
-          <text class="themeBody" style="color: #ddd;">{{themeBody}}</text>
-          <block wx:if="{{isLogin}}">
-            <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx;" bindtap="Ask">参与活动</button>
-          </block>
-          <block wx:else="">
-            <button type="primary" size="mini" style="width: fit-content; margin-top: 32rpx;" bindtap="Login">登 录</button>
-          </block>
-        </view>
-      </block>
+<view class="topBlock" style="height: {{top+32}}px;"></view>
+<view class="topBlock2" style="height: {{top+32}}px;"></view>
 
-      <!-- <block wx:if="{{index == 3 && hasTheme}}">
-        <view class="background background2" style="padding: 32rpx; display: flex; align-items: center; flex-direction: column; justify-content: center;">
-          <view class="themeTitle" style="color: #fff;">{{themeTitle2}}</view>
-          <text class="themeBody" style="color: #ddd;">{{themeBody2}}</text>
-        </view>
-      </block> -->
-      <block wx:if="{{item.questionList.length == 0}}">
-        <view class="bottom" style="margin-top: 40%;">这里暂时还没有帖子哦~</view>
-      </block>
-      <view class="background" hover-class="hoverClass" wx:for="{{item.questionList}}" wx:key="_id" id="{{item._id}}" data-index="{{index}}" bindtap="beWatched">
-        <view style="display: flex; justify-content: space-between; align-items:center">
-          <view class="word" style="align-items: stretch; height:fit-content">
-            <view class="tag">
-              <text class="point" style="background-color: {{colorGreen}};" wx:if="{{item.solved}}">{{item.commentNum}}</text>
-              <text class="point" style="background-color: {{colorGray}};" wx:elif="{{item.commentNum === 0}}"></text>
-              <text class="point" style="background-color: {{colorYellow}};" wx:else="{{item.commentNum > 0}}">{{item.commentNum}}</text>
-              {{item.tag}}
-            </view>
-            <view class="title">{{item.title}}</view>
-            <view class="body" wx:if="{{item.body.length > 0}}">{{filter.abbreviation(item.body)}}</view>
-            <view class="last">
-              <text>{{filter.timeString(item.time)}}</text>
-              <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
-              <text wx:if="{{item.collectNum != 0}}" class="watched"> · {{item.collectNum}} 收藏</text>
-              <text wx:if="{{item.postLikeNum != 0}}" class="watched"> · {{item.postLikeNum}} 赞</text>
-            </view>
-          </view>
-          <view class="image" style="margin: 32rpx; margin-left: 0; display: flex; align-items: center;justify-content: center;" wx:if="{{item.image[0]}}">
-            <image src="{{item.image[0]}}" mode="aspectFill" style="width: 170rpx; height: 170rpx; border-radius: 25rpx;"></image>
-          </view>
-        </view>
-      </view>
-      <view class="bottom" wx:if="{{ activeTab===index && !isBottom && reachBottom}}">加载中...</view>
-      <view class="bottom" wx:if="{{ activeTab===index && isBottom}}">已经触底了~</view>
+<view class="container">
+  <view class="contentTitle" style="z-index: 6;">搜索</view>
+  <view class="inputContainer" style="position: sticky; top: {{top+32}}px; z-index: 4;">
+    <i class="iconfont icon-AI input" bindtap="goToAI"></i>
+    <view class="input" style="width:100%; margin-left: 16rpx " bind:tap="goToSearch">
+      <i class="iconfont icon-ic_public_input_search" style="font-size: 50rpx; color: white; margin-right: 32rpx; font-weight: normal;"></i>
+      <view>想聊什么话题？</view>
     </view>
-  </block>
-</tabs>
+  </view>
+
+  <tabs top='0' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherEnabled='{{false}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+    <block wx:for="{{tabs}}" wx:key="id">
+      <view slot="tab-content-{{index}}">
+        <view class="topicBottom topicTitle" style="margin: 32rpx; color: #acacac; display: flex; align-items: center; justify-content: space-between;" wx:if="{{index==0}}">
+          <view>在这里显示「关注的话题」「参与过的话题」「精选话题」</view>
+          <i class="iconfont icon-ic_desktop_pin" style="font-size: 40rpx;"></i>
+        </view>
+        <block wx:for="{{item.topicList}}" wx:key="_id">
+          <view class="topic" bind:tap="goToTopic" data-tag="{{item.tag}}" data-tagImg="{{item.image}}">
+            <view class="topicTop">
+              <image class="topicTopImage" src="{{item.image}}" mode="aspectFill"></image>
+              <view class="topicTopText">
+                <text class="title">{{item.tag}}</text>
+                <text class="last">
+                  <text wx:if="{{item.star}}" style="color: #F50057;">[精选] </text> <text wx:if="{{filter.isInArray(openId, item.collector)}}" style="color: #FCC300;">[已关注] </text> {{item.num}} 个帖子
+                </text>
+              </view>
+            </view>
+            <view class="topicBottom">
+              <block wx:for="{{item.posts}}" wx:key="_id">
+                <text wx:if="{{index < 2}}" class="topicArea topicTitle">
+                  <text style="color: #acacac;">{{filter.timeString(item.time)}}</text>
+                  <text style="color: #acacac;  margin-left: 16rpx; margin-right: 16rpx; font-weight: bold;">{{item.unknown ? '匿名发帖用户': item.nickName}}</text>
+                  <text>{{item.title}}</text>
+                </text>
+              </block>
+            </view>
+          </view>
+        </block>
+        <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+        <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
+        <view class="bottom" wx:if="{{ isBottom && index == 1}}">- 热门话题 TOP 20 -</view>
+      </view>
+
+    </block>
+  </tabs>
+</view>

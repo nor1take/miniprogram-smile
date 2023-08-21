@@ -1,6 +1,7 @@
 // app.js
 App({
   globalData: {
+    follow: false,
     questionId: '',
     isClick: false,
 
@@ -12,6 +13,7 @@ App({
     isAsk: false,
 
     openId: '',
+    otherOpenId: '',
     title: '',
     nickName: '',
     avatarUrl: '',
@@ -21,7 +23,7 @@ App({
     isManager: false,
     isLogin: false,
     isAuthentic: false,
-    idTitle:'',
+    idTitle: '',
     modifyNum: 0,
     isCheckSystemMsg: true,
     isModify: false,

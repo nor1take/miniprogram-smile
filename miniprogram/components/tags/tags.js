@@ -5,14 +5,16 @@ Component({
    */
   properties: {
     isScroll: { type: Boolean, value: true },
-    tagsList: { type: Array, value: [] }
+    tagsList: { type: Array, value: [] },
+    activeTag: { type: Number, value: 0 },
+    value: { type: String, value: "" }
   },
 
   /**
    * 组件的初始数据
    */
   data: {
-    activeTag: 0
+
   },
 
   /**
@@ -21,19 +23,19 @@ Component({
   methods: {
     tagTap: function (e) {
       const { index } = e.currentTarget.dataset
-      const { tagname } = e.currentTarget.dataset
+      const { tag } = e.currentTarget.dataset
       this.setData({
         activeTag: index
       })
-      this.triggerEvent('tagtap', { tagname })
+      this.triggerEvent('tagtap', { tag })
     },
 
     tapDIY: function (e) {
-      const tagname = e.detail.value
+      const tag = e.detail.value
       this.setData({
         activeTag: -1
       })
-      this.triggerEvent('tagtap', { tagname })
+      this.triggerEvent('tagtap', { tag })
     },
 
     input: function (e) {

@@ -1,47 +1,30 @@
-page{
+page {
   background-color: white;
-}
-.topBlock{
-  background-color: white;
-  box-shadow:0 0 10rpx #d2d2d2;
-}
-.topWord{
-  width: 100%;
-  height: 32px;
-  /* border: 1rpx solid black; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: #181818;
 }
 
-.messageBackground{
+.messageBackground {
+  padding: 32rpx;
   border-bottom: 1rpx solid #DDDDDD;
-  /* border-bottom: 1rpx solid #DDDDDD; */
-  margin: 16rpx;
-}
-.top{
-  /* border: 1rpx solid black; */
-  height: fit-content;
-  
-  margin: 32rpx;
-  margin-top: 16rpx;
-  margin-bottom: 16rpx;
-
-  font-size: 30rpx;
 }
 
-.showTime{
+.showTime {
   /* border: 1rpx solid black; */
-  margin: 32rpx;
-  margin-bottom: 16rpx;
   font-size: 28rpx;
   display: flex;
   justify-content: space-between;
+  color: #acacac;
 }
-.red-point{
+
+.top {
+  /* border: 1rpx solid black; */
+  height: fit-content;
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
+  font-size: 30rpx;
+}
+
+
+.red-point {
   width: 30rpx;
   height: 30rpx;
 
@@ -54,30 +37,35 @@ page{
   align-items: center;
   justify-content: center;
 
-  color:white;
+  color: white;
   font-size: 20rpx;
   font-weight: bolder;
 }
-.nickName{
+
+.nickName {
   /* border: 1rpx solid black; */
   color: #0C88B5;
   margin-right: 8rpx;
 }
-.background{
-  border: 1rpx solid transparent;
+
+.background {
+  margin: 0;
+  /* border: 1rpx solid black; */
   border-radius: 10rpx;
-  box-shadow:0 0 0rpx transparent;
+  box-shadow: 0 0 0rpx transparent;
   background-color: #F6F6F6;
   padding: 32rpx;
   color: #7b7b7b;
 }
-.title{
+
+.title {
   color: #7B7B7B;
   font-size: 30rpx;
-  margin: 32rpx;
-  margin-top: 16rpx;
+  margin-top: 32rpx;
+  font-weight: bolder;
 }
-.bottom{
+
+.bottom {
   width: 100%;
   height: 60rpx;
 
@@ -92,40 +80,35 @@ page{
 /******************************************************************
 ** 夜间模式
 ******************************************************************/
-@media (prefers-color-scheme: dark)
-{
-  page{
+@media (prefers-color-scheme: dark) {
+  page {
     background-color: black;
   }
-  .topBlock{
-    background-color: black;
-    box-shadow:0 0 10rpx black;
-  }
-  .topWord{
+
+
+
+  .topWord {
     color: #DDDDDD;
   }
 
-  .messageBackground{
-    border-bottom: 1rpx solid #7b7b7b; 
-  }
-  
-  .red-point{ 
-    color:black;
+  .messageBackground {
+    border-bottom: 1rpx solid #7b7b7b;
   }
 
-  .background{
-    border: 1rpx solid transparent;
-    box-shadow:0 0 0rpx transparent;
+  .red-point {
+    color: black;
+  }
+
+  .background {
     background-color: #7b7b7b;
     color: #D2D2D2;
   }
-  .title{
+
+  .title {
     color: #D2D2D2;
-    font-size: 30rpx;
-    margin: 32rpx;
-    margin-top: 16rpx;
   }
-  .bottom{
+
+  .bottom {
     color: #ACACAC;
   }
 }

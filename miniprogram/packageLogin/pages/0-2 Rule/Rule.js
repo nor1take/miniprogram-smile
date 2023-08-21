@@ -15,7 +15,7 @@ Page({
   },
 
   communityTap: function () {
-    console.log('communityTap')
+    //console.log('communityTap')
     wx.navigateTo({
       url: '../0-3 Community/Community',
     })

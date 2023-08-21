@@ -30,7 +30,7 @@ Page({
     wx.showLoading({
       title: '提交中',
     })
-    console.log(e.detail.value)
+    //console.log(e.detail.value)
     const { name } = e.detail.value
     const { classNum } = e.detail.value
     const { id } = e.detail.value
@@ -45,7 +45,7 @@ Page({
       activity.where({
         _openid: '{openid}'
       }).get().then((res) => {
-        console.log(res.data)
+        //console.log(res.data)
         if (res.data.length != 0) {
           wx.showToast({
             title: '请勿重复提交！如有其他问题，请前往 意见反馈 联系开发者',
