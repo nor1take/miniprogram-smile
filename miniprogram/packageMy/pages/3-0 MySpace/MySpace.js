@@ -39,10 +39,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    bottom: app.globalData.bottom,
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -56,6 +54,7 @@ Page({
       { id: 0, name: '发帖', questionList: [] },
       { id: 1, name: '回应', questionList: [] },
     ],
+    activeTab: 0,
 
 
     avatarUrl: '',
@@ -274,6 +273,23 @@ Page({
 
   },
 
+  tabsTap: function (e) {
+    const index = e.detail.index
+    this.setData({
+      activeTab: index,
+      reachBottom: false,
+      isBottom: false
+    })
+  },
+  swiperChange: function (e) {
+    const index = e.detail.index
+    this.setData({
+      activeTab: index,
+      reachBottom: false,
+      isBottom: false
+    })
+  },
+
   /**
    * 生命周期函数--监听页面卸载
    */
@@ -301,5 +317,68 @@ Page({
    */
   onShareAppMessage() {
 
-  }
+  },
+
+  reachBottom: function () {
+    this.setData({
+      reachBottom: true
+    })
+    const { activeTab, postList, commentList } = this.data
+    if (activeTab === 0) {
+      const questionList = postList
+      const showNum = questionList.length
+      question.where({
+        _openid: app.globalData.otherOpenId
+      }).count().then((res) => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false,
+          })
+          question.where({
+            _openid: app.globalData.otherOpenId
+          }).orderBy('time', 'desc').skip(showNum).get().then(res => {
+            let new_data = res.data
+            let old_data = questionList
+            this.setData({
+              postList: old_data.concat(new_data),
+            })
+          })
+        }
+        else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    }
+    else if (activeTab === 1) {
+      const questionList = commentList
+      const showNum = questionList.length
+      comment.where({
+        _openid: app.globalData.otherOpenId,
+        posterId: _.neq(app.globalData.otherOpenId)
+      }).orderBy('time', 'desc').count().then((res) => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false
+          })
+          comment.where({
+            _openid: app.globalData.otherOpenId,
+            posterId: _.neq(app.globalData.otherOpenId)
+          }).orderBy('time', 'desc').skip(showNum).get().then(res => {
+            let new_data = res.data
+            let old_data = questionList
+            this.setData({
+              commentList: old_data.concat(new_data),
+            })
+          })
+        }
+        else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    }
+  },
 })

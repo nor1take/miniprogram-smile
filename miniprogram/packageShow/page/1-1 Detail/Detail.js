@@ -9,194 +9,7 @@ const userInfo = db.collection('userInfo')
 const deleteRecord = db.collection('deleteRecord')
 const topic = db.collection('topic')
 
-function matchLabel(labelNum) {
-  switch (labelNum) {
-    case 100:
-      return '正常';
-      break;
-    case 10001:
-      return '广告';
-      break;
-    case 20001:
-      return '时政';
-      break;
-    case 20002:
-      return '色情';
-      break;
-    case 20003:
-      return '辱骂';
-      break;
-    case 20006:
-      return '违法犯罪';
-      break;
-    case 20008:
-      return '欺诈';
-      break;
-    case 20012:
-      return '低俗';
-      break;
-    case 20013:
-      return '版权';
-      break;
-    case 21000:
-      return '其他';
-      break;
-  }
-}
-
-/**
- * 触发图片审核
- * @param {*待审核图片列表} tempFiles 
- * @param {*page = this} page 
- */
-function checkAndUploadManyImages(tempFiles, page) {
-  //console.log(tempFiles)
-  wx.showLoading({
-    title: '上传中',
-    mask: true
-  })
-
-  for (var i = 0; i < tempFiles.length; i++) {
-    const { tempFilePath } = tempFiles[i]
-    /**
-     * 1、触发审核，获取traceId
-     */
-    wx.cloud.callFunction({
-      name: 'checkContent',
-      data: {
-        value: wx.cloud.CDN({
-          type: 'filePath',
-          filePath: tempFilePath
-        }),
-        scene: 2 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-      },
-      success: json => {
-        //console.log(json)
-        const { traceId } = json.result.imageR
-        /**
-         * 2、将traceId作为图片的云存储路径
-         */
-        wx.cloud.uploadFile({
-          cloudPath: traceId, // 上传至云端的路径
-          filePath: tempFilePath, // 小程序临时文件路径
-          success: res => {
-            const { fileID } = res
-            //console.log('fileID', fileID)
-            page.data.fileID.push(fileID)
-            page.setData({
-              fileID: page.data.fileID,
-            })
-            wx.hideLoading()
-            wx.showToast({
-              title: '上传成功 等待审核',
-              icon: 'none'
-            })
-          },
-          fail: err => {
-            //console.error('uploadFile err：', err)
-            wx.hideLoading()
-            wx.showToast({
-              icon: 'error',
-              title: '上传失败',
-            })
-          }
-        })
-      },
-      fail: err => {
-        //console.log('checkContent err：', err)
-      }
-    })
-
-  }
-}
-
-/**
- * 删除已上传图片列表中的违规图片，并移除traceId对象
- * @param {已上传图片列表} fileIds 
- * @param {*违规图片集合} cloudFileIds 
- */
-async function deleteInvalidImages(fileIds, cloudFileIds) {
-  return new Promise(async function (resolve, reject) {
-    try {
-      const promises = [];
-      let fileIdsWithoutCommon = [];
-      promises.push(new Promise((resolve, reject) => {
-        // 找到数组 fileIds 和数组 cloudFileIds 共有的元素
-        const common = fileIds.filter((elementA) =>
-          cloudFileIds.some((elementB) => elementA === elementB.fileId)
-        );
-
-        // 删除数组 fileIds 中的共有元素
-        fileIdsWithoutCommon = fileIds.filter((elementA) =>
-          !cloudFileIds.some((elementB) => elementA === elementB.fileId)
-        );
-        /**
-         * 删除云存储中的违规图片
-         */
-        wx.cloud.deleteFile({
-          fileList: common,
-          success: res => {
-            //console.log(res)
-            resolve();
-          },
-          fail: err => {
-            //console.log(err)
-            reject(err);
-          }
-        })
-
-        /**
-         * 移除traceId对象
-         */
-        traceId.where({
-          fileId: _.in(common)
-        }).remove({
-          success: res => {
-            //console.log(res)
-            resolve();
-          },
-          fail: err => {
-            //console.log(err)
-            reject(err);
-          }
-        })
-      }));
-
-      await Promise.all(promises);
-      resolve(fileIdsWithoutCommon);
-    } catch (error) {
-      reject(error);
-    }
-  })
-}
-
-function deleteCommentCloudImage(list) {
-  if (list.length > 0) {
-    const arr = [].concat(...list.map(item => item.image_upload));
-    wx.cloud.deleteFile({
-      fileList: arr,
-      success: res => {
-        //console.log('成功删除', res)
-      },
-      fail: err => {
-        //console.error(err)
-      }
-    })
-  }
-}
-
-function deleteQuestionCloudImage(list) {
-  wx.cloud.deleteFile({
-    fileList: list[0].image,
-    success: res => {
-      //console.log('成功删除', res)
-    },
-    fail: err => {
-      //console.error(err)
-    }
-  })
-
-}
+const check = require('../../check.js');
 
 Page({
   /**
@@ -233,12 +46,19 @@ Page({
     holderValue1: '在此处输入你的回应 :)',
     holderValue2: '本次评论将会被 AI 回复',
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
 
     _commentBody: ''
+  },
+
+  copy(e) {
+    const { content } = e.currentTarget.dataset
+    wx.setClipboardData({
+      data: content,
+    })
   },
   isAskChatGLM: function () {
     const { isAskChatGLM } = this.data
@@ -413,7 +233,7 @@ Page({
       camera: 'back',
       success: res => {
         //console.log(res.tempFiles)
-        checkAndUploadManyImages(res.tempFiles, this)
+        check.checkAndUploadManyImages(res.tempFiles, this)
       },
       fail: err => {
         //console.log(err)
@@ -989,17 +809,17 @@ Page({
                       _id: app.globalData.questionId
                     }).get().then(res => {
                       //console.log(res.data)
-                      deleteQuestionCloudImage(res.data)
+                      check.deleteQuestionCloudImage(res.data)
                     }),
                     comment.where({
                       questionId: app.globalData.questionId
                     }).get().then(res => {
-                      deleteCommentCloudImage(res.data)
+                      check.deleteCommentCloudImage(res.data)
                     }),
                     commentAgain.where({
                       questionId: app.globalData.questionId
                     }).get().then(res => {
-                      deleteCommentCloudImage(res.data)
+                      check.deleteCommentCloudImage(res.data)
                     })
                   ]).then(() => {
                     Promise.all([
@@ -1146,13 +966,13 @@ Page({
                         list: res.data
                       }
                     }),
-                      deleteCommentCloudImage(res.data)
+                      check.deleteCommentCloudImage(res.data)
                   }),
                   commentAgain.where({
                     commentId: e.currentTarget.id
                   }).get().then(res => {
                     //console.log(res.data)
-                    deleteCommentCloudImage(res.data)
+                    check.deleteCommentCloudImage(res.data)
                   }),
                   comment.doc(e.currentTarget.id).get().then((res) => {
                     //console.log(res.data.commenter.length)
@@ -1265,17 +1085,6 @@ Page({
         _commentBody: e.detail.value
       })
     }
-  },
-
-  //1-3 获取右上角按钮数据
-  getRightTop: function () {
-    const res = wx.getMenuButtonBoundingClientRect()
-    this.setData({
-      top: res.top,
-      left: res.left,
-      right: res.right,
-      bottom: res.bottom
-    })
   },
 
   sendEnd: function (title = '发送成功', isScrollTop = true) {
@@ -1414,7 +1223,7 @@ Page({
           traceId.orderBy('CreateTime', 'desc').get()
             .then((res) => {
               // 2、删除上传图片列表中违规图片
-              deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+              check.deleteInvalidImages(that.data.fileID, res.data).then((res) => {
                 // 3、更新图片列表
                 comment.doc(_id).update({
                   data: { image_upload: res }
@@ -1463,7 +1272,7 @@ Page({
             /**
              * 2、删除上传图片列表中违规图片
              */
-            deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+            check.deleteInvalidImages(that.data.fileID, res.data).then((res) => {
               /**
                * 3、更新图片列表
                */
@@ -1668,11 +1477,11 @@ Page({
           const { label } = res.result.msgR.result
           const { suggest } = res.result.msgR.result
           if (suggest === 'risky') {
-            that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]', commentId, postId)
+            that.sendCompletion('[危险：包含' + check.matchLabel(label) + '信息！]', commentId, postId)
           }
           else if (suggest === 'review') {
-            //console.log('可能包含' + matchLabel(label) + '信息')
-            that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, commentId, postId)
+            //console.log('可能包含' + check.matchLabel(label) + '信息')
+            that.sendCompletion('[可能包含' + check.matchLabel(label) + '信息]：' + completion, commentId, postId)
           }
           else {
             that.sendCompletion(completion, commentId, postId)
@@ -1810,13 +1619,13 @@ Page({
                 if (suggest === 'risky') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '危险：包含' + matchLabel(label) + '信息！',
+                    title: '危险：包含' + check.matchLabel(label) + '信息！',
                     icon: 'none'
                   })
                 } else if (suggest === 'review') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    title: '可能包含' + check.matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
                 }
@@ -1913,7 +1722,6 @@ Page({
       app.globalData.questionId = id
       this.getNicknameandImage()
     }
-    this.getRightTop()
     this.getData()
   },
 
@@ -1958,12 +1766,7 @@ Page({
     app.globalData.otherOpenId = ''
     //console.log(app.globalData.questionDelete)
     if (!app.globalData.questionDelete) {
-      app.globalData.questionSolved = this.data.questionList[0].solved
-      app.globalData.questionCommentNum = this.data.questionList[0].commentNum
-      app.globalData.questionWatcher = this.data.questionList[0].watcher
-      app.globalData.questionWatched = this.data.questionList[0].watched
-      app.globalData.questionCollect = this.data.collectNum
-      app.globalData.questionLikeNum = this.data.postLikeNum
+      app.globalData.tmpPost = this.data.questionList[0]
     }
     else {
       app.globalData.questionDelete = true

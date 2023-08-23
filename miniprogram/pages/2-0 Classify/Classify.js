@@ -2,8 +2,8 @@
 const app = getApp()
 const db = wx.cloud.database()
 const _ = db.command
+const $ = db.command.aggregate
 const question = db.collection('question')
-const userInfo = db.collection('userInfo')
 
 const topic = db.collection('topic')
 
@@ -16,7 +16,7 @@ Page({
       { id: 3, name: '探索', topic: [] },
     ],
     activeTab: 1,
-    top: 48,
+    top: app.globalData.top,
     openId: app.globalData.openId
   },
 
@@ -64,17 +64,37 @@ Page({
   },
 
   getHotData() {
+    var now = new Date().getTime();
     return new Promise((resolve) => {
-      topic.where({
-        _id: _.exists(true)
-      }).orderBy('num', 'desc').orderBy('updatetime', 'desc')
-        .get().then((res) => {
-          //console.log(res)
+      topic
+        .aggregate()
+        .match({
+          _id: _.exists(true)
+        })
+        .project({
+          _id: 1,
+          image: 1,
+          num: 1,
+          posts: 1,
+          star: 1,
+          tag: 1,
+          updatetime: 1,
+
+          totalScores: $.divide([
+            // $.multiply([$.log10($.size('$posts')), 1]),
+            $.multiply([$.size('$posts'), 1]),
+            $.pow([
+              $.sum(([$.subtract([now, '$updatetime']), 2]), 1),
+              1.5
+            ])
+          ])
+        })
+        .sort({ totalScores: -1 })
+        .end()
+        .then((res) => {
+          //console.log(res.list)
           resolve()
-          this.myData.HotData = res.data
-          // this.setData({
-          //   'tabs[1].topicList': res.data
-          // })
+          this.myData.HotData = res.list
         })
     })
   },

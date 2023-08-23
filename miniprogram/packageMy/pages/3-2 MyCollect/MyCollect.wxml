@@ -1,7 +1,7 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<return top="{{top}}" topWord="收藏和赞"></return>
-<tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherEnabled='{{false}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+<return topWord="收藏和赞"></return>
+<tabs tabs='{{tabs}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherEnabled='{{false}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
   <block wx:for="{{tabs}}" wx:key="id">
     <view slot="tab-content-{{index}}">
       <block wx:if="{{item.questionList.length == 0}}">

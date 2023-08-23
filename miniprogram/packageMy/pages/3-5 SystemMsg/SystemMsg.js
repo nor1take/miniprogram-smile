@@ -10,10 +10,10 @@ Page({
    * 页面的初始数据
    */
   data: {
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
   },
 
   getNicknameandImage: function () {

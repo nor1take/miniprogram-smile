@@ -1,8 +1,8 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<return top="{{top}}" topWord="处理举报"></return>
+<return topWord="处理举报"></return>
 
-<tabs tabs='{{tabs}}' top='{{top}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+<tabs tabs='{{tabs}}' activeTab='{{activeTab}}' scrollTop='{{scrollTop}}' refresherTriggered='{{refresherTriggered}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
 
   <view slot="tab-content-0">
 

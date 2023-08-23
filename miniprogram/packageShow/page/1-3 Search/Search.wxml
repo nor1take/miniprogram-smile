@@ -1,6 +1,6 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<return top="{{top}}" bottom="{{bottom}}" color="white" bkgColor="black"></return>
+<return color="white" bkgColor="black"></return>
 
 <view class="searchContainer" style="width: 100%; position: fixed; top:{{top}}px;">
   <input class="searchInput" confirm-type="search" focus style="margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input" placeholder="输入关键字词" />

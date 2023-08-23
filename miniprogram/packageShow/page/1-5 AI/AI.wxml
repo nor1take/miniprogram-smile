@@ -1,25 +1,21 @@
-<return top="{{top}}" bottom="{{bottom}}" color="white" topWord="AI"></return>
+<return color="white" topWord="AI"></return>
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<view style="width: 100%; height: 100%; position: absolute;">
-  <view style="height: 100%; margin: 32rpx; display: flex; flex-direction: column;">
+<view class="container">
+  <view class="intro">
     <!-- <i class="iconfont icon-a-logo_white74c0b874" style="font-size: 100rpx; color: white;"></i> -->
-    <i class="iconfont icon-a-logo_alphadeab58a2" style="font-size: 100rpx; color: white;"></i>
-
-    <text class="body" style="margin: 0;">
-      本小程序使用的问答、多轮对话和代码生成功能的中英双语模型是 ChatGLM。
-
-      ChatGLM 是清华大学KEG实验室和智谱AI公司于 2023 年共同训练的语言模型。
-
-      提问 ChatGLM：5 次/天
-
-      * 支持多轮对话。在评论区追问前，请确保评论输入框右侧 LOGO 为点亮状态。
-    </text>
+    <i class="iconfont icon-a-logo_alphadeab58a2 top"></i>
+    <view class="top" style="font-weight: bolder;">ChatGLM</view>
+    <view class="body gptComment answer" style="display: flex; ">
+      <i class="iconfont icon-AI"></i>
+      <text class="commentBody" style="padding-top: 16rpx; " user-select="{{true}}">你好，我是 智谱清言 ChatGLM，是清华大学 KEG 实验室和智谱 AI 公司共同训练的语言模型。我的目标是通过回答用户提出的问题来帮助他们解决问题。由于我是一个计算机程序，所以我没有自我意识，也不能像人类一样感知世界。我只能通过分析我所学到的信息来回答问题。
+      </text>
+    </view>
   </view>
 
   <view class="hotLabel">最新提问</view>
 
-  <view class="background" wx:for="{{newPostList}}" wx:key="_id">
+  <view class="background" style="margin: 0; margin-bottom: 16rpx;" wx:for="{{newPostList}}" wx:key="_id">
     <view>
       <view class="last">{{filter.timeString(item.time)}}</view>
       <view class="body gptComment ask">
@@ -40,12 +36,12 @@
   <view style="width: 100%; height: 500rpx;"></view>
 
 
-  <view class="gptBG background" style="bottom: {{keyboardHeight}}px;">
-    <i wx:if="{{glm}}" class="iconfont icon-chatglm" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i>
-    <image wx:else="" src="cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/646708c1-78c1749e-2e010e69" mode="widthFix" style="width: 120rpx; height: 120rpx;" bindtap="changeAPI"></image>
+  <view class="gptBG" style="bottom: {{keyboardHeight}}px;">
+    <!-- <i wx:if="{{glm}}" class="iconfont icon-chatglm" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i> -->
+    <!-- <image wx:else="" src="cloud://smile-9gkoqi8o7618f34a.736d-smile-9gkoqi8o7618f34a-1316903232/646708c1-78c1749e-2e010e69" mode="widthFix" style="width: 120rpx; height: 120rpx;" bindtap="changeAPI"></image> -->
     <!-- <i wx:else="" class="iconfont icon-AI" style="font-size: 60rpx; color: white;" bindtap="changeAPI"></i> -->
     <block wx:if="{{isTesting}}">
-      <textarea class="gptInput" placeholder-style="color:white;" maxlength="300" placeholder="此处输入你的问题 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
+      <textarea class="gptInput" placeholder-style="color:white;" maxlength="300" placeholder="输入你的问题或需求 :)" auto-height adjust-position="{{false}}" show-confirm-bar="{{false}}" bindkeyboardheightchange="focus" bindblur="loseFocus" bindinput="input" value="{{inputValue}}"></textarea>
       <i class="iconfont icon-ic_public_email_send" style="font-size: 60rpx; color: white;" bindtap="send"></i>
     </block>
     <block wx:else="">

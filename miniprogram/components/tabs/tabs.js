@@ -1,5 +1,5 @@
 // components/tabs/tabs.js
-
+const app = getApp()
 Component({
   options: {
     multipleSlots: true   //使用[具名插槽]要配置multipleSlots
@@ -9,7 +9,7 @@ Component({
    */
   properties: {
     tabs: { type: Array, value: [] },
-    top: { type: Number, value: 0 },
+    top: { type: Number, value: app.globalData.top },
     scrollTop: { type: Number, value: 0 },
     activeTab: { type: Number, value: 0 },
     refresherTriggered: { type: Boolean, value: false },

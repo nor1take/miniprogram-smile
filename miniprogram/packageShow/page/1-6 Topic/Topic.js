@@ -52,7 +52,7 @@ Page({
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
     colorYellow: '#F9A826',
-    top: 48,
+    top: app.globalData.top,
     tag: '标签',
     defaultAvatarUrl: 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0',
     tabs: [
@@ -60,6 +60,8 @@ Page({
       { id: 1, name: '热门', questionList: [] },
       { id: 2, name: '最新', questionList: [] },
     ],
+
+    activeTab: 0,
   },
 
   goToAsk: function () {
@@ -382,6 +384,46 @@ Page({
    */
   onReachBottom() {
 
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  reachBottom: function () {
+    const { activeTab } = this.data
+    const { questionList } = this.data.tabs[activeTab]
+    const showNum = questionList.length
+
+    if (activeTab === 1) {
+      this.setData({
+        reachBottom: true
+      })
+      question.where({
+        tag: app.globalData.tag,
+        time: _.lte(questionList[0].time)
+      }).count().then((res) => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false
+          })
+          question.where({
+            tag: app.globalData.tag,
+            time: _.lt(questionList[showNum - 1].time)
+          }).orderBy('time', 'desc').get().then(res => {
+            let new_data = res.data
+            let old_data = questionList
+            this.setData({
+              'tabs[1].questionList': old_data.concat(new_data),
+            })
+          })
+        }
+        else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    }
   },
 
   /**

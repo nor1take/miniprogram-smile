@@ -1,10 +1,10 @@
 // components/return-withTab/return-withTab.js
+const app = getApp()
 Component({
   /**
    * 组件的属性列表
    */
   properties: {
-    top: { type: Number, value: 0 },
     topWord: { type: String, value: '' },
   },
 
@@ -12,7 +12,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-
+    top: app.globalData.top,
   },
 
   /**

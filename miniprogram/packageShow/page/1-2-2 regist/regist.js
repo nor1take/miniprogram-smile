@@ -9,22 +9,11 @@ Page({
    * 页面的初始数据
    */
   data: {
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
   },
-
-  getRightTop: function () {
-    const res = wx.getMenuButtonBoundingClientRect()
-    this.setData({
-      top: res.top,
-      left: res.left,
-      right: res.right,
-      bottom: res.bottom
-    })
-  },
-
 
   formSubmit: function (e) {
     wx.showLoading({
@@ -81,7 +70,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.getRightTop()
   },
 
   /**

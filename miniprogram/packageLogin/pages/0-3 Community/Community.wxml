@@ -1,4 +1,4 @@
-<return top="{{top}}" bottom="{{bottom}}" topWord="{{title}}"></return>
+<return topWord="{{title}}"></return>
 <view class="ruleContainer">
   <text user-select='true'>
     社区里鼓励真诚地表达、专业地讨论、友善地互动，反对不友善、低质、低俗、抄袭、侵权、虚假认证、恶意营销导流等破坏社区生态的内容与行为，禁止一切违法违规行为。

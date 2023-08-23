@@ -30,10 +30,10 @@ Page({
 
     reachBottom: false,
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
 
     loading: false
   },
@@ -61,7 +61,7 @@ Page({
             warner: [],
             warnerDetail: [],
           }
-        }).then((res) =>{
+        }).then((res) => {
           //console.log(res)
         })
       })
@@ -71,7 +71,7 @@ Page({
   },
 
   clearWarnersComment: function (e) {
-    const {commentid} = e.currentTarget.dataset
+    const { commentid } = e.currentTarget.dataset
     wx.showActionSheet({
       itemList: ['清空Warners'],
       itemColor: '#FA5151'
@@ -82,7 +82,7 @@ Page({
             warner: [],
             warnerDetail: [],
           }
-        }).then((res) =>{
+        }).then((res) => {
           //console.log(res)
         })
       })
@@ -138,9 +138,6 @@ Page({
       this.setData({
         'tabs[0].questionList': this.questionListPostData.questionListPost,
         'tabs[1].questionList': this.questionListCommentData.questionListComment,
-
-        top: app.globalData.top,
-        bottom: app.globalData.bottom,
       })
     })
   },

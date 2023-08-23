@@ -10,166 +10,7 @@ const topic = db.collection('topic')
 
 var systemMsgNum = 0
 
-function matchLabel(labelNum) {
-  switch (labelNum) {
-    case 100:
-      return '正常';
-      break;
-    case 10001:
-      return '广告';
-      break;
-    case 20001:
-      return '时政';
-      break;
-    case 20002:
-      return '色情';
-      break;
-    case 20003:
-      return '辱骂';
-      break;
-    case 20006:
-      return '违法犯罪';
-      break;
-    case 20008:
-      return '欺诈';
-      break;
-    case 20012:
-      return '低俗';
-      break;
-    case 20013:
-      return '版权';
-      break;
-    case 21000:
-      return '其他';
-      break;
-  }
-}
-
-/**
- * 触发图片审核
- * @param {*待审核图片列表} tempFiles 
- * @param {*page = this} page 
- */
-function checkAndUploadManyImages(tempFiles, page) {
-  //console.log(tempFiles)
-  wx.showLoading({
-    title: '上传中',
-    mask: true
-  })
-
-  for (var i = 0; i < tempFiles.length; i++) {
-    const { tempFilePath } = tempFiles[i]
-    /**
-     * 1、触发审核，获取traceId
-     */
-    wx.cloud.callFunction({
-      name: 'checkContent',
-      data: {
-        value: wx.cloud.CDN({
-          type: 'filePath',
-          filePath: tempFilePath
-        }),
-        scene: 3 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
-      },
-      success: json => {
-        //console.log(json)
-        const { traceId } = json.result.imageR
-        /**
-         * 2、将traceId作为图片的云存储路径
-         */
-        wx.cloud.uploadFile({
-          cloudPath: traceId, // 上传至云端的路径
-          filePath: tempFilePath, // 小程序临时文件路径
-          success: res => {
-            const { fileID } = res
-            //console.log(fileID)
-            page.data.fileID.push(fileID)
-            page.setData({
-              fileID: page.data.fileID,
-            })
-            wx.hideLoading()
-            wx.showToast({
-              title: '上传成功 等待审核',
-              icon: 'none'
-            })
-          },
-          fail: err => {
-            //console.error('uploadFile err：', err)
-            wx.hideLoading()
-            wx.showToast({
-              icon: 'error',
-              title: '上传失败',
-            })
-          }
-        })
-      },
-      fail: err => {
-        //console.log('checkContent err：', err)
-      }
-    })
-
-  }
-}
-
-/**
- * 删除已上传图片列表中的违规图片，并移除traceId对象
- * @param {已上传图片列表} fileIds 
- * @param {*违规图片集合} cloudFileIds 
- */
-async function deleteInvalidImages(fileIds, cloudFileIds) {
-  return new Promise(async function (resolve, reject) {
-    try {
-      const promises = [];
-      let fileIdsWithoutCommon = [];
-      promises.push(new Promise((resolve, reject) => {
-        // 找到数组 fileIds 和数组 cloudFileIds 共有的元素
-        const common = fileIds.filter((elementA) =>
-          cloudFileIds.some((elementB) => elementA === elementB.fileId)
-        );
-
-        // 删除数组 fileIds 中的共有元素
-        fileIdsWithoutCommon = fileIds.filter((elementA) =>
-          !cloudFileIds.some((elementB) => elementA === elementB.fileId)
-        );
-        /**
-         * 删除云存储中的违规图片
-         */
-        wx.cloud.deleteFile({
-          fileList: common,
-          success: res => {
-            //console.log(res)
-            resolve();
-          },
-          fail: err => {
-            //console.log(err)
-            reject(err);
-          }
-        })
-
-        /**
-         * 移除traceId对象
-         */
-        traceId.where({
-          fileId: _.in(common)
-        }).remove({
-          success: res => {
-            //console.log(res)
-            resolve();
-          },
-          fail: err => {
-            //console.log(err)
-            reject(err);
-          }
-        })
-      }));
-
-      await Promise.all(promises);
-      resolve(fileIdsWithoutCommon);
-    } catch (error) {
-      reject(error);
-    }
-  })
-}
+const check = require('../../check.js');
 
 
 Page({
@@ -206,10 +47,10 @@ Page({
 
     fileID: [],
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
   },
 
   goToRichtext: function () {
@@ -220,22 +61,33 @@ Page({
 
   //0-1 标题的输入状态，更新titleContent数据 → 发布按钮的disable
   title: function (e) {
-    if (e.detail.value == '') {
+    const { value } = e.detail
+    this.myData.title = value
+    const { titleContent } = this.data
+    if (value == '' && titleContent) {
       this.setData({
         titleContent: false
       })
     }
-    else {
+    else if (!titleContent) {
       this.setData({
         titleContent: true
       })
     }
     // //console.log('title',this.data.titleContent)
   },
+
+  myData: {},
+
+  body: function (e) {
+    const { value } = e.detail
+    this.myData.body = value
+  },
   //固定标签
   tagTap: function (e) {
     //console.log(e)
     const { tag } = e.detail
+    this.myData.tag = tag
     //console.log('tag', tag)
     this.setData({
       tag
@@ -250,6 +102,7 @@ Page({
   //自定义标签
   tagInput: function (e) {
     const { value } = e.detail
+    this.myData.tag = value
     //console.log('taginput', value)
     this.setData({
       tag: value,
@@ -257,16 +110,6 @@ Page({
     })
   },
 
-  //1 获取右上角按钮数据
-  getRightTop: function () {
-    const res = wx.getMenuButtonBoundingClientRect()
-    this.setData({
-      top: res.top,
-      left: res.left,
-      right: res.right,
-      bottom: res.bottom
-    })
-  },
 
   //2-1 写入数据库：上传图片
   upload: function (e) {
@@ -279,7 +122,7 @@ Page({
       sourceType: ['album', 'camera'],
       camera: 'back',
       success: res => {
-        checkAndUploadManyImages(res.tempFiles, this)
+        check.checkAndUploadManyImages(res.tempFiles, this)
       },
       fail: err => {
         //console.log(err)
@@ -298,6 +141,7 @@ Page({
 
     //console.log(e.detail.value)
     const { value } = e.detail
+    this.myData.isUnknown = value
 
     this.setData({
       _unknown: value
@@ -308,6 +152,8 @@ Page({
    * @param {*传入的表单} e 
    */
   formSubmit(e) {
+    this.myData.isSendPost = true
+
 
     let that = this
 
@@ -352,14 +198,14 @@ Page({
                 if (suggest === 'risky') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '危险：包含' + matchLabel(label) + '信息！',
+                    title: '危险：包含' + check.matchLabel(label) + '信息！',
                     icon: 'none'
                   })
                 }
                 else if (suggest === 'review') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    title: '可能包含' + check.matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
                 }
@@ -392,8 +238,8 @@ Page({
                           /**
                            * 2、删除上传图片列表中违规图片
                            */
-                          deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                            //console.log('deleteInvalidImages', res)
+                          check.deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                            //console.log('check.deleteInvalidImages', res)
                             /**
                              * 3、更新图片列表
                              */
@@ -512,8 +358,8 @@ Page({
                           /**
                            * 2、删除上传图片列表中违规图片
                            */
-                          deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                            //console.log('deleteInvalidImages', res)
+                          check.deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                            //console.log('check.deleteInvalidImages', res)
                             /**
                              * 3、更新图片列表
                              */
@@ -617,7 +463,6 @@ Page({
       })
       //console.log('>>> ' + this.data.tag)
     }
-    this.getRightTop()
     this.getTopic()
   },
 
@@ -630,8 +475,75 @@ Page({
   onReady: function () {
     setTimeout(this.focus, 250)
   },
+  onShow() {
+    wx.getStorage({
+      key: 'post'
+    }).then(res => {
+      wx.showToast({
+        title: '已恢复到上次的编辑',
+        icon: 'none'
+      })
+      console.log(res.data)
+      const post = JSON.parse(res.data)
+
+      const { title, body, imgList, tag, isUnknown } = post
+      this.myData = {
+        title, body, imgList, tag, isUnknown
+      }
+      this.setData({
+        activeTag: -1,
+        value: tag,
+        tag: tag,
+        titleValue: title,
+        bodyValue: body,
+        fileID: imgList ? imgList : [],
+        isChecked: isUnknown,
+        _unknown: isUnknown,
+        titleContent: title && title != ''
+      })
+    }).catch(err => {
+      console.log('无缓存', err)
+    })
+  },
+  setStorage() {
+    const { title, body, isUnknown } = this.myData
+    const imgList = this.data.fileID
+    const { tag } = this.data
+
+    if (!((title && title.length > 0) || (body && body.length > 0) || imgList.length > 0)) {
+      wx.removeStorage({
+        key: 'post',
+      })
+      return
+    }
+
+    const post = {
+      title, body, tag, isUnknown, imgList
+    }
+
+    console.log(post)
+
+    wx.setStorage({
+      key: 'post',
+      data: JSON.stringify(post),
+    }).then(() => {
+      wx.showToast({
+        title: '已自动保存',
+      })
+    })
+  },
   onUnload: function () {
-    //console.log('onUnload')
-    wx.clearStorageSync()
+    if (!this.myData.isSendPost) {
+      this.setStorage()
+    } else {
+      wx.removeStorage({
+        key: 'post',
+      })
+      this.myData.isSendPost = false
+    }
+  },
+  onHide() {
+    this.setStorage()
+    console.log('onHide')
   }
 })

@@ -1,7 +1,6 @@
 <wxs src="../../../util/filter.wxs" module="filter" />
 
-<return top="{{top}}" bottom="{{bottom}}"></return>
-
+<return />
 
 <block wx:if="{{questionList[0].tag == 'AI'}}">
   <view class="background aibkg" wx:for="{{questionList}}" wx:key="_id" id="{{item._id}}">
@@ -12,7 +11,18 @@
       <view class="right">
         <view class="commentTop">
           <view class="middle">
-            <view class="nickName">{{item.nickName}}</view>
+            <view class="nickName">{{item.nickName}}
+              <block wx:if="{{item.isAuthentic}}">
+                <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
+                  <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
+                </block>
+                <block wx:else="">
+                  <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                </block>
+              </block>
+            </view>
+
           </view>
           <i class="iconfont icon-more-fill" style="font-size: 20px; color: #acacac;" bindtap="threePointTap"></i>
         </view>
@@ -32,22 +42,22 @@
               <block wx:else="">
                 <view wx:if="{{filter.isInArray(openId, item.collector)}}" class="button-area" style="color: #FCC300;" bindtap="collectCancel">
                   <i class="iconfont icon-ic_public_highlight_filled" style="color: #FCC300; font-size: 50rpx; margin-right: 16rpx;"></i>
-                  {{collectNum === 0 ? '收藏' : collectNum}}
+                  {{item.collector.length === 0 ? '收藏' : item.collector.length}}
                 </view>
                 <view wx:else class="button-area" bindtap="collectAdd">
                   <i class="iconfont icon-ic_public_highlight" style="font-size: 50rpx; margin-right: 16rpx;"></i>
-                  {{collectNum === 0 ? '收藏' : collectNum}}
+                  {{item.collector.length === 0 ? '收藏' : item.collector.length}}
                 </view>
               </block>
             </block>
 
             <view wx:if="{{filter.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
               <i class="iconfont icon-ic_public_favor_filled heartBeat" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-              {{postLikeNum === 0 ? '赞' : postLikeNum}}
+              {{item.liker.length === 0 ? '赞' : item.liker.length}}
             </view>
             <view wx:else="" class="button-area" bindtap="postLikeAdd">
               <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-              {{postLikeNum === 0 ? '赞' : postLikeNum}}
+              {{item.liker.length === 0 ? '赞' : item.liker.length}}
             </view>
           </view>
         </view>
@@ -66,6 +76,15 @@
             <view class="commentTop">
               <view class="userInfo nickName">
                 <view>{{item.nickname}} </view>
+                <block wx:if="{{item.isAuthentic}}">
+                  <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                  <block wx:if="{{item.idTitle && item.idTitle.length != 0}}">
+                    <text style="color: #07C160; margin-right: 8rpx;">[{{item.idTitle}}]</text>
+                  </block>
+                  <block wx:else="">
+                    <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                  </block>
+                </block>
               </view>
               <i class="iconfont icon-more-fill" style="font-size: 40rpx; color: #acacac;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></i>
             </view>
@@ -103,7 +122,9 @@
                     <i class="iconfont icon-comment" style="font-size: 37rpx; margin: 8rpx;"></i>
                     {{item.commentNum}}
                   </view>
+                  <i class="iconfont icon-a-ic_public_save_filled1" style="font-size: 37rpx; margin-left: 8rpx; color: #D8D8D8;" bind:tap="copy" data-content="{{item.body}}"></i>
                 </view>
+
               </view>
             </view>
           </view>
@@ -116,19 +137,14 @@
             </view>
             <view class="right">
               <view class="first">
-                <block wx:if="{{commentAgain.isUnknown}}">
-                  <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
-                </block>
-                <block wx:else="">
-                  <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
-                  <block wx:if="{{commentAgain.isAuthentic}}">
-                    <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
-                    <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
-                      <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
-                    </block>
-                    <block wx:else="">
-                      <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
-                    </block>
+                <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
+                <block wx:if="{{commentAgain.isAuthentic}}">
+                  <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                  <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
+                    <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+                  </block>
+                  <block wx:else="">
+                    <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
                   </block>
                 </block>
               </view>
@@ -143,6 +159,12 @@
                   </block>
                 </view>
               </view>
+              <view style="display: flex;">
+                <view wx:if="{{commentAgain.newNickName == 'AI'&& commentAgain.isAuthentic}}" class="last">以上内容为 AI 生成，不代表开发者立场，请勿删除或修改本标记</view>
+                <i class="iconfont icon-a-ic_public_save_filled1" style="font-size: 37rpx; color: #D8D8D8; display: flex; justify-content: flex-end;" bind:tap="copy" data-content="{{commentAgain.commentAgainBody}}"></i>
+              </view>
+
+
             </view>
           </view>
         </block>
@@ -245,20 +267,20 @@
           <block wx:else="">
             <view wx:if="{{filter.isInArray(openId, item.collector)}}" class="button-area" style="color: #FCC300;" bindtap="collectCancel">
               <i class="iconfont icon-ic_public_highlight_filled" style="color: #FCC300; font-size: 50rpx; margin-right: 16rpx;"></i>
-              {{collectNum === 0 ? '收藏' : collectNum}}
+              {{item.collector.length === 0 ? '收藏' : item.collector.length}}
             </view>
             <view wx:else class="button-area" bindtap="collectAdd">
               <i class="iconfont icon-ic_public_highlight" style="font-size: 50rpx; margin-right: 16rpx;"></i>
-              {{collectNum === 0 ? '收藏' : collectNum}}
+              {{item.collector.length === 0 ? '收藏' : item.collector.length}}
             </view>
           </block>
           <view wx:if="{{filter.isInArray(openId, item.liker)}}" class="button-area" style="color: #F50057;" bindtap="postLikeCancel">
             <i class="iconfont icon-ic_public_favor_filled heartBeat" style="color: #F50057; font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-            {{postLikeNum === 0 ? '赞' : postLikeNum}}
+            {{item.liker.length === 0 ? '赞' : item.liker.length}}
           </view>
           <view wx:else="" class="button-area" bindtap="postLikeAdd">
             <i class="iconfont icon-ic_public_favor" style="font-size: 50rpx; margin-left: 32rpx; margin-right: 16rpx;"></i>
-            {{postLikeNum === 0 ? '赞' : postLikeNum}}
+            {{item.liker.length === 0 ? '赞' : item.liker.length}}
           </view>
         </view>
       </view>
@@ -314,6 +336,7 @@
             </view>
             <view class="buttonArea">
               <view class="LikeCommentbutton-area">
+
                 <!-- 点赞按钮 -->
                 <view class="buttonLike" wx:if="{{filter.isInArray(openId, item.liker)}}" id="{{item._id}}" data-index="{{index}}" style="color: #F50057;" bindtap="likeCancel" animation="{{animation}}">
                   <i class="iconfont icon-good" style="font-size: 37rpx; margin: 8rpx; pointer-events:none; color: #F50057;"></i>
@@ -329,7 +352,9 @@
                 <view class="buttonComment" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
                   <i class="iconfont icon-comment" style="font-size: 37rpx; margin: 8rpx;"></i>
                   {{item.commentNum}}
+
                 </view>
+                <i class="iconfont icon-a-ic_public_save_filled1" style="font-size: 37rpx; margin-left: 8rpx; color: #D8D8D8;" bind:tap="copy" data-content="{{item.body}}"></i>
               </view>
             </view>
           </view>
@@ -371,6 +396,7 @@
                 </block>
               </view>
             </view>
+            <i class="iconfont icon-a-ic_public_save_filled1" style="font-size: 37rpx; color: #D8D8D8; display: flex; justify-content: flex-end;" bind:tap="copy" data-content="{{commentAgain.commentAgainBody}}"></i>
           </view>
         </view>
       </block>

@@ -18,15 +18,16 @@ Page({
     reachBottom: false,
     isDone: false,
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
 
     tabs: [
       { id: 1, name: '热门', questionList: [] },
       { id: 2, name: '最新', questionList: [] },
     ],
+    activeTab: 0,
   },
 
   //0-1 搜索框的输入状态，更新searchList数组数据
@@ -159,17 +160,6 @@ Page({
     }
   },
 
-  //1-2 获取右上角按钮数据
-  getRightTop: function () {
-    const res = wx.getMenuButtonBoundingClientRect()
-    this.setData({
-      top: res.top,
-      left: res.left,
-      right: res.right,
-      bottom: res.bottom
-    })
-  },
-
   //2 点击，跳转到Detail页面
   beWatched: function (e) {
     app.globalData.questionId = e.currentTarget.id
@@ -188,68 +178,27 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
+  tabsTap: function (e) {
+    const index = e.detail.index
+    this.setData({
+      activeTab: index,
+      reachBottom: false,
+      isBottom: false
+    })
+  },
+  swiperChange: function (e) {
+    const index = e.detail.index
+    this.setData({
+      activeTab: index,
+      reachBottom: false,
+      isBottom: false
+    })
+  },
   onLoad: function (options) {
-    this.getRightTop()
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  // onShow: function () {
-  //   //console.log(app.globalData)
-  //   const { searchList } = this.data
-  //   const { questionIndex } = app.globalData
-  //   if (app.globalData.isClick && questionIndex != -1) {
-  //     if (app.globalData.questionDelete) {
-  //       // //console.log('执行这里')
-  //       searchList.splice(questionIndex, 1)
-  //       this.setData({
-  //         searchList
-  //       })
-  //     }
-  //     else {
-  //       searchList[questionIndex].solved = app.globalData.questionSolved
-  //       searchList[questionIndex].commentNum = app.globalData.questionCommentNum
-  //       searchList[questionIndex].watcher = app.globalData.questionWatcher
-  //       searchList[questionIndex].watched = app.globalData.questionWatched
-  //       searchList[questionIndex].collectNum = app.globalData.questionCollect
-  //       searchList[questionIndex].postLikeNum = app.globalData.questionLikeNum
-  //       this.setData({
-  //         searchList
-  //       })
-  //     }
-  //   }
-  //   app.globalData.questionDelete = false
-  //   app.globalData.isAsk = false
-  // },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
   onUnload: function () {
     app.globalData.isClick = false
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
   },
 
   /**

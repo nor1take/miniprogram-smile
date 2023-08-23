@@ -33,7 +33,6 @@ Page({
       { id: 2, name: '热门' },
     ],
     isLogin: false,
-    sortWord: '最新发帖',
 
     colorGray: '#E7E7E7',
     colorGreen: '#07C160',
@@ -43,22 +42,9 @@ Page({
     color2: '#FE721D',
     color3: '#F5AD01',
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
-
     isManager: false,
 
     reachBottom: false,
-
-
-
-    // boardList: [{ img: '', id: '', }],
-
-    // topWord: '置顶：使用帮助',
-
-
   },
   QuestionMessageData: { QuestionMessageNum: 0 },
   CommentMessageData: { CommentMessageNum: 0 },
@@ -115,15 +101,15 @@ Page({
     app.globalData.questionIndex = e.currentTarget.dataset.index
   },
 
-  getBoardList: function () {
-    userInfo.doc('0bc57b0d63fe176e000f9eb35c23eec4').get().then((res) => {
-      const { boardList } = res.data
-      //console.log(boardList)
-      this.setData({
-        boardList
-      })
-    })
-  },
+  // getBoardList: function () {
+  //   userInfo.doc('0bc57b0d63fe176e000f9eb35c23eec4').get().then((res) => {
+  //     const { boardList } = res.data
+  //     //console.log(boardList)
+  //     this.setData({
+  //       boardList
+  //     })
+  //   })
+  // },
 
   goToAI: function () {
     wx.navigateTo({
@@ -253,16 +239,6 @@ Page({
     })
   },
 
-  getData: function () {
-    if (this.data.sortWord == "最新发帖") this.getNewData()
-    else this.getNewAnswer()
-    this.setData({
-      top: app.globalData.top,
-      left: app.globalData.left,
-      right: app.globalData.right,
-      bottom: app.globalData.bottom,
-    })
-  },
   getCommentMessage: function () {
     return new Promise((resolve) => {
       commentAgain.where({
@@ -361,7 +337,6 @@ Page({
             url: '../../packageLogin/pages/0-1 Forbidden/Forbidden',
           })
         } else {
-
           this.setData({
             nickName: res.data[0].nickName,
             avatarUrl: res.data[0].avatarUrl,
@@ -448,7 +423,7 @@ Page({
     this.getFollowing()
     this.getHotData()
     this.getNicknameandImage()
-    this.getData()
+    this.getNewData()
     this.getOtherData()
 
     //console.log('onLoad')
@@ -497,27 +472,21 @@ Page({
    */
 
   updateList(index, list) {
-    if (app.globalData.isClick && index != -1) {
-      app.globalData.isClick = false
-      if (app.globalData.questionDelete) {
-        list.splice(index, 1)
-      }
-      else {
-        list[index].solved = app.globalData.questionSolved
-        list[index].commentNum = app.globalData.questionCommentNum
-        list[index].watcher = app.globalData.questionWatcher
-        list[index].watched = app.globalData.questionWatched
-        list[index].collectNum = app.globalData.questionCollect
-        list[index].postLikeNum = app.globalData.questionLikeNum
-      }
-      return list
-    } else {
-      false
+    app.globalData.isClick = false
+    if (app.globalData.questionDelete) {
+      list.splice(index, 1)
     }
+    else {
+      list[index] = app.globalData.tmpPost
+    }
+    return list
+
   },
 
   onShow: function () {
-    //console.log(app.globalData)
+    const { newList, followingPostList, activeTab } = this.data
+    const { questionIndex } = app.globalData
+
     app.globalData.otherOpenId = app.globalData.openId
     if (app.globalData.isCheckSystemMsg && this.data.topWord != '置顶：使用帮助') {
       this.setData({
@@ -530,38 +499,33 @@ Page({
       app.globalData.isModify = false
     }
 
-    const { newList, followingPostList, activeTab } = this.data
-    const { questionIndex } = app.globalData
-
-    console.log(this.newList)
-
-
     var list
-    if (activeTab == 0) {
-
-      list = this.updateList(questionIndex, followingPostList)
-      if (list) {
-        this.setData({
-          followingPostList: list
-        })
+    if (app.globalData.isClick && questionIndex != -1) {
+      if (activeTab == 0) {
+        list = this.updateList(questionIndex, followingPostList)
+        if (list) {
+          this.setData({
+            followingPostList: list
+          })
+        }
+      } else if (activeTab == 1) {
+        if (newList) {
+          list = this.updateList(questionIndex, newList)
+          if (list) {
+            this.setData({
+              newList: list
+            })
+          }
+        }
       }
-    } else if (activeTab == 1) {
-      if (newList) {
-        list = this.updateList(questionIndex, newList)
-        this.setData({
-          newList: list
-        })
-      }
-
     }
-
 
     if (app.globalData.isAsk) {
       this.setData({
         activeTab: 1,
         scrollTop: 0
       })
-      this.getData()
+      this.getNewData()
     }
     app.globalData.questionDelete = false
     app.globalData.isAsk = false
@@ -578,7 +542,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    console.log('onUnload')
   },
 
   /**
@@ -604,14 +568,14 @@ Page({
       this.getFollowing()
     }
     else if (activeTab == 1) {
-      this.getData()
+      this.getNewData()
     } else if (activeTab == 2) {
       this.getHotData()
     }
     setTimeout(this.test, 500)
   },
   // onPullDownRefresh: function () {
-  //   this.getData()
+  //   this.getNewData()
   //   this.getCurrentMessageNum()
   //   //this.getBoardList()
   //   setTimeout(function () { wx.stopPullDownRefresh() }, 500)
@@ -621,44 +585,39 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   reachBottom: function () {
-    const { activeTab } = this.data
-
+    const { activeTab, newList } = this.data
     if (activeTab == 1) {
       this.setData({
         reachBottom: true
       })
-      //console.log('触底')
-      const { newList } = this.data
       console.log(newList)
       const showNum = this.data.newList.length
-      if (this.data.sortWord == "最新发帖") {
-        question.where({
-          tag: _.neq('AI'),
-          time: _.lte(newList[0].time)
-        }).count().then((res) => {
-          if (showNum < res.total) {
+
+      question.where({
+        tag: _.neq('AI'),
+        time: _.lte(newList[0].time)
+      }).count().then((res) => {
+        if (showNum < res.total) {
+          this.setData({
+            isBottom: false,
+          })
+          question.where({
+            tag: _.neq('AI'),
+            time: _.lt(newList[showNum - 1].time)
+          }).orderBy('time', 'desc').get().then(res => {
+            let new_data = res.data
+            let old_data = newList
             this.setData({
-              isBottom: false,
+              newList: old_data.concat(new_data),
             })
-            question.where({
-              tag: _.neq('AI'),
-              time: _.lt(newList[showNum - 1].time)
-            }).orderBy('time', 'desc').get().then(res => {
-              let new_data = res.data
-              let old_data = newList
-              this.setData({
-                newList: old_data.concat(new_data),
-              })
-            })
-          }
-          else {
-            this.setData({
-              isBottom: true
-            })
-          }
-        })
-      }
-    } else if (activeTab == 2) {
+          })
+        }
+        else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
 
     }
 

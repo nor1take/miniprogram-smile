@@ -1,6 +1,6 @@
-<return top="{{top}}" bottom="{{bottom}}" topWord=""></return>
+<return />
 <view style="position: fixed; top:{{top}}px; width: {{left}}px; z-index: 1;">
-  <button wx:if="{{title && title.length !=0 && tag && tag.length !=0}}" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};" bindtap="sendPost">发 布</button>
+  <button wx:if="{{title && title.length > 0 && tag && tag.length > 0}}" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};" bindtap="sendPost">发 布</button>
   <button wx:else disabled="true" size="default" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};">发 布</button>
 </view>
 <view class="background">
@@ -14,9 +14,9 @@
   </view>
 
 
-  <textarea class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="标题：用一句话描述你的帖子（必填）" name="title" bindinput="title"></textarea>
+  <textarea value="{{titleValue}}" class="title" placeholder-style="font-weight: 500; color:#ACACAC" focus='{{focus}}' auto-height show-confirm-bar='{{false}}' adjust-position='{{false}}' placeholder="标题：用一句话描述你的帖子（必填）" name="title" bindinput="title"></textarea>
 
-  <editor id="editor" class="ql-container" placeholder="补充说明（支持富文本编辑）" placeholder-style="color:#ACACAC" bindstatuschange="onStatusChange" bindready="onEditorReady" bindblur="loseFocus">
+  <editor id="editor" class="ql-container" placeholder="补充说明（支持富文本编辑）" placeholder-style="color:#ACACAC" bindstatuschange="onStatusChange" bindready="onEditorReady" bindinput="body" bindblur="loseFocus">
   </editor>
 </view>
 <view style="width: 100%; height: 10%; position: absolute;"></view>

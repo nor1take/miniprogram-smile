@@ -7,106 +7,13 @@ const systemMsg = db.collection('systemMsg')
 const userInfo = db.collection('userInfo')
 const topic = db.collection('topic')
 
-function matchLabel(labelNum) {
-  switch (labelNum) {
-    case 100:
-      return '正常';
-      break;
-    case 10001:
-      return '广告';
-      break;
-    case 20001:
-      return '时政';
-      break;
-    case 20002:
-      return '色情';
-      break;
-    case 20003:
-      return '辱骂';
-      break;
-    case 20006:
-      return '违法犯罪';
-      break;
-    case 20008:
-      return '欺诈';
-      break;
-    case 20012:
-      return '低俗';
-      break;
-    case 20013:
-      return '版权';
-      break;
-    case 21000:
-      return '其他';
-      break;
-  }
-}
-
-/**
- * 删除已上传图片列表中的违规图片，并移除traceId对象
- * @param {已上传图片列表} fileIds 
- * @param {*违规图片集合} cloudFileIds 
- */
-async function deleteInvalidImages(fileIds, cloudFileIds) {
-  return new Promise(async function (resolve, reject) {
-    try {
-      const promises = [];
-      let fileIdsWithoutCommon = [];
-      promises.push(new Promise((resolve, reject) => {
-        // 找到数组 fileIds 和数组 cloudFileIds 共有的元素
-        const common = fileIds.filter((elementA) =>
-          cloudFileIds.some((elementB) => elementA === elementB.fileId)
-        );
-
-        // 删除数组 fileIds 中的共有元素
-        fileIdsWithoutCommon = fileIds.filter((elementA) =>
-          !cloudFileIds.some((elementB) => elementA === elementB.fileId)
-        );
-        /**
-         * 删除云存储中的违规图片
-         */
-        wx.cloud.deleteFile({
-          fileList: common,
-          success: res => {
-            //console.log(res)
-            resolve();
-          },
-          fail: err => {
-            //console.log(err)
-            reject(err);
-          }
-        })
-
-        /**
-         * 移除traceId对象
-         */
-        traceId.where({
-          fileId: _.in(common)
-        }).remove({
-          success: res => {
-            //console.log(res)
-            resolve();
-          },
-          fail: err => {
-            //console.log(err)
-            reject(err);
-          }
-        })
-      }));
-
-      await Promise.all(promises);
-      resolve(fileIdsWithoutCommon);
-    } catch (error) {
-      reject(error);
-    }
-  })
-}
-
+const check = require('../../check.js');
 Page({
   options: {
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
+    editorCtx: null,
     formats: {},
     readOnly: false,
     editorHeight: 300,
@@ -120,10 +27,8 @@ Page({
 
     fileID: [],
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
 
     tag: '生活',
     tagsList: [
@@ -150,19 +55,19 @@ Page({
   switchChange: function (e) {
     //console.log(e.detail.value)
     const { value } = e.detail
+    this.myData.isUnknown = value
     this.setData({
       _unknown: value
     })
   },
 
   tagTap: function (e) {
-    //console.log(e)
-    const { tagname } = e.detail
-    //console.log('tagname', tagname)
+    const { tag } = e.detail
+    this.myData.tag = tag
     this.setData({
-      tag: tagname
+      tag: tag
     })
-    if (this.data.tagId != 1 && this.data.tagsList.includes(tagname)) {
+    if (this.data.tagId != 1 && this.data.tagsList.includes(tag)) {
       this.setData({
         tagId: 1
       })
@@ -170,7 +75,7 @@ Page({
   },
   tagInput: function (e) {
     const { value } = e.detail
-    //console.log('taginput', value)
+    this.myData.tag = value
     this.setData({
       tag: value,
       tagId: 0
@@ -178,6 +83,7 @@ Page({
   },
 
   sendPost: function () {
+    this.myData.isSendPost = true
     let that = this
     wx.requestSubscribeMessage({
       tmplIds: ['TV_8WCCiyJyxxSar0WTIwJjY_S4BxvAITzaRanOjXWQ'],
@@ -187,11 +93,7 @@ Page({
           title: '审核中',
           mask: true
         })
-        const { title } = that.data;
-        const { html } = that.data;
-        const { text } = that.data;
-        const { tag } = that.data;
-
+        const { title, html, text, tag } = that.data;
         userInfo.where({
           _openid: '{openid}'
         }).get()
@@ -218,13 +120,13 @@ Page({
                 if (suggest === 'risky') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '危险：包含' + matchLabel(label) + '信息！',
+                    title: '危险：包含' + check.matchLabel(label) + '信息！',
                     icon: 'none'
                   })
                 } else if (suggest === 'review') {
                   wx.hideLoading()
                   wx.showToast({
-                    title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
+                    title: '可能包含' + check.matchLabel(label) + '信息，建议调整相关表述',
                     icon: 'none'
                   })
                 } else {
@@ -289,8 +191,8 @@ Page({
                         /**
                          * 2、删除上传图片列表中违规图片
                          */
-                        deleteInvalidImages(that.data.fileID, res.data).then((res) => {
-                          //console.log('deleteInvalidImages', res)
+                        check.deleteInvalidImages(that.data.fileID, res.data).then((res) => {
+                          //console.log('check.deleteInvalidImages', res)
                           /**
                            * 3、更新图片列表
                            */
@@ -323,31 +225,32 @@ Page({
     })
   },
 
+  myData: {},
+
   title: function (e) {
     const { value } = e.detail
-    if (value == '') {
+    this.myData.title = value
+    const { titleContent } = this.data
+    if (value == '' && titleContent) {
       this.setData({
-        title: value
+        titleContent: false
       })
     }
-    else {
+    else if (!titleContent) {
       this.setData({
-        title: value
+        titleContent: true
       })
+    }
+    // //console.log('title',this.data.titleContent)
+  },
+
+  body: function (e) {
+    const { html, text, delta } = e.detail
+    this.myData = {
+      html, text, delta
     }
   },
 
-  getRightTop: function () {
-    const res = wx.getMenuButtonBoundingClientRect()
-    this.setData({
-      top: res.top,
-      left: res.left,
-      right: res.right,
-      bottom: res.bottom,
-      height: res.height
-    })
-    //console.log(res)
-  },
 
   loseFocus: function (e) {
     //console.log(e.detail.html)
@@ -390,7 +293,6 @@ Page({
       //console.log('>>> ' + this.data.tag)
     }
     this.getTopic()
-    this.getRightTop()
     this.setData({
       theme: wx.getSystemInfoSync().theme || 'light'
     })
@@ -414,12 +316,7 @@ Page({
     this.setData({ isIOS, safeHeight, toolBarHeight: isIOS ? safeHeight + 50 : 50 })
     this.updatePosition(0)
   },
-  onShow() {
-    //console.log('onShow')
-  },
-  onHide() {
-    //console.log('onHide')
-  },
+
   updatePosition(keyboardHeight) {
     const toolbarHeight = 50
     const { windowHeight } = wx.getSystemInfoSync()
@@ -451,9 +348,12 @@ Page({
     return statusBarHeight + navigationBarHeight
   },
   onEditorReady() {
-    const that = this
-    wx.createSelectorQuery().select('#editor').context(function (res) {
-      that.editorCtx = res.context
+    let that = this;
+    wx.createSelectorQuery().select('#editor').context((res) => {
+      that.editorCtx = res.context;
+      that.editorCtx.setContents({
+        delta: that.myData.delta
+      })
     }).exec()
   },
   blur() {
@@ -569,9 +469,80 @@ Page({
       },
     })
   },
-  readOnlyChange() {
-    this.setData({
-      readOnly: !this.data.readOnly
+
+  onShow() {
+
+    wx.getStorage({
+      key: 'postHTML'
+    }).then(res => {
+      wx.showToast({
+        title: '已恢复到上次的编辑',
+        icon: 'none'
+      })
+      console.log(res.data)
+      const post = JSON.parse(res.data)
+
+      const { title, html, text, delta, tag, isUnknown, imgList } = post
+
+      this.myData = {
+        title, html, text, delta, tag, isUnknown
+      }
+      this.setData({
+        html, text,
+        activeTag: -1,
+        value: tag,
+        tag: tag,
+        titleValue: title,
+        title,
+        fileID: imgList ? imgList : [],
+        isChecked: isUnknown,
+        _unknown: isUnknown,
+        titleContent: title && title != ''
+      })
+    }).catch(err => {
+      console.log('无缓存', err)
     })
   },
+  setStorage() {
+    const { title, html, text, delta, isUnknown } = this.myData
+    const imgList = this.data.fileID
+    const { tag } = this.data
+
+    console.log(text)
+
+    if (!((title && title.length > 0) || (text && text != '\n'))) {
+      wx.removeStorage({
+        key: 'postHTML',
+      })
+      return
+    }
+
+    const post = {
+      title, html, text, delta, tag, isUnknown, imgList
+    }
+    wx.setStorage({
+      key: 'postHTML',
+      data: JSON.stringify(post),
+    }).then((res) => {
+      console.log(res)
+      wx.showToast({
+        title: '已自动保存',
+      }).catch(err => {
+        console.log(err)
+      })
+    })
+  },
+  onUnload: function () {
+    if (!this.myData.isSendPost) {
+      this.setStorage()
+    } else {
+      wx.removeStorage({
+        key: 'postHTML',
+      })
+    }
+  },
+  onHide() {
+    this.setStorage()
+    console.log('onHide')
+  }
 })

@@ -10,40 +10,7 @@ const userInfo = db.collection('userInfo')
 const deleteRecord = db.collection('deleteRecord')
 const topic = db.collection('topic')
 
-function matchLabel(labelNum) {
-  switch (labelNum) {
-    case 100:
-      return '正常';
-      break;
-    case 10001:
-      return '广告';
-      break;
-    case 20001:
-      return '时政';
-      break;
-    case 20002:
-      return '色情';
-      break;
-    case 20003:
-      return '辱骂';
-      break;
-    case 20006:
-      return '违法犯罪';
-      break;
-    case 20008:
-      return '欺诈';
-      break;
-    case 20012:
-      return '低俗';
-      break;
-    case 20013:
-      return '版权';
-      break;
-    case 21000:
-      return '其他';
-      break;
-  }
-}
+const check = require('../../check.js');
 
 Page({
 
@@ -51,11 +18,13 @@ Page({
    * 页面的初始数据
    */
   data: {
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
-    keyboardHeight: 32,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
+    screenHeight: app.globalData.screenHeight,
+
+    keyboardHeight: 0,
     inputValue: '',
 
     color1: '#DF3E3E',
@@ -213,7 +182,7 @@ Page({
   loseFocus: function () {
     //console.log('失去焦点')
     this.setData({
-      keyboardHeight: 32,
+      keyboardHeight: 0,
     })
   },
   focus: function (e) {
@@ -279,13 +248,13 @@ Page({
             if (suggest === 'risky') {
               wx.hideLoading()
               wx.showToast({
-                title: '危险：包含' + matchLabel(label) + '信息！',
+                title: '危险：包含' + check.matchLabel(label) + '信息！',
                 icon: 'none'
               })
             } else if (suggest === 'review') {
               wx.hideLoading()
               wx.showToast({
-                title: '可能包含' + matchLabel(label) + '信息，建议调整相关表述',
+                title: '可能包含' + check.matchLabel(label) + '信息，建议调整相关表述',
                 icon: 'none'
               })
             } else {
@@ -437,10 +406,10 @@ Page({
           const { label } = res.result.msgR.result
           const { suggest } = res.result.msgR.result
           if (suggest === 'risky') {
-            that.sendCompletion('[危险：包含' + matchLabel(label) + '信息！]：回答不予显示', postId)
+            that.sendCompletion('[危险：包含' + check.matchLabel(label) + '信息！]：回答不予显示', postId)
           } else if (suggest === 'review') {
-            //console.log('可能包含' + matchLabel(label) + '信息')
-            that.sendCompletion('[可能包含' + matchLabel(label) + '信息]：' + completion, postId)
+            //console.log('可能包含' + check.matchLabel(label) + '信息')
+            that.sendCompletion('[可能包含' + check.matchLabel(label) + '信息]：' + completion, postId)
           } else {
             that.sendCompletion(completion, postId)
           }
@@ -602,15 +571,6 @@ Page({
     this.getNewData()
     this.getHotPost()
     this.getHotComment()
-    const windowInfo = wx.getWindowInfo()
-    this.setData({
-      top: app.globalData.top,
-      left: app.globalData.left,
-      right: app.globalData.right,
-      bottom: app.globalData.bottom,
-
-      screenHeight: windowInfo.screenHeight
-    })
   },
   /**
    * 生命周期函数--监听页面初次渲染完成

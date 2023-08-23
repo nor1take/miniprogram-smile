@@ -52,9 +52,7 @@
           <view class="comment" wx:if="{{item.comments.length > 0}}">
             <i class="iconfont icon-question-answer-line" style="font-size: 30rpx; color: #7b7b7b; margin-right: 16rpx;"></i><text style="font-weight: bolder;">{{item.comments[0].nickname}}：</text><text>{{filter.abbreviation(item.comments[0].body)}}</text>
           </view>
-
         </view>
-        <ad-custom wx:if="{{(index+1)%10==0}}" style="margin: 16rpx; margin-left: 32rpx; margin-right: 32rpx;  border-bottom: 1rpx solid #dddddd;" unit-id="adunit-64acaeb0e07bfabf"></ad-custom>
       </block>
     </view>
     <view slot="tab-content-1">

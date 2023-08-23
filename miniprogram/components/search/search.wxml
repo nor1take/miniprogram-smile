@@ -50,7 +50,7 @@
 
 <view class="container" style="width: 100%; position: fixed; top:{{top}}px; z-index: 2;">
   <view class="container" style="width: {{left}}px;">
-    <view bindtap="menu" style="height: 30px; width: 30px;  border: 1rpx solid #dddddd;  padding: 1px;  border-radius: 30px; margin-left: 32rpx;">
+    <view bindtap="menu" style="height: 28px; width: 28px;  border: 1rpx solid #dddddd;  padding: 1px;  border-radius: 30px; margin-left: 32rpx;">
       <image src="{{avatarUrl == '' ? defaultAvatarUrl : avatarUrl}}" style="width: 100%; height: 100%; border-radius: 30px;"></image>
     </view>
     <!-- <view class="searchInput" bindtap="search"></view> -->

@@ -1,14 +1,12 @@
 // app.js
 App({
   globalData: {
+    tmpPost: {},
     follow: false,
     questionId: '',
     isClick: false,
 
-    questionSolved: false,
-    questionCommentNum: 0,
     questionDelete: false,
-    questionCollect: 0,
 
     isAsk: false,
 
@@ -43,16 +41,16 @@ App({
     }
 
     const res = wx.getMenuButtonBoundingClientRect()
+    const windowInfo = wx.getWindowInfo()
     this.globalData = {
       top: res.top,
       left: res.left,
       right: res.right,
       bottom: res.bottom,
-      stayTime: 0,
-      questionWatcher: [],
-      questionWatched: 0,
+      
+      screenHeight: windowInfo.screenHeight,
+
       questionIndex: -1,
-      questionLikeNum: 0
     };
   },
 });

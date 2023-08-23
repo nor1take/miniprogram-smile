@@ -1,5 +1,24 @@
 page {
-  background-color: black;
+  background-color: white;
+}
+
+.last {
+  margin-left: 16rpx;
+}
+
+.intro {
+  height: 100%;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.top {
+  font-size: xx-large;
+  margin: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ask {
@@ -24,35 +43,39 @@ page {
   color: white;
 }
 
-.gptBG {
-  position: fixed;
 
-  left: 32rpx;
-  right: 32rpx;
-  height: fit-content;
-  background-color: #0A59F7;
-  padding: 32rpx;
-
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
 
 
 .hotLabel {
   font-size: 34rpx;
   font-weight: bold;
-  margin: 32rpx;
+  margin: 16rpx;
   font-size: larger;
-  color: white;
-  line-height: 1.5;
+}
+
+.gptBG {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  height: fit-content;
+  background-color: #0A59F7;
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
+
+  display: flex;
+  align-items: center;
 }
 
 .gptInput {
+  width: 100%;
   height: fit-content;
   color: white;
   padding: 32rpx;
+  padding-left: 0;
 }
 
 .gptComment {
@@ -70,6 +93,7 @@ page {
   font-size: 30rpx;
 
   padding-left: 16rpx;
+  padding-right: 0;
 
   line-height: 1.75;
 }
@@ -80,6 +104,10 @@ page {
 }
 
 @media (prefers-color-scheme: dark) {
+  page {
+    background-color: #343541;
+  }
+
   .gptBG {
     background-color: #00B0FF;
   }

@@ -15,10 +15,10 @@ Page({
     show: false,
     pass: false,
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
 
     isChecked: false
   },

@@ -24,10 +24,10 @@ Page({
 
     reachBottom: false,
 
-    top: 48,
-    left: 281,
-    right: 367,
-    bottom: 80,
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
   },
 
 
@@ -94,8 +94,6 @@ Page({
       this.setData({
         'tabs[0].questionList': this.questionListNoData.questionListNo,
         'tabs[1].questionList': this.questionListYesData.questionListYes,
-        top: app.globalData.top,
-        bottom: app.globalData.bottom,
       })
     })
   },
@@ -120,12 +118,7 @@ Page({
       }
       else {
         //console.log(app.globalData)
-        questionList[questionIndex].solved = app.globalData.questionSolved
-        questionList[questionIndex].commentNum = app.globalData.questionCommentNum
-        questionList[questionIndex].watcher = app.globalData.questionWatcher
-        questionList[questionIndex].watched = app.globalData.questionWatched
-        questionList[questionIndex].collectNum = app.globalData.questionCollect
-        questionList[questionIndex].postLikeNum = app.globalData.questionLikeNum
+        questionList[questionIndex] = app.globalData.tmpPost
       }
       if (index === 0) {
         this.setData({

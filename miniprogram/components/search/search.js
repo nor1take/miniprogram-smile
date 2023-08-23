@@ -1,26 +1,25 @@
 // components/search/search.js
-
+const app = getApp()
 Component({
   /**
    * 组件的属性列表
    */
   properties: {
-    top: { type: Number, value: 48, },
-    left: { type: Number, value: 281, },
-    right: { type: Number, value: 367, },
-    bottom: { type: Number, value: 80, },
     nickName: { type: String, value: '' },
     avatarUrl: { type: String, value: '' },
     isManager: { type: Boolean, value: false },
     isAuthentic: { type: Boolean, value: false },
     idTitle: { type: String, value: '' },
-
   },
 
   /**
    * 组件的初始数据
    */
   data: {
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
     menu: false,
     menuAnimation: {},
     backAnimation: {},

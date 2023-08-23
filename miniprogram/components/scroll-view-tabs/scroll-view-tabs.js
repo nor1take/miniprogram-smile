@@ -1,4 +1,4 @@
-// components/tabs/tabs.js
+const app = getApp()
 Component({
   options: {
     multipleSlots: true   //使用[具名插槽]要配置multipleSlots
@@ -7,11 +7,6 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    top: { type: Number, value: 0, },
-    left: { type: Number, value: 0, },
-    right: { type: Number, value: 0, },
-    bottom: { type: Number, value: 0, },
-
     tabs: { type: Array, value: [] },
     activeTab: { type: Number, value: 0 },
     refresherTriggered: { type: Boolean, value: false }
@@ -21,6 +16,11 @@ Component({
    * 组件的初始数据
    */
   data: {
+    top: app.globalData.top,
+    left: app.globalData.left,
+    right: app.globalData.right,
+    bottom: app.globalData.bottom,
+
     currentView: 0,
   },
   observers: {

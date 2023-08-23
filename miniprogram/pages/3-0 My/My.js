@@ -5,7 +5,6 @@ const _ = db.command
 const question = db.collection('question')
 const comment = db.collection('comment')
 const commentAgain = db.collection('commentAgain')
-const userInfo = db.collection('userInfo')
 
 Page({
   /**
@@ -36,7 +35,7 @@ Page({
     colorYellow: '#F9A826',
 
     reachBottom: false,
-    top: 48,
+    top: app.globalData.top,
   },
 
   gotoDetail: function (e) {
@@ -162,13 +161,6 @@ Page({
   },
   getData: function () {
     var d = new Date();
-    this.setData({
-      top: app.globalData.top,
-      // height:app.globalData.height
-      // left: app.globalData.left,
-      // right: app.globalData.right,
-      bottom: app.globalData.bottom,
-    })
     Promise.all([this.getAllData(), this.getNoData(), this.getYesData()]).then(() => {
       this.setData({
         'tabs[0].questionList': this.questionListAllData.questionListAll,

@@ -139,6 +139,7 @@
   /* border: 1rpx solid blue; */
   padding: 16rpx;
   padding-left: 0;
+  padding-right: 0;
 }
 
 .commentBody {
@@ -149,7 +150,6 @@
   display: flex;
   font-size: 30rpx;
   color: black;
-  padding-right: 16rpx;
 
   line-height: 1.75;
 }
@@ -165,6 +165,7 @@
 .second {
   padding: 16rpx;
   padding-left: 0;
+  padding-right: 0;
   font-size: 28rpx;
   line-height: 1.5;
   word-wrap: break-word;
@@ -219,7 +220,7 @@
 /* 4-2 评论的评论 */
 .commentAgainBackground {
   margin: 8rpx;
-  padding: 16rpx;
+  margin-right: 0;
   padding-bottom: 0;
   display: flex;
   border-left: 8rpx solid #dddddd;
@@ -348,7 +349,6 @@ button {
 
 .aibkg {
   margin: 0;
-  padding: 32rpx;
   border: 0 solid transparent;
   background-color: transparent;
   box-shadow: 0 0 0 transparent;

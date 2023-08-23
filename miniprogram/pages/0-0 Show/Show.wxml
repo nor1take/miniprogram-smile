@@ -1,13 +1,13 @@
 <wxs src="../../util/filter.wxs" module="filter" />
 
-<search top='{{top}}' left='{{left}}' right='{{right}}' bottom='{{bottom}}' nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
+<search nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
 <movable-area>
   <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="goToAsk">
     <i class="iconfont icon-ic_public_add add_class"></i>
   </movable-view>
 </movable-area>
 
-<tabs top='{{top}}' tabs='{{tabs}}' activeTab='{{activeTab}}' refresherTriggered='{{refresherTriggered}}' scroll-top='{{scrollTop}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
+<tabs tabs='{{tabs}}' activeTab='{{activeTab}}' refresherTriggered='{{refresherTriggered}}' scroll-top='{{scrollTop}}' bindtabclick="tabsTap" bindchange="swiperChange" bindreachBottom="reachBottom" bindrefresh="refresh">
   <view slot="tab-content-0">
 
     <block wx:if="{{followingPostList && followingPostList.length > 0}}">
@@ -44,11 +44,11 @@
                 </view>
                 <view class="iconArea">
                   <i class="iconfont icon-star-line lasticon"></i>
-                  <text class="watched">{{item.collectNum}}</text>
+                  <text class="watched">{{item.collector.length}}</text>
                 </view>
                 <view class="iconArea">
                   <i class="iconfont icon-ic_public_favor lasticon"></i>
-                  <text class="watched">{{item.postLikeNum}}</text>
+                  <text class="watched">{{item.liker.length}}</text>
                 </view>
               </view>
               <view class="comment" wx:if="{{item.comments.length > 0}}">
@@ -97,8 +97,8 @@
         <text class="last">
           <text>{{filter.timeString(item.time)}}</text>
           <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
-          <text wx:if="{{item.collectNum != 0}}" class="watched"> · {{item.collectNum}} 收藏</text>
-          <text wx:if="{{item.postLikeNum != 0}}" class="watched"> · {{item.postLikeNum}} 赞</text>
+          <text wx:if="{{item.collector.length != 0}}" class="watched"> · {{item.collector.length}} 收藏</text>
+          <text wx:if="{{item.liker.length != 0}}" class="watched"> · {{item.liker.length}} 赞</text>
         </text>
 
         <view class="comment" wx:if="{{item.comments.length > 0}}">
