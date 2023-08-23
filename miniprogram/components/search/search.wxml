@@ -39,7 +39,7 @@
       </button>
     </view>
   </view>
-  <view class="version">版本号：v2.0.0</view>
+  <view class="version">版本号：v2.0.1</view>
 
 </view>
 <view class="coverBackground" animation="{{backAnimation}}"></view>

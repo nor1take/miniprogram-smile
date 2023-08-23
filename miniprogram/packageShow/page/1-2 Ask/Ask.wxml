@@ -37,7 +37,7 @@
     </view>
 
     <view class="btn-area">
-      <button wx:if="{{title && title.length > 0 && tag && tag.length > 0}}" size="default" type="primary" formType="submit">发布</button>
+      <button wx:if="{{titleContent && tag && tag.length > 0}}" size="default" type="primary" formType="submit">发布</button>
       <button wx:else disabled="true" size="default" type="primary" formType="submit">发布</button>
     </view>
   </view>

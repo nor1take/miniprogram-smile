@@ -160,13 +160,13 @@ Page({
     })
   },
   getData: function () {
-    var d = new Date();
     Promise.all([this.getAllData(), this.getNoData(), this.getYesData()]).then(() => {
       this.setData({
         'tabs[0].questionList': this.questionListAllData.questionListAll,
         'tabs[1].questionList': this.questionListNoData.questionListNo,
         'tabs[2].questionList': this.questionListYesData.questionListYes,
       })
+      wx.hideLoading()
     })
   },
 
@@ -174,6 +174,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true,
+    });
     this.getData()
   },
 

@@ -149,6 +149,7 @@ Page({
       .orderBy('time', 'desc').get()
       .then((res) => {
         // //console.log(res.data)
+        wx.hideLoading();
         this.setData({
           newList: res.data,
         })
@@ -412,6 +413,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true,
+    });
 
     //记得及时注释！！！
     // wx.cloud.callFunction({
@@ -465,6 +470,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+
   },
 
   /**

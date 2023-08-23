@@ -227,6 +227,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true,
+    });
     const { openid } = options
     if (openid) {
       app.globalData.otherOpenId = openid
@@ -249,6 +253,7 @@ Page({
         'tabs[0].name': this.data.tabs[0].name + " " + this.PostNum.PostNum,
         'tabs[1].name': this.data.tabs[1].name + " " + this.CommentNum.CommentNum
       })
+      wx.hideLoading()
     })
   },
 

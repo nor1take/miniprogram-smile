@@ -25,12 +25,12 @@
 
         <view class="background">
           <view class="title" style="margin: 0; margin-bottom: 32rpx; font-weight: 500;">{{item.title}}</view>
-          <view class="last" style="margin: 0;">
-            <text class="watched">{{item.commentNum}} 回应</text> ·
-            <text class="watched">{{item.watched + item.watcher.length}} 浏览</text> ·
-            <text class="watched">{{item.collectNum}} 收藏</text> ·
-            <text class="watched">{{item.postLikeNum}} 赞</text>
-          </view>
+          <text class="last">
+            <text>{{filter.timeString(item.time)}}</text>
+            <text wx:if="{{item.watched + item.watcher.length >= 10}}" class="watched"> · {{item.watched + item.watcher.length}} 浏览</text>
+            <text wx:if="{{item.collector.length != 0}}" class="watched"> · {{item.collector.length}} 收藏</text>
+            <text wx:if="{{item.liker.length != 0}}" class="watched"> · {{item.liker.length}} 赞</text>
+          </text>
         </view>
       </view>
     </block>

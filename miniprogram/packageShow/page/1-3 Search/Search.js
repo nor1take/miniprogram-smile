@@ -179,7 +179,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   tabsTap: function (e) {
-    const index = e.detail.index
+    const { index } = e.detail
     this.setData({
       activeTab: index,
       reachBottom: false,
@@ -187,7 +187,7 @@ Page({
     })
   },
   swiperChange: function (e) {
-    const index = e.detail.index
+    const { index } = e.detail
     this.setData({
       activeTab: index,
       reachBottom: false,
@@ -204,93 +204,97 @@ Page({
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
-    this.setData({
-      reachBottom: true
-    })
-    //console.log('触底')
-    const questionList = this.data.searchList
-    const value = this.data.inputValue
-    const showNum = questionList.length
-    question.where(
-      _.or([
-        {
-          time: _.lte(questionList[0].time),
-          title: db.RegExp({
-            regexp: value,
-            options: 'i',
-          })
-        },
-        {
-          time: _.lte(questionList[0].time),
-          body: db.RegExp({
-            regexp: value,
-            options: 'i',
-          }),
-        },
-        {
-          time: _.lte(questionList[0].time),
-          tag: db.RegExp({
-            regexp: value,
-            options: 'i',
-          }),
-        }
-      ])
-    ).count().then((res) => {
-      if (showNum < res.total) {
-        this.setData({
-          isBottom: false,
-        })
-        question.where(_.or([
+  reachBottom: function () {
+    const { activeTab, tabs, inputValue } = this.data
+    if (activeTab == 1) {
+      this.setData({
+        reachBottom: true
+      })
+      //console.log('触底')
+      const { questionList } = tabs[activeTab]
+      const value = inputValue
+      const showNum = questionList.length
+      question.where(
+        _.or([
           {
-            time: _.lt(questionList[showNum - 1].time),
+            time: _.lte(questionList[0].time),
             title: db.RegExp({
               regexp: value,
               options: 'i',
             })
           },
           {
-            time: _.lt(questionList[showNum - 1].time),
+            time: _.lte(questionList[0].time),
             body: db.RegExp({
               regexp: value,
               options: 'i',
             }),
           },
           {
-            time: _.lt(questionList[showNum - 1].time),
+            time: _.lte(questionList[0].time),
             tag: db.RegExp({
               regexp: value,
               options: 'i',
             }),
           }
-        ])).orderBy('time', 'desc').get().then(res => {
-
-          const searchList = res.data.map(item => {
-            // Highlight the matched keyword in title, body, and tag
-            const highlightedTitle = item.title.replace(new RegExp(value, 'gi'), '<span class="highlight">$&</span>');
-            const highlightedBody = item.body.replace(new RegExp(value, 'gi'), '<span class="highlight">$&</span>');
-            const highlightedTag = item.tag.replace(new RegExp(value, 'gi'), '<span class="highlight">$&</span>');
-
-            return {
-              ...item,
-              highlightedTitle,
-              highlightedBody,
-              highlightedTag
-            };
-          });
-
-          let new_data = searchList
-          let old_data = questionList
+        ])
+      ).count().then((res) => {
+        if (showNum < res.total) {
           this.setData({
-            searchList: old_data.concat(new_data),
+            isBottom: false,
           })
-        })
-      }
-      else {
-        this.setData({
-          isBottom: true
-        })
-      }
-    })
+          question.where(_.or([
+            {
+              time: _.lt(questionList[showNum - 1].time),
+              title: db.RegExp({
+                regexp: value,
+                options: 'i',
+              })
+            },
+            {
+              time: _.lt(questionList[showNum - 1].time),
+              body: db.RegExp({
+                regexp: value,
+                options: 'i',
+              }),
+            },
+            {
+              time: _.lt(questionList[showNum - 1].time),
+              tag: db.RegExp({
+                regexp: value,
+                options: 'i',
+              }),
+            }
+          ])).orderBy('time', 'desc').get().then(res => {
+
+            const searchList = res.data.map(item => {
+              // Highlight the matched keyword in title, body, and tag
+              const highlightedTitle = item.title.replace(new RegExp(value, 'gi'), '<span class="highlight">$&</span>');
+              const highlightedBody = item.body.replace(new RegExp(value, 'gi'), '<span class="highlight">$&</span>');
+              const highlightedTag = item.tag.replace(new RegExp(value, 'gi'), '<span class="highlight">$&</span>');
+
+              return {
+                ...item,
+                highlightedTitle,
+                highlightedBody,
+                highlightedTag
+              };
+            });
+
+            let new_data = searchList
+            let old_data = questionList
+            this.setData({
+              'tabs[1].questionList': old_data.concat(new_data),
+            })
+          })
+        }
+        else {
+          this.setData({
+            isBottom: true
+          })
+        }
+      })
+    }
+
   },
 })

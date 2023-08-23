@@ -1,3 +1,8 @@
+const db = wx.cloud.database()
+const _ = db.command
+const traceId = db.collection('traceId')
+
+
 function matchLabel(labelNum) {
   switch (labelNum) {
     case 100:

@@ -294,10 +294,15 @@ Page({
         tagimg: app.globalData.tagimg,
         openId: app.globalData.openId
       })
+      wx.hideLoading()
     })
   },
 
   onLoad(options) {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true,
+    });
     const { tag } = options
     //console.log(tag)
     if (tag) {
@@ -355,7 +360,6 @@ Page({
         scrollTop: 0
       })
     }
-
   },
 
   /**

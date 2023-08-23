@@ -79,6 +79,7 @@ Page({
           star: 1,
           tag: 1,
           updatetime: 1,
+          collector: 1,
 
           totalScores: $.divide([
             // $.multiply([$.log10($.size('$posts')), 1]),
@@ -130,6 +131,7 @@ Page({
       this.setData({
         'tabs[1].topicList': this.myData.HotData,
       })
+      wx.hideLoading()
     })
     Promise.all([
       this.getSelectedData(),
@@ -144,6 +146,10 @@ Page({
   },
 
   onLoad() {
+    wx.showLoading({
+      title: '加载中...',
+      mask: true,
+    });
     this.getData()
   },
 
@@ -214,7 +220,7 @@ Page({
     }
     else if (activeTab === 1) {
       this.setData({
-        isBottom: true
+        reachBottom: false
       })
     }
     else if (activeTab === 2) {

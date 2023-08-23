@@ -54,6 +54,8 @@
           </view>
         </view>
       </block>
+      <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+      <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
     </view>
     <view slot="tab-content-1">
       <block wx:if="{{commentList.length == 0}}">
@@ -69,5 +71,6 @@
       <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
       <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
     </view>
+
   </tabs>
 </view>

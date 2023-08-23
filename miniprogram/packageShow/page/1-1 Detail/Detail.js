@@ -297,6 +297,13 @@ Page({
     question.where({
       _id: app.globalData.questionId
     }).get().then(res => {
+      if (res.data.length == 0) {
+        wx.showToast({
+          title: '原帖已删除',
+          icon: 'error'
+        })
+        return
+      }
       this.setData({
         questionList: res.data,
         collectNum: res.data[0].collector.length,
@@ -1716,7 +1723,6 @@ Page({
       })
   },
   onLoad: function (options) {
-    //console.log('onLoad')
     const { id } = options
     if (id != undefined) {
       app.globalData.questionId = id

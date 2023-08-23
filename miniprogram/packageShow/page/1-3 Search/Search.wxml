@@ -3,10 +3,12 @@
 <return color="white" bkgColor="black"></return>
 
 <view class="searchContainer" style="width: 100%; position: fixed; top:{{top}}px;">
-  <input class="searchInput" confirm-type="search" focus style="margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input" placeholder="输入关键字词" />
+  <input class="searchInput" confirm-type="search" focus style="margin-right: {{1.3*(right-left)}}px;margin-left: {{0.6*(right-left)}}px;" bindconfirm="confirm" bindinput="input" placeholder="输入关键字、词" />
 </view>
 <block wx:if="{{tabs[0].questionList.length == 0 && !isDone}}">
-  <view class="bigTip">支持搜索 标签 / 标题 / 正文，回车触发搜索。</view>
+  <view class="bigTip">回车触发搜索 <view class="bottom">支持搜索 标签 / 标题 / 正文的关键字、词。</view>
+  </view>
+
 </block>
 <block wx:if="{{tabs[0].questionList.length == 0 && isDone}}">
   <view class="bottom" style="margin-top: 40%;">（搜索结果为空）</view>
@@ -45,10 +47,10 @@
           </view>
           <ad-custom wx:if="{{(index+1)%10==0}}" style="margin: 16rpx; margin-left: 32rpx; margin-right: 32rpx;   border-bottom: 1rpx solid #dddddd;" unit-id="adunit-64acaeb0e07bfabf"></ad-custom>
         </block>
+        <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
+        <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
         <view style="width: 100%; height: 20%; position: absolute;"></view>
       </view>
     </block>
-    <view class="bottom" wx:if="{{ !isBottom && reachBottom}}">加载中...</view>
-    <view class="bottom" wx:if="{{ isBottom}}">已经触底了~</view>
   </tabs>
 </block>
