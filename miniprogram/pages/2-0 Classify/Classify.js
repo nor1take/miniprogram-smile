@@ -281,4 +281,8 @@ Page({
   onUnload: function () {
     app.globalData.isClick = false
   },
+
+  onHide(){
+    app.globalData.questionIndex = -1
+  }
 })

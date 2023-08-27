@@ -159,6 +159,7 @@
   height: 50rpx;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   font-size: 28rpx;
 }
 
@@ -222,6 +223,7 @@
   margin: 8rpx;
   margin-right: 0;
   padding-bottom: 0;
+  padding-left: 32rpx;
   display: flex;
   border-left: 8rpx solid #dddddd;
   border-top-right-radius: 10rpx;
@@ -237,22 +239,9 @@
 
 /* 5 底部评论输入 */
 .imageShow {
-  /* width: fit-content;
-  height: fit-content; */
-
-  /* border: 1rpx solid black; */
-  border-radius: 10rpx;
-  background-color: white;
-  position: fixed;
-
   display: flex;
   flex-wrap: wrap;
   margin: 0 auto;
-
-  padding: 16rpx;
-  padding-left: 0;
-
-  z-index: 2;
 }
 
 .imageArea {
@@ -276,10 +265,6 @@
 
   border-top: 1rpx solid #ECECEC;
   background-color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .bottomInput {
@@ -287,10 +272,13 @@
   width: 100%;
   margin: 16rpx;
 
-  border-radius: 30rpx;
+  border-radius: 25rpx;
   background-color: #F3F3F3;
 
-  padding: 16rpx;
+  padding: 32rpx;
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
+
 }
 
 button {
@@ -365,6 +353,10 @@ button {
   background-color: #f7f7f7;
 }
 
+.icon-a-ic_public_save1 {
+  color: #dddddd;
+}
+
 
 /******************************************************************
 ** 夜间模式
@@ -384,6 +376,10 @@ button {
     color: #7B7B7B;
   }
 
+  .icon-a-ic_public_save1 {
+    color: #7B7B7B;
+  }
+
   .commentBody {
     color: #DDDDDD;
   }
@@ -396,11 +392,6 @@ button {
   .commentAgainBackground {
     background-color: #3d3d3d;
     border-left: 8rpx solid #7B7B7B;
-  }
-
-  /* 5 底部评论输入 */
-  .imageShow {
-    background-color: black;
   }
 
   .bottomInput-Container {

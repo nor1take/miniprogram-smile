@@ -98,7 +98,6 @@
                 </block>
               </view>
             </view>
-
             <!-- 三、评论时间 点赞按钮 评论按钮-->
             <view class="commentLast">
               <view class="commentTime">
@@ -127,6 +126,7 @@
 
               </view>
             </view>
+            <view wx:if="{{item.nickname == 'AI'&& item.isAuthentic}}" class="last">以上内容为 AI 生成，不代表开发者立场，请勿删除或修改本标记</view>
           </view>
         </view>
 
@@ -137,16 +137,19 @@
             </view>
             <view class="right">
               <view class="first">
-                <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
-                <block wx:if="{{commentAgain.isAuthentic}}">
-                  <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
-                  <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
-                    <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+                <view>
+                  <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
+                  <block wx:if="{{commentAgain.isAuthentic}}">
+                    <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                    <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
+                      <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+                    </block>
+                    <block wx:else="">
+                      <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                    </block>
                   </block>
-                  <block wx:else="">
-                    <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
-                  </block>
-                </block>
+                </view>
+                <i class="iconfont icon-a-ic_public_save1 nickName" style="font-size: 37rpx;display: flex; justify-content: flex-end;" bind:tap="copy" data-content="{{commentAgain.commentAgainBody}}"></i>
               </view>
               <view class="second" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
                 回复
@@ -159,12 +162,7 @@
                   </block>
                 </view>
               </view>
-              <view style="display: flex;">
-                <view wx:if="{{commentAgain.newNickName == 'AI'&& commentAgain.isAuthentic}}" class="last">以上内容为 AI 生成，不代表开发者立场，请勿删除或修改本标记</view>
-                <i class="iconfont icon-a-ic_public_save_filled1" style="font-size: 37rpx; color: #D8D8D8; display: flex; justify-content: flex-end;" bind:tap="copy" data-content="{{commentAgain.commentAgainBody}}"></i>
-              </view>
-
-
+              <view wx:if="{{commentAgain.newNickName == 'AI'&& commentAgain.isAuthentic}}" class="last">以上内容为 AI 生成，不代表开发者立场，请勿删除或修改本标记</view>
             </view>
           </view>
         </block>
@@ -318,7 +316,6 @@
             <i class="iconfont icon-more-fill" style="font-size: 40rpx; color: #acacac;" bindtap="threePointTap2" id="{{item._id}}" data-index="{{index}}"></i>
           </view>
 
-
           <view class="commentBodyContainer" hover-class="hoverClass" id="{{item._id}}" data-nickName="{{item.nickname}}" data-Image="{{item.image}}" data-openId="{{item._openid}}" data-unknown="{{item.isUnknown}}" bindtap="commentAgain">
             <!-- 二、评论文字和图片-->
             <text class="commentBody" user-select="true">{{item.body}}</text>
@@ -369,21 +366,24 @@
           </view>
           <view class="right">
             <view class="first">
-              <block wx:if="{{commentAgain.isUnknown}}">
-                <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
-              </block>
-              <block wx:else="">
-                <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
-                <block wx:if="{{commentAgain.isAuthentic}}">
-                  <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
-                  <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
-                    <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
-                  </block>
-                  <block wx:else="">
-                    <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+              <view>
+                <block wx:if="{{commentAgain.isUnknown}}">
+                  <text class="nickName" style="color: #c87d2f;">[匿名发帖用户]</text>
+                </block>
+                <block wx:else="">
+                  <text class="nickName" style="margin-right: 8rpx;">{{commentAgain.newNickName}}</text>
+                  <block wx:if="{{commentAgain.isAuthentic}}">
+                    <i class="iconfont icon-ic_public_security_filled" style="font-size: 22rpx; color: #07C160;"></i>
+                    <block wx:if="{{commentAgain.idTitle && commentAgain.idTitle.length != 0}}">
+                      <text style="color: #07C160; margin-right: 8rpx;">[{{commentAgain.idTitle}}]</text>
+                    </block>
+                    <block wx:else="">
+                      <text style="color: #07C160; margin-right: 8rpx;">[已认证]</text>
+                    </block>
                   </block>
                 </block>
-              </block>
+              </view>
+              <i class="iconfont icon-a-ic_public_save1" style="font-size: 37rpx; display: flex; justify-content: flex-end;" bind:tap="copy" data-content="{{commentAgain.commentAgainBody}}"></i>
             </view>
             <view class="second" hover-class="hoverClass" id="{{item._id}}" data-newNickName="{{commentAgain.newNickName}}" data-openId="{{commentAgain.newOpenId}}" data-idx="{{idx}}" data-index="{{index}}" data-commentAgainBody="{{commentAgain.commentAgainBody}}" data-unknown="{{commentAgain.isUnknown}}" bindlongtap="commentSLongTap" bindtap="commentSShortTap">
               回复
@@ -396,7 +396,7 @@
                 </block>
               </view>
             </view>
-            <i class="iconfont icon-a-ic_public_save_filled1" style="font-size: 37rpx; color: #D8D8D8; display: flex; justify-content: flex-end;" bind:tap="copy" data-content="{{commentAgain.commentAgainBody}}"></i>
+            <view wx:if="{{commentAgain.newNickName == 'AI'&& commentAgain.isAuthentic}}" class="last">以上内容为 AI 生成，不代表开发者立场，请勿删除或修改本标记</view>
           </view>
         </view>
       </block>
@@ -407,49 +407,45 @@
   </view>
 </block>
 
-
-
-
-
-
-
 <!--0-3 底部占位 -->
 <!-- <view style=" width: 100%; height: 139rpx; background-color: white;"></view> -->
 <view style=" width: 100%; height: 30%; position: absolute; margin: 64rpx;"></view>
 <!--2 底部评论输入 -->
-<view wx:if="{{fileID.length > 0}}" class="imageShow" style="bottom: {{height+50}}px;">
-  <block wx:for="{{fileID}}" wx:key="*this">
-    <image src="{{item}}" mode="aspectFill" style="height: 150rpx; width: 150rpx; margin-left: 16rpx; margin-bottom: 16rpx;" bindtap="deleteImage" id="{{item}}" data-index="{{index}}">{{item}}</image>
-  </block>
-</view>
 
 <view class="bottomInput-Container" style="bottom: {{height}}px;">
-  <view class="imageArea" bindtap="upload">
-    <i wx:if="{{!isAskChatGLM}}" class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
+  <view style="  display: flex;  align-items: center;  justify-content: space-between;">
+    <view class="imageArea" bindtap="upload">
+      <i wx:if="{{!isAskChatGLM}}" class="iconfont icon-image-add-fill" style="font-size: 50rpx; color: #7b7b7b;"></i>
+    </view>
+    <textarea maxlength="2500" class="bottomInput" auto-height focus="{{answer?true:false}}" show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:if="{{tapAnswerButton}}" placeholder="{{isAskChatGLM?holderValue2:holderValue1}}" bindinput="input" bindkeyboardheightchange="focus" value="{{inputValue}}">
+  </textarea>
+
+    <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:elif="{{tapReplyButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">
+  </textarea>
+
+    <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:else="{{tapAgainButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">
+  </textarea>
+    <i wx:if="{{isAskChatGLM}}" class="iconfont icon-a-ic_gallery_ai_photography_on1" style="font-size: 50rpx; margin-right: 16rpx; color: #3485FF;" bindtap="isAskChatGLM"></i>
+    <i wx:else="" class="iconfont icon-ic_gallery_ai_photography" style="font-size: 50rpx; margin-right: 16rpx; color: #7b7b7b;" bindtap="isAskChatGLM"></i>
+    <view class="sendButton">
+      <block wx:if="{{isLogin}}">
+
+        <button style="font-weight: bold;" size="mini" type="primary" wx:if="{{inputContent}}" bindtap="sendComment">
+          发送
+        </button>
+
+        <button style="font-weight: normal;" size="mini" type="primary" wx:if="{{!inputContent}}" disabled="true" bindtap="sendComment">
+          发送
+        </button>
+      </block>
+      <block wx:else="">
+        <button type="primary" size="mini" bindtap="goToLogin">登录</button>
+      </block>
+    </view>
   </view>
-  <textarea maxlength="2500" class="bottomInput" auto-height focus="{{answer?true:false}}" show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:if="{{tapAnswerButton}}" placeholder="{{isAskChatGLM?holderValue2:holderValue1}}" bindinput="input" bindkeyboardheightchange="focus" value="{{inputValue}}">
-  </textarea>
-
-  <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:elif="{{tapReplyButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">
-  </textarea>
-
-  <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:else="{{tapAgainButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">
-  </textarea>
-  <i wx:if="{{isAskChatGLM}}" class="iconfont icon-chatglm" style="font-size: 65rpx; margin-right: 16rpx; color: #3485FF;" bindtap="isAskChatGLM"></i>
-  <i wx:else="" class="iconfont icon-chatglm" style="font-size: 65rpx; margin-right: 16rpx; color: #7b7b7b;" bindtap="isAskChatGLM"></i>
-  <view class="sendButton">
-    <block wx:if="{{isLogin}}">
-
-      <button style="font-weight: bold;" size="mini" type="primary" wx:if="{{inputContent}}" bindtap="sendComment">
-        发送
-      </button>
-
-      <button style="font-weight: normal;" size="mini" type="primary" wx:if="{{!inputContent}}" disabled="true" bindtap="sendComment">
-        发送
-      </button>
-    </block>
-    <block wx:else="">
-      <button type="primary" size="mini" bindtap="goToLogin">登录</button>
+  <view wx:if="{{fileID.length > 0}}" class="imageShow">
+    <block wx:for="{{fileID}}" wx:key="*this">
+      <image src="{{item}}" mode="aspectFill" style="height: 150rpx; width: 150rpx; margin-left: 16rpx; margin-bottom: 16rpx; border-radius: 25rpx;" bindtap="deleteImage" id="{{item}}" data-index="{{index}}">{{item}}</image>
     </block>
   </view>
 </view>

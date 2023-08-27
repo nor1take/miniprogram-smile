@@ -24,7 +24,7 @@ Page({
     bottom: app.globalData.bottom,
     screenHeight: app.globalData.screenHeight,
 
-    keyboardHeight: 0,
+    keyboardHeight: 16,
     inputValue: '',
 
     color1: '#DF3E3E',
@@ -182,7 +182,7 @@ Page({
   loseFocus: function () {
     //console.log('失去焦点')
     this.setData({
-      keyboardHeight: 0,
+      keyboardHeight: 16,
     })
   },
   focus: function (e) {

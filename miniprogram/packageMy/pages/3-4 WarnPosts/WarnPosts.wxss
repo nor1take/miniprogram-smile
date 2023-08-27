@@ -102,12 +102,7 @@
     background-color: #3d3d3d;
     color: #D2D2D2;
   }
-  .title{
-    color: #D2D2D2;
-    font-size: 30rpx;
-    margin: 32rpx;
-    margin-top: 16rpx;
-  }
+
   .bottom{
     color: #ACACAC;
   }
