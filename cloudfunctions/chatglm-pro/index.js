@@ -10,12 +10,12 @@ const apiKey = [
   process.env.key2,
   process.env.key3,
   process.env.key4,
-  process.env.key5,
-  process.env.key6,
-  process.env.key7,
-  process.env.key8,
-  process.env.key9,
-  process.env.key10,
+  // process.env.key5,
+  // process.env.key6,
+  // process.env.key7,
+  // process.env.key8,
+  // process.env.key9,
+  // process.env.key10,
 ]; // 替换为您的API Key
 
 const randomNum = Math.floor(Math.random() * apiKey.length);
