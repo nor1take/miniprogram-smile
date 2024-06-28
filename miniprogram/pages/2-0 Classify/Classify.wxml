@@ -6,8 +6,8 @@
 <view class="container">
   <view class="contentTitle" style="z-index: 6;">搜索</view>
   <view class="inputContainer" style="position: sticky; top: {{top+32}}px; z-index: 4;">
-    <i class="iconfont icon-AI input" bindtap="goToAI"></i>
-    <view class="input" style="width:100%; margin-left: 16rpx " bind:tap="goToSearch">
+    <!-- <i class="iconfont icon-AI input" bindtap="goToAI"></i> -->
+    <view class="input" style="width:100%;" bind:tap="goToSearch">
       <i class="iconfont icon-ic_public_input_search" style="font-size: 50rpx; color: white; margin-right: 32rpx; font-weight: normal;"></i>
       <view>想聊什么话题？</view>
     </view>

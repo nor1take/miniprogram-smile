@@ -425,8 +425,8 @@
 
     <textarea maxlength="2500" class="bottomInput" auto-height focus show-confirm-bar='{{false}}' adjust-position='{{false}}' wx:else="{{tapAgainButton}}" placeholder="回复 @{{postNickName2}}：" bindinput="input" bindkeyboardheightchange="focus" bindblur="loseFocus" value="{{inputValue}}">
   </textarea>
-    <i wx:if="{{isAskChatGLM}}" class="iconfont icon-a-ic_gallery_ai_photography_on1" style="font-size: 50rpx; margin-right: 16rpx; color: #3485FF;" bindtap="isAskChatGLM"></i>
-    <i wx:else="" class="iconfont icon-ic_gallery_ai_photography" style="font-size: 50rpx; margin-right: 16rpx; color: #7b7b7b;" bindtap="isAskChatGLM"></i>
+    <!-- <i wx:if="{{isAskChatGLM}}" class="iconfont icon-a-ic_gallery_ai_photography_on1" style="font-size: 50rpx; margin-right: 16rpx; color: #3485FF;" bindtap="isAskChatGLM"></i>
+    <i wx:else="" class="iconfont icon-ic_gallery_ai_photography" style="font-size: 50rpx; margin-right: 16rpx; color: #7b7b7b;" bindtap="isAskChatGLM"></i> -->
     <view class="sendButton">
       <block wx:if="{{isLogin}}">
 
