@@ -314,30 +314,14 @@ Page({
                        */
                       //console.log(res)
                       let { _id } = res
-
                       topic.where({
                         tag: tag
-                      }).update({
-                        data: {
-                          updatetime: d,
-                          posts: _.push({
-                            each: [{
-                              _id: _id,
-                              _openid: app.globalData.openId,
-                              nickName: app.globalData.nickName,
-                              time: d,
-                              title: title,
-                              unknown: that.data._unknown
-                            }],
-                            position: 0
-                          }),
-                          num: _.inc(1),
-                        }
-                      })
-                        .catch(err => {
-                          //console.log(err)
+                      }).get().then(res => {
+                        console.log(res.data)
+                        if (res.data.length == 0) {
                           topic.add({
                             data: {
+                              tag: tag,
                               updatetime: d,
                               posts: [{
                                 _id: _id,
@@ -350,7 +334,29 @@ Page({
                               num: 1,
                             }
                           })
-                        })
+                        } else {
+                          topic.where({
+                            tag: tag
+                          })
+                            .update({
+                              data: {
+                                updatetime: d,
+                                posts: _.push({
+                                  each: [{
+                                    _id: _id,
+                                    _openid: app.globalData.openId,
+                                    nickName: app.globalData.nickName,
+                                    time: d,
+                                    title: title,
+                                    unknown: that.data._unknown
+                                  }],
+                                  position: 0
+                                }),
+                                num: _.inc(1),
+                              }
+                            })
+                        }
+                      })
 
                       traceId.orderBy('CreateTime', 'desc').get()
                         .then((res) => {

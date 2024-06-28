@@ -792,7 +792,12 @@ Page({
                     topic.where({
                       tag: questionList[0].tag
                     }).get().then(res => {
-                      if (res.data && res.data.length > 0 && res.data[0].posts) {
+                      if (res.data && res.data.length > 0 && res.data[0].num == 1) {
+                        topic.where({
+                          tag: questionList[0].tag
+                        }).remove()
+                      }
+                      else if (res.data && res.data.length > 0 && res.data[0].posts) {
                         const topicData = res.data[0].posts;
                         // 找到要删除的帖子索引
                         const postIndex = topicData.findIndex(post => post._id === app.globalData.questionId);
