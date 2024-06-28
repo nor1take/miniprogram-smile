@@ -792,25 +792,26 @@ Page({
                     topic.where({
                       tag: questionList[0].tag
                     }).get().then(res => {
-                      const topicData = res.data[0].posts;
-                      // 找到要删除的帖子索引
-                      const postIndex = topicData.findIndex(post => post._id === app.globalData.questionId);
+                      if (res.data && res.data.length > 0 && res.data[0].posts) {
+                        const topicData = res.data[0].posts;
+                        // 找到要删除的帖子索引
+                        const postIndex = topicData.findIndex(post => post._id === app.globalData.questionId);
 
-                      if (postIndex !== -1) {
-                        // 从 posts 数组中删除帖子
-                        topicData.splice(postIndex, 1);
-                      }
-
-                      topic.where({
-                        tag: questionList[0].tag
-                      }).update({
-                        data: {
-                          posts: topicData,
-                          num: _.inc(-1)
+                        if (postIndex !== -1) {
+                          // 从 posts 数组中删除帖子
+                          topicData.splice(postIndex, 1);
                         }
-                      })
-                    }
-                    ),
+
+                        topic.where({
+                          tag: questionList[0].tag
+                        }).update({
+                          data: {
+                            posts: topicData,
+                            num: _.inc(-1)
+                          }
+                        })
+                      }
+                    }),
 
                     question.where({
                       _id: app.globalData.questionId
