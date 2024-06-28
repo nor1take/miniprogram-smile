@@ -71,137 +71,177 @@ Page({
         wx.showLoading({
           title: '提交中',
         })
-        if (this.data.avatarUrl.startsWith("https://") || this.data.avatarUrl.startsWith("cloud://")) {
-          if (!app.globalData.isLogin) {
-            userInfo.add({
-              data: {
-                askTime: 5,
-                nickName: nickName,
-                avatarUrl: this.data.avatarUrl,
-                isManager: false,
-                isForbidden: false,
-                isAuthentic: false,
-                modifyNum: 2,
-                isCheckSystemMsg: false
-              }
-            }).then(() => {
-              wx.hideLoading()
-              app.globalData.isModify = true
-              app.globalData.isLogin = true
-              wx.navigateBack()
-                .catch(() => {
-                  wx.navigateBack()
-                    .catch(() => {
-                      wx.switchTab({
-                        url: '../../../pages/0-0 Show/Show'
-                      })
-                    })
+        wx.cloud.callFunction({
+          name: 'checkContent',
+          data: {
+            txt: nickName,
+            scene: 1 //场景枚举值（1 资料；2 评论；3 论坛；4 社交日志）
+          },
+          success(_res) {
+            //console.log(_res)
+            if (_res.result.msgR) {
+              const { label } = _res.result.msgR.result
+              const { suggest } = _res.result.msgR.result
+              if (suggest === 'risky') {
+                wx.hideLoading()
+                wx.showToast({
+                  title: '危险：包含' + check.matchLabel(label) + '信息！',
+                  icon: 'none'
                 })
-            })
-          } else {
-            app.globalData.modifyNum = app.globalData.modifyNum - 1;
-            userInfo.where({
-              _openid: '{openid}'
-            }).update({
-              data: {
-                nickName: nickName,
-                avatarUrl: this.data.avatarUrl,
-                modifyNum: _.inc(-1)
-              }
-            }).then(() => {
-              wx.hideLoading()
-              wx.showToast({
-                title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
-                icon: 'none'
-              })
-              app.globalData.isModify = true
-              setTimeout(function () {
-                wx.navigateBack()
-                  .catch(() => {
-                    wx.switchTab({
-                      url: '../../../pages/0-0 Show/Show'
-                    })
-                  })
-                // wx.switchTab({
-                //   url: '../../../pages/0-0 Show/Show'
-                // })
-              }, 1000);
-            })
-          }
-        } else {
-          const onlyString = new Date().getTime().toString();
-          wx.cloud.uploadFile({
-            cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString, // 上传至云端的路径
-            filePath: this.data.avatarUrl, // 小程序临时文件路径
-            success: res => {
-              if (!app.globalData.isLogin) {
-                userInfo.add({
-                  data: {
-                    askTime: 5,
-                    nickName: nickName,
-                    avatarUrl: res.fileID,
-                    isManager: false,
-                    isForbidden: false,
-                    isAuthentic: false,
-                    modifyNum: 2,
-                    isCheckSystemMsg: false
-                  }
-                }).then(() => {
-                  wx.hideLoading()
-                  app.globalData.isModify = true
-                  app.globalData.isLogin = true
-                  wx.navigateBack()
-                    .catch(() => {
-                      wx.switchTab({
-                        url: '../../../pages/0-0 Show/Show'
-                      })
-                    })
-                  // wx.switchTab({
-                  //   url: '../../../pages/0-0 Show/Show'
-                  // })
+              } else if (suggest === 'review') {
+                wx.hideLoading()
+                wx.showToast({
+                  title: '可能包含' + check.matchLabel(label) + '信息，建议调整相关表述',
+                  icon: 'none'
                 })
-              } else {
-                //console.log(res)
-                app.globalData.modifyNum = app.globalData.modifyNum - 1;
-                userInfo.where({
-                  _openid: '{openid}'
-                }).update({
-                  data: {
-                    nickName: nickName,
-                    avatarUrl: res.fileID,
-                    modifyNum: _.inc(-1)
-                  }
-                }).then(() => {
-                  wx.hideLoading()
-                  wx.showToast({
-                    title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
-                    icon: 'none'
-                  })
-                  app.globalData.isModify = true
-                  setTimeout(function () {
-                    wx.navigateBack()
-                      .catch(() => {
-                        wx.switchTab({
-                          url: '../../../pages/0-0 Show/Show'
+              }
+              else {
+                wx.hideLoading()
+                if (this.data.avatarUrl.startsWith("https://") || this.data.avatarUrl.startsWith("cloud://")) {
+                  if (!app.globalData.isLogin) {
+                    userInfo.add({
+                      data: {
+                        askTime: 5,
+                        nickName: nickName,
+                        avatarUrl: this.data.avatarUrl,
+                        isManager: false,
+                        isForbidden: false,
+                        isAuthentic: false,
+                        modifyNum: 2,
+                        isCheckSystemMsg: false
+                      }
+                    }).then(() => {
+                      wx.hideLoading()
+                      app.globalData.isModify = true
+                      app.globalData.isLogin = true
+                      wx.navigateBack()
+                        .catch(() => {
+                          wx.navigateBack()
+                            .catch(() => {
+                              wx.switchTab({
+                                url: '../../../pages/0-0 Show/Show'
+                              })
+                            })
                         })
+                    })
+                  } else {
+                    app.globalData.modifyNum = app.globalData.modifyNum - 1;
+                    userInfo.where({
+                      _openid: '{openid}'
+                    }).update({
+                      data: {
+                        nickName: nickName,
+                        avatarUrl: this.data.avatarUrl,
+                        modifyNum: _.inc(-1)
+                      }
+                    }).then(() => {
+                      wx.hideLoading()
+                      wx.showToast({
+                        title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
+                        icon: 'none'
                       })
-                    // wx.switchTab({
-                    //   url: '../../../pages/0-0 Show/Show'
-                    // })
-                  }, 1000);
-                })
+                      app.globalData.isModify = true
+                      setTimeout(function () {
+                        wx.navigateBack()
+                          .catch(() => {
+                            wx.switchTab({
+                              url: '../../../pages/0-0 Show/Show'
+                            })
+                          })
+                        // wx.switchTab({
+                        //   url: '../../../pages/0-0 Show/Show'
+                        // })
+                      }, 1000);
+                    })
+                  }
+                } else {
+                  const onlyString = new Date().getTime().toString();
+                  wx.cloud.uploadFile({
+                    cloudPath: app.globalData.openId + '/' + 'avatar' + onlyString, // 上传至云端的路径
+                    filePath: this.data.avatarUrl, // 小程序临时文件路径
+                    success: res => {
+                      if (!app.globalData.isLogin) {
+                        userInfo.add({
+                          data: {
+                            askTime: 5,
+                            nickName: nickName,
+                            avatarUrl: res.fileID,
+                            isManager: false,
+                            isForbidden: false,
+                            isAuthentic: false,
+                            modifyNum: 2,
+                            isCheckSystemMsg: false
+                          }
+                        }).then(() => {
+                          wx.hideLoading()
+                          app.globalData.isModify = true
+                          app.globalData.isLogin = true
+                          wx.navigateBack()
+                            .catch(() => {
+                              wx.switchTab({
+                                url: '../../../pages/0-0 Show/Show'
+                              })
+                            })
+                          // wx.switchTab({
+                          //   url: '../../../pages/0-0 Show/Show'
+                          // })
+                        })
+                      } else {
+                        //console.log(res)
+                        app.globalData.modifyNum = app.globalData.modifyNum - 1;
+                        userInfo.where({
+                          _openid: '{openid}'
+                        }).update({
+                          data: {
+                            nickName: nickName,
+                            avatarUrl: res.fileID,
+                            modifyNum: _.inc(-1)
+                          }
+                        }).then(() => {
+                          wx.hideLoading()
+                          wx.showToast({
+                            title: '你还有 ' + app.globalData.modifyNum + ' 次修改机会',
+                            icon: 'none'
+                          })
+                          app.globalData.isModify = true
+                          setTimeout(function () {
+                            wx.navigateBack()
+                              .catch(() => {
+                                wx.switchTab({
+                                  url: '../../../pages/0-0 Show/Show'
+                                })
+                              })
+                            // wx.switchTab({
+                            //   url: '../../../pages/0-0 Show/Show'
+                            // })
+                          }, 1000);
+                        })
+                      }
+                    },
+                    fail: err => {
+                      //console.error('[上传文件] 失败：', err)
+                      wx.hideLoading()
+                      wx.showToast({
+                        icon: 'none',
+                        title: '失败',
+                      })
+                    }
+                  })
+                }
               }
-            },
-            fail: err => {
-              //console.error('[上传文件] 失败：', err)
+            } else {
               wx.hideLoading()
-              wx.showToast({
-                icon: 'none',
-                title: '失败',
-              })
+                wx.showToast({
+                  title: '网络繁忙，请稍后再试！',
+                  icon: 'none'
+                })
             }
-          })
-        }
+          },
+          fail(_res) {
+            //console.log('checkContent云函数调用失败', _res)
+          }
+        })
+
       }
     }
   },

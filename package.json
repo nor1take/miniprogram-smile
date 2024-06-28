@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "git-split-diffs": "^1.2.0",
     "got": "^12.5.3"
   }
 }
