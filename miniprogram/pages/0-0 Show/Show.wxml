@@ -2,8 +2,11 @@
 
 <search nickName='{{nickName}}' avatarUrl='{{avatarUrl}}' isManager='{{isManager}}' isAuthentic='{{isAuthentic}}' idTitle='{{idTitle}}'></search>
 <movable-area>
-  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="goToAsk">
+  <movable-view x="0" y="1000px" direction="all" out-of-bounds inertia bindtap="goToAsk">
     <i class="iconfont icon-ic_public_add add_class"></i>
+  </movable-view>
+  <movable-view x="1000px" y="1000px" direction="all" out-of-bounds inertia bindtap="goToTop">
+    <i class="iconfont icon-arrow-up-s-line add_class"></i>
   </movable-view>
 </movable-area>
 

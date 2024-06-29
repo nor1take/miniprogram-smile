@@ -4,7 +4,6 @@
 <view class="topBlock2" style="height: {{top+32}}px;"></view>
 
 <view class="container">
-  <view class="contentTitle" style="z-index: 6;">搜索</view>
   <view class="inputContainer" style="position: sticky; top: {{top+32}}px; z-index: 4;">
     <!-- <i class="iconfont icon-AI input" bindtap="goToAI"></i> -->
     <view class="input" style="width:100%;" bind:tap="goToSearch">
