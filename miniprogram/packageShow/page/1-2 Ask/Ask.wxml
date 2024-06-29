@@ -31,8 +31,8 @@
       <tags isScroll='{{true}}' tagsList='{{tagsList}}' activeTag='{{activeTag}}' value='{{value}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>
     </view>
 
-    <view class="switch">
-      <view class="text">匿名发布</view>
+    <view wx:if="{{isManager}}" class="switch">
+      <view class="text">通知发布</view>
       <switch checked='{{isChecked}}' bindchange="switchChange" />
     </view>
 

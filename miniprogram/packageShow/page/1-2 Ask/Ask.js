@@ -8,7 +8,7 @@ const systemMsg = db.collection('systemMsg')
 const userInfo = db.collection('userInfo')
 const topic = db.collection('topic')
 
-var systemMsgNum = 0
+var isSystemMsg = false
 
 const check = require('../../check.js');
 
@@ -18,6 +18,7 @@ Page({
     pureDataPattern: /^_/ // 指定所有 _ 开头的数据字段为纯数据字段
   },
   data: {
+    isManager: false,
     tag: '生活',
     tagsList: [
       '生活',
@@ -130,22 +131,8 @@ Page({
     })
   },
   switchChange: function (e) {
-    if (systemMsgNum > 10) {
-      wx.showToast({
-        title: '请不要频繁操作',
-        icon: 'error'
-      })
-    } else {
-      systemMsgNum++;
-    }
-
-    //console.log(e.detail.value)
-    const { value } = e.detail
-    this.myData.isUnknown = value
-
-    this.setData({
-      _unknown: value
-    })
+    console.log(e.detail.value)
+    isSystemMsg = e.detail.value
   },
   /**
    * 点击发布按钮
@@ -212,7 +199,7 @@ Page({
                 else {
                   app.globalData.isAsk = true
                   var d = new Date().getTime();
-                  if (systemMsgNum > 10 && app.globalData.isAuthentic && app.globalData.isManager) {
+                  if (isSystemMsg && app.globalData.isManager) {
                     systemMsg.add({
                       data: {
                         time: d,
@@ -448,6 +435,7 @@ Page({
         //console.log(res.data)
         const tagsList = res.data.map(item => item.tag);
         this.setData({
+          isManager: app.globalData.isManager,
           tagsList,
         })
         if (this.data.activeTag != -1) {

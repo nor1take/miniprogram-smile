@@ -4,10 +4,10 @@
   <button wx:else disabled="true" size="default" type="primary" size="mini" style="width: fit-content; float: right; height: {{height}};">发 布</button>
 </view>
 <view class="background">
-  <view class="switch">
+  <!-- <view class="switch">
     <view class="text">匿名发布</view>
     <switch bindchange="switchChange" />
-  </view>
+  </view> -->
   <view class="tagsArea">
     <view class="text">推荐标签（左滑查看更多标签）</view>
     <tags style="margin-top:{{bottom+16}}px" isScroll='{{true}}' tagsList='{{tagsList}}' activeTag='{{activeTag}}' value='{{value}}' bind:tagtap="tagTap" bind:taginput="tagInput"></tags>

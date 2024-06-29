@@ -52,15 +52,6 @@ Page({
     ],
   },
 
-  switchChange: function (e) {
-    //console.log(e.detail.value)
-    const { value } = e.detail
-    this.myData.isUnknown = value
-    this.setData({
-      _unknown: value
-    })
-  },
-
   tagTap: function (e) {
     const { tag } = e.detail
     this.myData.tag = tag
